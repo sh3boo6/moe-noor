@@ -3,18 +3,19 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/ui'
   ],
-
   ssr: false,
 
   devtools: {
     enabled: true
   },
   app: {
-    baseURL: './',
-    buildAssetsDir: './_nuxt/'
+    baseURL: '/',
+    buildAssetsDir: '/_nuxt/'
   },
 
   css: ['~/assets/css/main.css'],
+
+  compatibilityDate: '2025-01-15',
 
   nitro: {
     preset: 'static',
@@ -22,8 +23,6 @@ export default defineNuxtConfig({
       publicDir: '.output/public'
     }
   },
-
-  compatibilityDate: '2025-01-15',
 
   eslint: {
     config: {
