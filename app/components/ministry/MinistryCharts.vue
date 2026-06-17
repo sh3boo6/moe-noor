@@ -148,6 +148,80 @@ const authorityStageSeries = computed<ApexAxisChartSeries>(() => authorities.val
   data: stages.value.map(stage => props.schools.filter(school => school.identity.authority === authority && school.identity.stage === stage).length)
 })))
 
+const authorityStageGenderData = computed(() => {
+  const grouped = new Map<string, { authority: string, stage: string, boys: number, girls: number }>()
+
+  for (const school of props.schools) {
+    const authority = school.identity.authority || 'غير محدد'
+    const stage = school.identity.stage || 'غير محدد'
+    const gender = school.identity.gender || ''
+    const key = `${authority}|${stage}`
+
+    const current = grouped.get(key) || { authority, stage, boys: 0, girls: 0 }
+    const schoolCount = school.additional?.schoolCount || 1
+    if (gender === 'بنين') {
+      current.boys += schoolCount
+    } else if (gender === 'بنات') {
+      current.girls += schoolCount
+    } else {
+      current.boys += schoolCount / 2
+      current.girls += schoolCount / 2
+    }
+    grouped.set(key, current)
+  }
+
+  return Array.from(grouped.values())
+    .sort((a, b) => (b.boys + b.girls) - (a.boys + a.girls) || a.authority.localeCompare(b.authority, 'ar') || a.stage.localeCompare(b.stage, 'ar'))
+})
+
+const authorityStageGenderSeries = computed<ApexAxisChartSeries>(() => [
+  {
+    name: 'بنين',
+    data: authorityStageGenderData.value.map(item => item.boys)
+  },
+  {
+    name: 'بنات',
+    data: authorityStageGenderData.value.map(item => item.girls)
+  }
+])
+
+const authorityStageGenderCategories = computed(() => authorityStageGenderData.value.map(item => `${item.authority} - ${item.stage}`))
+
+const genderAuthorityStageChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 8,
+      columnWidth: '64%'
+    }
+  },
+  colors: ['#2563eb', '#db2777'],
+  xaxis: {
+    categories: authorityStageGenderCategories.value,
+    labels: { style: { fontFamily }, rotate: -45, rotateAlways: true },
+    title: { text: 'السلطة - المرحلة', style: { fontFamily } }
+  },
+  yaxis: {
+    title: { text: 'عدد المدارس', style: { fontFamily } },
+    labels: { style: { fontFamily } }
+  },
+  legend: {
+    position: 'bottom',
+    rtl: true,
+    fontFamily
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => formatNumber(val),
+    style: { fontFamily }
+  },
+  tooltip: { theme: 'light' }
+}))
+
 const facilityRegions = computed<FacilityRegion[]>(() => {
   const grouped = new Map<string, FacilityRegion>()
 
@@ -419,6 +493,27 @@ const stageStudentChart = computed<ApexOptions>(() => ({
         :options="authorityStageChart"
         :series="authorityStageSeries"
         height="320"
+      />
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            توزيع المدارس حسب السلطة والمرحلة - بنين / بنات
+          </h2>
+          <UIcon
+            name="i-lucide-layers-3"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        type="bar"
+        :options="genderAuthorityStageChart"
+        :series="authorityStageGenderSeries"
+        height="420"
       />
     </UCard>
 

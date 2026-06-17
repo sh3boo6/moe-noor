@@ -109,7 +109,11 @@ const cards = computed(() => [
         </div>
 
         <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <img src="/img/logo.png" alt="" class="h-10 w-10 object-contain" />
+          <img
+            src="/img/logo.png"
+            alt=""
+            class="h-10 w-10 object-contain"
+          >
         </div>
       </div>
 
