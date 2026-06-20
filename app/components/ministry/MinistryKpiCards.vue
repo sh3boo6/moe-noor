@@ -23,6 +23,8 @@ const totalStudents = computed(() => (props.schools || []).reduce((sum, school) 
 const saudiStudents = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.students?.saudi || 0), 0))
 const saudiRatio = computed(() => totalStudents.value ? Math.round((saudiStudents.value / totalStudents.value) * 100) : 0)
 const totalStaff = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.staff?.teachers || 0) + (school.staff?.admins || 0), 0))
+const totalTeachers = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.staff?.teachers || 0), 0))
+const totalAdmins = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.staff?.admins || 0), 0))
 const governmentBuildings = computed(() => (props.schools || []).filter(school => school.building?.ownership && school.building.ownership.includes('حكومي')).length)
 const governmentRatio = computed(() => totalStages.value ? Math.round((governmentBuildings.value / totalStages.value) * 100) : 0)
 
@@ -71,6 +73,18 @@ const cards = computed(() => [
     value: formatNumber(totalStaff.value),
     description: 'معلمون وإداريون',
     icon: 'i-lucide-id-card'
+  },
+  {
+    title: 'الكادر الوظيفي معلمون',
+    value: formatNumber(totalTeachers.value),
+    description: 'عدد المعلمين في المدارس',
+    icon: 'i-lucide-user-check'
+  },
+  {
+    title: 'الكادر الوظيفي اداريون',
+    value: formatNumber(totalAdmins.value),
+    description: 'عدد الإداريين في المدارس٫ يشمل (عام - مستخدمين - بند اجور)',
+    icon: 'i-lucide-briefcase'
   },
   {
     title: 'نسبة المدارس الحكومية حسب المراحل',
@@ -122,7 +136,7 @@ const cards = computed(() => [
       </p>
     </article>
 
-    <article class="rounded-2xl border border-amber-300/60 bg-amber-50 p-5 text-right dark:border-amber-700/60 dark:bg-amber-950/30">
+    <article class="sm:col-span-2 xl:col-span-4 rounded-2xl border border-amber-300/60 bg-amber-50 p-5 text-right dark:border-amber-700/60 dark:bg-amber-950/30 row-span-2 xl:row-span-4">
       <div class="flex items-start justify-between gap-4">
         <div>
           <p class="text-sm font-medium text-amber-700 dark:text-amber-300">
