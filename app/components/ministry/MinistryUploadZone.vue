@@ -66,7 +66,7 @@ function onDrop(files: FileList | null) {
       </h2>
 
       <p class="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
-         اسحب ملف Excel وأفلته هنا أو اختره من الجهاز.
+        اسحب ملف Excel وأفلته هنا أو اختره من الجهاز.
       </p>
 
       <div class="mt-6 flex flex-col gap-3 sm:flex-row">

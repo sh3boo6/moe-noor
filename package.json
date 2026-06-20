@@ -34,5 +34,10 @@
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.3"
   },
-  "packageManager": "pnpm@11.5.2"
+  "packageManager": "pnpm@11.5.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "core-js"
+    ]
+  }
 }
