@@ -79,9 +79,9 @@ const cards = computed(() => [
     icon: 'i-lucide-circle-help'
   },
   {
-    title: 'نسبة المدارس الحكومية حسب المدير',
+    title: 'نسبة المدارس الحكومية حسب المبنى',
     value: `${formatNumber(governmentManagerRatio.value)}%`,
-    description: `${formatNumber(governmentBuildingsByManager.value)} من أصل ${formatNumber(uniqueManagers.value.size)} مدير`,
+    description: `${formatNumber(governmentBuildingsByManager.value)} من أصل ${formatNumber(uniqueManagers.value.size)} مبنى`,
     icon: 'i-lucide-user-check'
   }
 ])

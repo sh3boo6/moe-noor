@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MinistryFilters, MinistrySchoolRecord } from '~/types/ministrySchool'
+import { normalizeGender } from '~/utils/normalize'
 
 const {
   schools,
@@ -16,6 +17,7 @@ const filters = reactive<MinistryFilters>({
   educationDepartment: [],
   administrativeRegion: [],
   stage: [],
+  gender: [],
   authority: [],
   buildingOwnership: [],
   studyTime: [],
@@ -33,7 +35,7 @@ useHead({
 })
 
 // تستخرج القيم الفريدة من عمود محدد لاستخدامها في قوائم الفلاتر.
-function uniqueIdentityValues(field: keyof Pick<MinistrySchoolRecord['identity'], 'educationDepartment' | 'administrativeRegion' | 'stage' | 'authority' | 'studyTime' | 'educationType'>): string[] {
+function uniqueIdentityValues(field: keyof Pick<MinistrySchoolRecord['identity'], 'educationDepartment' | 'administrativeRegion' | 'stage' | 'gender' | 'authority' | 'studyTime' | 'educationType'>): string[] {
   return Array.from(new Set(schools.value.map(school => school.identity[field]).filter(Boolean)))
     .sort((a, b) => a.localeCompare(b, 'ar'))
 }
@@ -44,10 +46,14 @@ const uniqueBuildingOwnership = computed(() => Array.from(new Set(schools.value.
 const uniqueGovernorate = computed(() => Array.from(new Set(schools.value.map(school => school.additional.governorate).filter(Boolean)))
   .sort((a, b) => a.localeCompare(b, 'ar')))
 
+const uniqueGenderOptions = computed(() => Array.from(new Set(schools.value.map(school => normalizeGender(school.identity.gender || '')).filter(Boolean)))
+  .sort((a, b) => a.localeCompare(b, 'ar')))
+
 const filterOptions = computed(() => [
   { key: 'educationDepartment' as const, label: 'إدارة التعليم', placeholder: 'كل إدارات التعليم', options: uniqueIdentityValues('educationDepartment') },
   { key: 'administrativeRegion' as const, label: 'المنطقة الإدارية', placeholder: 'كل المناطق', options: uniqueIdentityValues('administrativeRegion') },
   { key: 'stage' as const, label: 'المرحلة', placeholder: 'كل المراحل', options: uniqueIdentityValues('stage') },
+  { key: 'gender' as const, label: 'الجنس', placeholder: 'كل الأجناس', options: uniqueGenderOptions.value },
   { key: 'authority' as const, label: 'السلطة', placeholder: 'كل السلطات', options: uniqueIdentityValues('authority') },
   { key: 'buildingOwnership' as const, label: 'نوع المبنى', placeholder: 'كل أنواع المباني', options: uniqueBuildingOwnership.value },
   { key: 'studyTime' as const, label: 'وقت الدراسة', placeholder: 'كل الأوقات', options: uniqueIdentityValues('studyTime') },
@@ -62,6 +68,7 @@ const filteredSchools = computed(() => schools.value.filter((school) => {
   return (!filters.educationDepartment.length || filters.educationDepartment.includes(identity.educationDepartment))
     && (!filters.administrativeRegion.length || filters.administrativeRegion.includes(identity.administrativeRegion))
     && (!filters.stage.length || filters.stage.includes(identity.stage))
+    && (!filters.gender.length || filters.gender.includes(normalizeGender(identity.gender || '')))
     && (!filters.authority.length || filters.authority.includes(identity.authority))
     && (!filters.buildingOwnership.length || filters.buildingOwnership.includes(school.building.ownership))
     && (!filters.studyTime.length || filters.studyTime.includes(identity.studyTime))
@@ -81,6 +88,7 @@ function resetFilters() {
   filters.educationDepartment = []
   filters.administrativeRegion = []
   filters.stage = []
+  filters.gender = []
   filters.authority = []
   filters.buildingOwnership = []
   filters.studyTime = []
@@ -101,10 +109,10 @@ function resetFilters() {
             <div class="mb-3 flex items-center gap-3 text-xl font-medium text-primary">
               <img
                 src="/img/logo.png"
-                alt="شعار الإدارة العامة للتعليم بمنطقة الباحة"
+                alt="شعار وزارة التعليم"
                 class="h-16 w-auto"
               >
-              الإدارة العامة للتعليم بمنطقة الباحة
+              وزارة التعليم
             </div>
 
             <h1 class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -112,7 +120,7 @@ function resetFilters() {
             </h1>
 
             <p class="mt-3 max-w-4xl text-sm leading-7 text-muted-foreground">
-              استورد ملف Excel يحتوي على أكثر من 140 عموداً، وقم بتحليل الهوية، الطلاب، الكادر، التجهيزات، المبنى، الجغرافيا والتصنيفات الحديثة داخل واجهة سطح مكتب سريعة ومستقرة.
+              استورد ملف Excel من برنامج نور لتحصل على تحليل شامل لبيانات المدارس، مع مؤشرات ورسوم بيانية وجداول تفاعلية تساعدك في اتخاذ قرارات مبنية على البيانات.
             </p>
           </div>
 
@@ -198,6 +206,8 @@ function resetFilters() {
           </div>
 
           <div class="flex flex-wrap gap-2">
+            <!-- <MinistryPdfExport :schools="filteredSchools" /> -->
+
             <UButton
               size="sm"
               color="neutral"

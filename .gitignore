@@ -22,3 +22,7 @@ logs
 .env
 .env.*
 !.env.example
+
+data.xlsx
+repomix-output.xml
+test-results/

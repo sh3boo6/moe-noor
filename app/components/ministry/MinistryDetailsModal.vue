@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+import { normalizeHeader, toEnglishDigits } from '~/utils/normalize'
 
 interface DetailSection {
   key: string
@@ -34,6 +35,7 @@ const tabs: TabDef[] = [
 const managerIdAliases = ['هوية المدير', 'هوية مدير المدرسة', 'رقم هوية المدير', 'هوية مدير المدرسة (الرقم الوطني)', 'الرقم الوطني للمدير', 'الرقم الوطني لمدير المدرسة', 'الهوية', 'رقم الهوية']
 const managerPhoneAliases = ['جوال المدير', 'جوال مدير المدرسة', 'هاتف المدير', 'هاتف مدير المدرسة', 'رقم جوال المدير', 'موبايل المدير', 'موبايل مدير المدرسة', 'رقم جوال مدير المدرسة']
 const managerEmailAliases = ['بريد المدير', 'بريد مدير المدرسة', 'ايميل المدير', 'ايميل مدير المدرسة', 'إيميل المدير', 'إيميل مدير المدرسة', 'البريد الإلكتروني للمدير', 'البريد الإلكتروني لمدير المدرسة', 'البريد الالكتروني للمدير', 'البريد الالكتروني لمدير المدرسة']
+const waterAliases = ['حالة الماء', 'الماء', 'مياه', 'خدمة المياه', 'شبكة المياه', 'حالة المياه']
 
 const defaultTab = tabs[0]!
 const activeTab = ref(defaultTab.key)
@@ -165,72 +167,10 @@ const sections = computed<DetailSection[]>(() => {
         ['عدد الحجرات', school.additional.rooms],
         ['الإنترنت', school.facilities.internet ? 'متوفر ✓' : 'غير متوفر'],
         ['المقصف', school.facilities.cafeteria ? 'متوفر ✓' : 'غير متوفر'],
-        ['حالة الماء', school.facilities.water ? 'متوفر ✓' : 'غير متوفر'],
+        ['حالة الماء', waterValue(school, school.facilities.water, waterAliases)],
         ['توجد مكتبة', school.additional.libraryExists ? 'نعم ✓' : 'لا'],
         ['المدرسة نائية', school.additional.remote ? 'نعم ✓' : 'لا'],
         ['المدرسة ضمن مجمع', school.additional.inComplex ? 'نعم ✓' : 'لا']
-      ]
-    },
-    {
-      key: 'students',
-      label: 'إحصاءات الطلاب',
-      rows: [
-        ['فصول جملة', school.students.classes],
-        ['جملة طلاب', school.students.total],
-        ['جملة سعودي', school.students.saudi],
-        ['مستجدون', school.students.newcomers],
-        ['طلاب الصف 1', school.students.grade1],
-        ['سعودي الصف 1', school.students.saudi1],
-        ['طلاب الصف 2', school.students.grade2],
-        ['سعودي الصف 2', school.students.saudi2],
-        ['طلاب الصف 3', school.students.grade3],
-        ['سعودي الصف 3', school.students.saudi3],
-        ['طلاب الصف 4', school.students.grade4],
-        ['سعودي الصف 4', school.students.saudi4],
-        ['طلاب الصف 5', school.students.grade5],
-        ['سعودي الصف 5', school.students.saudi5],
-        ['طلاب الصف 6', school.students.grade6],
-        ['سعودي الصف 6', school.students.saudi6],
-        ['طلاب الصف 7', school.students.grade7],
-        ['سعودي الصف 7', school.students.saudi7],
-        ['طلاب الصف 8', school.students.grade8],
-        ['سعودي الصف 8', school.students.saudi8],
-        ['طلاب الصف 9', school.students.grade9],
-        ['سعودي الصف 9', school.students.saudi9],
-        ['مجموع الصفوف', school.students.gradeTotal],
-        ['فرق المطابقة', school.students.gradeTotalMismatch]
-      ]
-    },
-    {
-      key: 'staff',
-      label: 'الموارد البشرية',
-      rows: [
-        ['اسم مدير المدرسة', school.staff.managerName],
-        ['هوية المدير', staffValue(school, school.staff.managerId, managerIdAliases)],
-        ['جوال المدير', staffValue(school, school.staff.managerPhone, managerPhoneAliases)],
-        ['بريد المدير الإلكتروني', staffValue(school, school.staff.managerEmailOfficial, managerEmailAliases)],
-        ['بريد مدير المدرسة', staffValue(school, school.staff.managerEmailPersonal, managerEmailAliases)],
-        ['عدد المعلمين', school.staff.teachers],
-        ['معلمين سعوديين', school.staff.saudiTeachers],
-        ['عدد الإداريين', school.staff.admins],
-        ['إداريين سعوديين', school.staff.saudiAdmins],
-        ['عدد الوكلاء', school.staff.agents],
-        ['عدد الموجهين', school.staff.guidance]
-      ]
-    },
-    {
-      key: 'facilities',
-      label: 'التجهيزات',
-      rows: [
-        ['معامل الكمبيوتر', school.facilities.computerLabs],
-        ['مختبرات فيزياء', school.facilities.physicsLabs],
-        ['مختبرات كيمياء', school.facilities.chemistryLabs],
-        ['غرف اللغة الإنجليزية', school.facilities.englishRooms],
-        ['غرف الخياطة', school.facilities.sewingRooms],
-        ['معامل الخياطة والتدبير المنزلي', school.facilities.homeEconomicsRooms],
-        ['الإنترنت', school.facilities.internet ? 'متوفر ✓' : 'غير متوفر'],
-        ['المقصف', school.facilities.cafeteria ? 'متوفر ✓' : 'غير متوفر'],
-        ['حالة الماء', school.facilities.water ? 'متوفر ✓' : 'غير متوفر']
       ]
     },
     {
@@ -261,25 +201,21 @@ const sections = computed<DetailSection[]>(() => {
 
 const activeSection = computed(() => sections.value.find(section => section.key === activeTab.value) || sections.value[0] || { key: 'identity', label: 'البيانات الأساسية', rows: [] })
 
-function cleanText(value: unknown): string {
-  return String(value ?? '').replace(/\u00A0/g, ' ').trim()
-}
-
-function normalizeHeader(value: unknown): string {
-  return cleanText(value)
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .replace(/\s+/g, ' ')
-    .replace(/[أإآ]/g, 'ا')
-    .replace(/ة/g, 'ه')
-    .replace(/ي/g, 'ى')
-    .toLocaleLowerCase('ar')
-}
-
 function findRawValue(school: MinistrySchoolRecord, aliases: string[]): unknown {
   const normalizedAliases = aliases.map(normalizeHeader)
   const match = Object.entries(school.raw).find(([key]) => normalizedAliases.includes(normalizeHeader(key)))
 
   return match?.[1]
+}
+
+function waterValue(school: MinistrySchoolRecord, value: boolean, aliases: string[]): unknown {
+  const raw = findRawValue(school, aliases)
+
+  if (raw && String(raw).trim()) {
+    return raw
+  }
+
+  return value ? 'متوفر ✓' : 'غير متوفر'
 }
 
 function staffValue(school: MinistrySchoolRecord, value: string, aliases: string[]): unknown {
@@ -292,7 +228,7 @@ function formatValue(value: unknown): string {
   }
 
   const str = String(value)
-  const converted = str.replace(/[\u0660-\u0669]/g, digit => String(parseInt(digit, 36) - 10))
+  const converted = toEnglishDigits(str)
 
   if (typeof value === 'number' && !isNaN(Number(converted))) {
     return Number(converted).toLocaleString('en-US')

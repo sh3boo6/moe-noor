@@ -56,7 +56,7 @@ function onDrop(files: FileList | null) {
       <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
         <img
           src="/img/logo.png"
-          alt="شعار الإدارة العامة للتعليم بمنطقة الباحة"
+          alt="شعار وزارة التعليم"
           class="h-16 w-auto"
         >
       </div>
@@ -66,7 +66,7 @@ function onDrop(files: FileList | null) {
       </h2>
 
       <p class="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
-        الإدارة العامة للتعليم بمنطقة الباحة - اسحب ملف Excel وأفلته هنا أو اختره من الجهاز.
+         اسحب ملف Excel وأفلته هنا أو اختره من الجهاز.
       </p>
 
       <div class="mt-6 flex flex-col gap-3 sm:flex-row">

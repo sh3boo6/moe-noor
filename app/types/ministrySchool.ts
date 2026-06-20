@@ -1,4 +1,12 @@
-export type ColumnGroup = 'identity' | 'students' | 'staff' | 'facilities' | 'building' | 'classification' | 'additional' | 'raw'
+export type ColumnGroup
+  = | 'identity'
+    | 'students'
+    | 'staff'
+    | 'facilities'
+    | 'building'
+    | 'classification'
+    | 'additional'
+    | 'raw'
 
 export interface IdentityData {
   id: string
@@ -200,6 +208,7 @@ export interface MinistryFilters {
   educationDepartment: string[]
   administrativeRegion: string[]
   stage: string[]
+  gender: string[]
   authority: string[]
   buildingOwnership: string[]
   studyTime: string[]

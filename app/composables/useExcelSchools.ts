@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx'
 import type { SchoolRecord } from '~/types/school'
+import { cleanText, normalizeHeader, toEnglishDigits } from '~/utils/normalize'
 
 const SUPPORTED_EXTENSIONS = new Set(['.xlsx', '.xls', '.xlsm', '.csv'])
 
@@ -21,32 +22,12 @@ const COLUMN_KEYS: Record<keyof Omit<SchoolRecord, 'raw' | 'sourceRow'>, string[
   buildingOwnership: ['ملكية المبنى', 'ملكية البناء', 'نوع الملكية']
 }
 
-function cleanText(value: unknown): string {
-  return String(value ?? '').replace(/\u00A0/g, ' ').trim()
-}
-
-function normalizeHeader(value: unknown): string {
-  return cleanText(value)
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .replace(/\s+/g, ' ')
-    .replace(/[أإآ]/g, 'ا')
-    .replace(/ة/g, 'ه')
-    .replace(/ي/g, 'ى')
-    .toLocaleLowerCase('ar')
-}
-
-function toEnglishDigits(value: string): string {
-  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
-
-  return value.replace(/[٠-٩]/g, digit => String(arabicDigits.indexOf(digit)))
-}
-
 function parseNumber(value: unknown): number {
   if (typeof value === 'number') {
     return Number.isFinite(value) ? value : 0
   }
 
-  const normalized = toEnglishDigits(cleanText(value))
+  const normalized = toEnglishDigits(cleanText(String(value ?? '')))
     .replace(/,/g, '')
     .replace(/[^\d.-]/g, '')
 
@@ -58,14 +39,14 @@ function parseNumber(value: unknown): number {
 function findColumnValue(row: Record<string, unknown>, keys: string[]): string {
   for (const key of keys) {
     if (Object.prototype.hasOwnProperty.call(row, key)) {
-      return cleanText(row[key])
+      return cleanText(String(row[key]))
     }
   }
 
   const normalizedKeys = keys.map(normalizeHeader)
   const matchedKey = Object.keys(row).find(key => normalizedKeys.includes(normalizeHeader(key)))
 
-  return matchedKey ? cleanText(row[matchedKey]) : ''
+  return matchedKey ? cleanText(String(row[matchedKey])) : ''
 }
 
 function hasMeaningfulData(record: Omit<SchoolRecord, 'raw' | 'sourceRow'>): boolean {
@@ -74,7 +55,7 @@ function hasMeaningfulData(record: Omit<SchoolRecord, 'raw' | 'sourceRow'>): boo
       return value > 0
     }
 
-    return cleanText(value).length > 0
+    return cleanText(String(value ?? '')).length > 0
   })
 }
 

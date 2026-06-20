@@ -12,6 +12,7 @@ let nextJobId = 1
 
 export function useMinistryExcel() {
   const schools = ref<MinistrySchoolRecord[]>([])
+
   const headers = ref<string[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)

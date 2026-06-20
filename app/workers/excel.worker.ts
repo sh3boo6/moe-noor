@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx'
 import type { MinistryExcelPayload, MinistrySchoolRecord } from '~/types/ministrySchool'
+import { cleanText, normalizeHeader, toEnglishDigits } from '~/utils/normalize'
 
 interface ColumnDefinition {
   key: string
@@ -253,7 +254,7 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   { key: 'facilities.homeEconomicsRooms', label: 'معامل التدبير المنزلي', aliases: ['معامل الخياطة والتدبير المنزلي', 'عدد معامل الخياطة والتدبير المنزلي', 'معامل التدبير المنزلي', 'غرف التدبير المنزلي'] },
   { key: 'facilities.internet', label: 'الإنترنت', aliases: ['الإنترنت', 'انترنت', 'الانترنت', 'الواي فاي', 'WiFi', 'يوجد انترنت'] },
   { key: 'facilities.cafeteria', label: 'المقصف', aliases: ['المقصف', 'كافيتريا', 'بوفيه', 'مطعم', 'يوجد مقصف'] },
-  { key: 'facilities.water', label: 'الماء', aliases: ['الماء', 'مياه', 'خدمة المياه', 'شبكة المياه'] },
+  { key: 'facilities.water', label: 'الماء', aliases: ['الماء', 'مياه', 'خدمة المياه', 'شبكة المياه', 'حالة الماء', 'حالة المياه'] },
 
   { key: 'building.ownership', label: 'ملكية المبنى', aliases: ['ملكية المبنى', 'ملكية البناء', 'نوع الملكية', 'ملكية المبنى حكومي/مستأجر'] },
   { key: 'building.rent', label: 'الإيجار', aliases: ['الإيجار', 'قيمة الإيجار', 'الايجار', 'إيجار المبنى'] },
@@ -353,36 +354,12 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   column('additional.segment', 'الشريحة', ['الشريحة'])
 ]
 
-function cleanText(value: unknown): string {
-  return String(value ?? '')
-    .replace(/\u00A0/g, ' ')
-    .replace(/ـ/g, '')
-    .trim()
-}
-
-function normalizeHeader(value: unknown): string {
-  return cleanText(value)
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')
-    .replace(/\s+/g, ' ')
-    .replace(/[()]/g, '')
-    .replace(/[أإآ]/g, 'ا')
-    .replace(/ة/g, 'ه')
-    .replace(/ي/g, 'ى')
-    .toLocaleLowerCase('ar')
-}
-
-function toEnglishDigits(value: string): string {
-  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
-
-  return value.replace(/[٠-٩]/g, digit => String(arabicDigits.indexOf(digit)))
-}
-
 function parseNumber(value: unknown): number {
   if (typeof value === 'number') {
     return Number.isFinite(value) ? value : 0
   }
 
-  const normalized = toEnglishDigits(cleanText(value))
+  const normalized = toEnglishDigits(cleanText(String(value ?? '')))
     .replace(/,/g, '')
     .replace(/[^\d.-]/g, '')
   const parsed = Number(normalized)
@@ -391,22 +368,22 @@ function parseNumber(value: unknown): number {
 }
 
 function parseBoolean(value: unknown): boolean {
-  const normalized = normalizeHeader(value)
+  const normalized = normalizeHeader(String(value ?? ''))
 
-  return ['نعم', 'yes', 'true', '1', 'متاح', 'موجود', 'متوفر', 'فعال', 'يعمل', 'صالحه'].includes(normalized)
+  return ['نعم', 'yes', 'true', '1', 'متاح', 'موجود', 'متوفر', 'فعال', 'يعمل', 'صالحه', 'صالحة'].includes(normalized)
 }
 
 function findColumnValue(row: Record<string, unknown>, aliases: string[]): string {
   for (const alias of aliases) {
     if (Object.prototype.hasOwnProperty.call(row, alias)) {
-      return cleanText(row[alias])
+      return cleanText(String(row[alias]))
     }
   }
 
   const normalizedAliases = aliases.map(normalizeHeader)
   const matchedKey = Object.keys(row).find(key => normalizedAliases.includes(normalizeHeader(key)))
 
-  return matchedKey ? cleanText(row[matchedKey]) : ''
+  return matchedKey ? cleanText(String(row[matchedKey])) : ''
 }
 
 function setNestedValue(record: Record<string, unknown>, key: string, value: unknown) {
@@ -622,8 +599,8 @@ function hasMeaningfulData(school: MinistrySchoolRecord): boolean {
       return value > 0
     }
 
-    return cleanText(value).length > 0
-  }) || Object.values(school.raw).some(value => cleanText(value).length > 0)
+    return cleanText(String(value ?? '')).length > 0
+  }) || Object.values(school.raw).some(value => cleanText(String(value ?? '')).length > 0)
 }
 
 function mapRowToSchool(row: Record<string, unknown>, sourceRow: number): MinistrySchoolRecord {
@@ -673,7 +650,7 @@ function mapRowToSchool(row: Record<string, unknown>, sourceRow: number): Minist
       continue
     }
 
-    setNestedValue(record, definition.key, cleanText(value))
+    setNestedValue(record, definition.key, cleanText(String(value)))
   }
 
   const grades = [
@@ -701,7 +678,7 @@ function extractHeaders(worksheet: XLSX.WorkSheet): string[] {
   const firstRow = XLSX.utils.sheet_to_json<unknown[]>(worksheet, { header: 1, defval: '' })[0] || []
 
   return firstRow
-    .map(cleanText)
+    .map(value => cleanText(String(value ?? '')))
     .filter(Boolean)
 }
 

@@ -21,6 +21,7 @@ const filterModels = ref<Record<keyof MinistryFilters, string[]>>({
   educationDepartment: [],
   administrativeRegion: [],
   stage: [],
+  gender: [],
   authority: [],
   buildingOwnership: [],
   studyTime: [],
@@ -51,7 +52,7 @@ function updateFilter(key: keyof MinistryFilters, value: string[]) {
             الفلترة المتقدمة
           </h2>
           <p class="mt-1 text-sm text-muted-foreground">
-            صفّ البيانات حسب إدارة التعليم، المنطقة، المرحلة، السلطة، نوع المبنى، وقت الدراسة، نوع التعليم والمحافظة.
+            صفّ البيانات حسب إدارة التعليم، المنطقة، المرحلة، الجنس، السلطة، نوع المبنى، وقت الدراسة، نوع التعليم والمحافظة.
           </p>
         </div>
 
