@@ -1,0 +1,4789 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.github/
+  workflows/
+    ci.yml
+app/
+  assets/
+    css/
+      main.css
+  components/
+    excel/
+      ExcelCharts.vue
+      ExcelDataTable.vue
+      ExcelKpiCards.vue
+      ExcelUploadZone.vue
+    ministry/
+      MinistryCharts.vue
+      MinistryDetailsModal.vue
+      MinistryFilters.vue
+      MinistryKpiCards.vue
+      MinistryPowerTable.vue
+      MinistryUploadZone.vue
+    AppLogo.vue
+    TemplateMenu.vue
+  composables/
+    useExcelSchools.ts
+    useMinistryExcel.ts
+  pages/
+    index.vue
+  types/
+    ministrySchool.ts
+    school.ts
+  workers/
+    excel.worker.ts
+  app.config.ts
+  app.vue
+public/
+  fonts/
+    ibm-plex-sans-arabic-400.ttf
+    ibm-plex-sans-arabic-500.ttf
+    ibm-plex-sans-arabic-600.ttf
+    ibm-plex-sans-arabic-700.ttf
+  img/
+    logo.png
+  favicon.ico
+src-tauri/
+  capabilities/
+    default.json
+  icons/
+    android/
+      mipmap-anydpi-v26/
+        ic_launcher.xml
+      mipmap-hdpi/
+        ic_launcher_foreground.png
+        ic_launcher_round.png
+        ic_launcher.png
+      mipmap-mdpi/
+        ic_launcher_foreground.png
+        ic_launcher_round.png
+        ic_launcher.png
+      mipmap-xhdpi/
+        ic_launcher_foreground.png
+        ic_launcher_round.png
+        ic_launcher.png
+      mipmap-xxhdpi/
+        ic_launcher_foreground.png
+        ic_launcher_round.png
+        ic_launcher.png
+      mipmap-xxxhdpi/
+        ic_launcher_foreground.png
+        ic_launcher_round.png
+        ic_launcher.png
+      values/
+        ic_launcher_background.xml
+    ios/
+      AppIcon-20x20@1x.png
+      AppIcon-20x20@2x-1.png
+      AppIcon-20x20@2x.png
+      AppIcon-20x20@3x.png
+      AppIcon-29x29@1x.png
+      AppIcon-29x29@2x-1.png
+      AppIcon-29x29@2x.png
+      AppIcon-29x29@3x.png
+      AppIcon-40x40@1x.png
+      AppIcon-40x40@2x-1.png
+      AppIcon-40x40@2x.png
+      AppIcon-40x40@3x.png
+      AppIcon-512@2x.png
+      AppIcon-60x60@2x.png
+      AppIcon-60x60@3x.png
+      AppIcon-76x76@1x.png
+      AppIcon-76x76@2x.png
+      AppIcon-83.5x83.5@2x.png
+    128x128.png
+    128x128@2x.png
+    32x32.png
+    64x64.png
+    icon.icns
+    icon.ico
+    icon.png
+    Square107x107Logo.png
+    Square142x142Logo.png
+    Square150x150Logo.png
+    Square284x284Logo.png
+    Square30x30Logo.png
+    Square310x310Logo.png
+    Square44x44Logo.png
+    Square71x71Logo.png
+    Square89x89Logo.png
+    StoreLogo.png
+  src/
+    lib.rs
+    main.rs
+  .gitignore
+  build.rs
+  Cargo.toml
+  tauri.conf.json
+.editorconfig
+.gitignore
+eslint.config.mjs
+fix-paths.mjs
+LICENSE
+nuxt.config.ts
+package.json
+pnpm-workspace.yaml
+README.md
+renovate.json
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".github/workflows/ci.yml">
+name: ci
+
+on: push
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [22]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Install node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run typecheck
+</file>
+
+<file path="app/assets/css/main.css">
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+html {
+  direction: rtl;
+}
+
+body {
+  direction: rtl;
+  text-align: right;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-sans-arabic-400.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-sans-arabic-500.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-sans-arabic-600.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-sans-arabic-700.ttf') format('truetype');
+}
+
+@theme static {
+  --font-sans: 'IBM Plex Sans Arabic', sans-serif;
+
+  --color-green-50: #EFFDF5;
+  --color-green-100: #D9FBE8;
+  --color-green-200: #B3F5D1;
+  --color-green-300: #75EDAE;
+  --color-green-400: #00DC82;
+  --color-green-500: #00C16A;
+  --color-green-600: #00A155;
+  --color-green-700: #007F45;
+  --color-green-800: #016538;
+  --color-green-900: #0A5331;
+  --color-green-950: #052E16;
+}
+</file>
+
+<file path="app/components/excel/ExcelCharts.vue">
+<script setup lang="ts">
+import VueApexCharts from 'vue3-apexcharts'
+import type { ApexOptions } from 'apexcharts'
+import type { SchoolRecord } from '~/types/school'
+
+interface DistributionItem {
+  label: string
+  count: number
+}
+
+const props = defineProps<{
+  schools: SchoolRecord[]
+}>()
+
+const ApexChart = VueApexCharts
+
+const chartColors = ['#16a34a', '#2563eb', '#f97316', '#9333ea', '#0f766e', '#dc2626', '#ca8a04', '#4f46e5']
+const fontFamily = 'Public Sans, sans-serif'
+
+// تجمع عدد المدارس حسب الحقل المطلوب وتعيد النتيجة مرتبة تنازلياً.
+function groupBy(field: keyof Pick<SchoolRecord, 'governorate' | 'gender' | 'authority' | 'stage'>): DistributionItem[] {
+  const grouped = new Map<string, number>()
+
+  for (const school of props.schools) {
+    const label = school[field] || 'غير محدد'
+    grouped.set(label, (grouped.get(label) || 0) + 1)
+  }
+
+  return Array.from(grouped.entries())
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count)
+}
+
+const genderDistribution = computed(() => groupBy('gender'))
+const governorateDistribution = computed(() => groupBy('governorate').slice(0, 10))
+const authorityDistribution = computed(() => groupBy('authority'))
+
+// إعدادات الرسم الدائري لتوزيع المدارس حسب الجنس.
+const genderChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'donut',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  labels: genderDistribution.value.map(item => item.label),
+  series: genderDistribution.value.map(item => item.count),
+  colors: chartColors.slice(0, genderDistribution.value.length),
+  legend: {
+    position: 'bottom',
+    rtl: true,
+    fontFamily,
+    fontSize: '12px'
+  },
+  plotOptions: {
+    pie: {
+      donut: {
+        size: '72%',
+        labels: {
+          show: true,
+          total: {
+            show: true,
+            label: 'المجموع',
+            formatter: () => String(props.schools.length)
+          }
+        }
+      }
+    }
+  },
+  dataLabels: { enabled: false },
+  tooltip: { enabled: true }
+}))
+
+// إعدادات الرسم الشريطي لتوزيع المدارس حسب المحافظة.
+const governorateChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 8,
+      columnWidth: '56%',
+      distributed: true
+    }
+  },
+  colors: chartColors.slice(0, governorateDistribution.value.length),
+  xaxis: {
+    categories: governorateDistribution.value.map(item => item.label),
+    labels: {
+      style: { fontFamily },
+      rotate: -35
+    },
+    title: {
+      text: 'المحافظة',
+      style: { fontFamily }
+    }
+  },
+  yaxis: {
+    title: {
+      text: 'عدد المدارس',
+      style: { fontFamily }
+    },
+    labels: { style: { fontFamily } }
+  },
+  tooltip: {
+    theme: 'light'
+  }
+}))
+
+// إعدادات الرسم الدائري لتوزيع المدارس حسب السلطة.
+const authorityChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'donut',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  labels: authorityDistribution.value.map(item => item.label),
+  series: authorityDistribution.value.map(item => item.count),
+  colors: chartColors.slice(0, authorityDistribution.value.length),
+  legend: {
+    position: 'bottom',
+    rtl: true,
+    fontFamily,
+    fontSize: '12px'
+  },
+  plotOptions: {
+    pie: {
+      donut: {
+        size: '72%',
+        labels: {
+          show: true,
+          total: {
+            show: true,
+            label: 'المجموع',
+            formatter: () => String(props.schools.length)
+          }
+        }
+      }
+    }
+  },
+  dataLabels: { enabled: false },
+  tooltip: { enabled: true }
+}))
+</script>
+
+<template>
+  <section
+    dir="rtl"
+    class="grid gap-6 xl:grid-cols-3"
+  >
+    <UCard>
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            توزيع المدارس حسب الجنس
+          </h2>
+          <UIcon
+            name="i-lucide-chart-pie"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        v-if="genderDistribution.length"
+        type="donut"
+        :options="genderChart"
+        :series="genderChart.series"
+        height="280"
+      />
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            المدارس حسب المحافظة
+          </h2>
+          <UIcon
+            name="i-lucide-map"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        v-if="governorateDistribution.length"
+        type="bar"
+        :options="governorateChart"
+        :series="governorateChart.series"
+        height="280"
+      />
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            توزيع المدارس حسب السلطة
+          </h2>
+          <UIcon
+            name="i-lucide-circle-help"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        v-if="authorityDistribution.length"
+        type="donut"
+        :options="authorityChart"
+        :series="authorityChart.series"
+        height="280"
+      />
+    </UCard>
+  </section>
+</template>
+</file>
+
+<file path="app/components/excel/ExcelDataTable.vue">
+<script setup lang="ts">
+import type { SchoolRecord } from '~/types/school'
+
+const props = defineProps<{
+  schools: SchoolRecord[]
+}>()
+
+const numberFormatter = new Intl.NumberFormat('ar')
+const search = ref('')
+const governorate = ref<string[]>([])
+const stage = ref<string[]>([])
+const gender = ref<string[]>([])
+const studyTime = ref<string[]>([])
+const page = ref(1)
+const pageSize = ref(10)
+
+// تعيد القيم الفريدة من عمود محدد لتستخدم كخيارات فلاتر.
+function uniqueValues(field: keyof Pick<SchoolRecord, 'governorate' | 'stage' | 'gender' | 'studyTime'>): string[] {
+  return Array.from(new Set(props.schools.map(school => school[field]).filter(Boolean)))
+    .sort((a, b) => a.localeCompare(b, 'ar'))
+}
+
+const governorateOptions = computed(() => uniqueValues('governorate'))
+const stageOptions = computed(() => uniqueValues('stage'))
+const genderOptions = computed(() => uniqueValues('gender'))
+const studyTimeOptions = computed(() => uniqueValues('studyTime'))
+
+// تعيد تصفية البيانات بناء على البحث والفلاتر الجانبية.
+const filteredRows = computed(() => {
+  const keyword = search.value.toLocaleLowerCase('ar')
+
+  return props.schools.filter((school) => {
+    const searchableText = `${school.schoolName} ${school.id} ${school.managerName}`.toLocaleLowerCase('ar')
+    const matchesSearch = !keyword || searchableText.includes(keyword)
+    const matchesGovernorate = !governorate.value.length || governorate.value.includes(school.governorate)
+    const matchesStage = !stage.value.length || stage.value.includes(school.stage)
+    const matchesGender = !gender.value.length || gender.value.includes(school.gender)
+    const matchesStudyTime = !studyTime.value.length || studyTime.value.includes(school.studyTime)
+
+    return matchesSearch && matchesGovernorate && matchesStage && matchesGender && matchesStudyTime
+  })
+})
+
+// يعيد ترتيب الصفحة إلى الأولى عند تغيير أي فلتر أو نص بحث.
+watch([search, governorate, stage, gender, studyTime], () => {
+  page.value = 1
+})
+
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredRows.value.length / pageSize.value)))
+
+watch(totalPages, (value) => {
+  if (page.value > value) {
+    page.value = value
+  }
+})
+
+const paginatedRows = computed(() => {
+  const start = (page.value - 1) * pageSize.value
+  return filteredRows.value.slice(start, start + pageSize.value)
+})
+
+const pageStart = computed(() => filteredRows.value.length ? (page.value - 1) * pageSize.value + 1 : 0)
+const pageEnd = computed(() => Math.min(page.value * pageSize.value, filteredRows.value.length))
+
+// تنقل آمن بين الصفحات حتى عند الوصول إلى أول أو آخر صفحة.
+function goToPage(nextPage: number) {
+  page.value = Math.min(Math.max(nextPage, 1), totalPages.value)
+}
+
+function resetFilters() {
+  search.value = ''
+  governorate.value = []
+  stage.value = []
+  gender.value = []
+  studyTime.value = []
+  page.value = 1
+}
+
+function formatNumber(value: number): string {
+  return numberFormatter.format(value)
+}
+</script>
+
+<template>
+  <UCard dir="rtl">
+    <template #header>
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">
+            جدول بيانات المدارس
+          </h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            اعرض {{ filteredRows.length }} سجل من أصل {{ schools.length }} سجل
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-2 sm:flex-row">
+          <UInput
+            v-model="search"
+            class="w-full sm:w-72"
+            placeholder="ابحث باسم المدرسة أو الرقم الوزاري أو المدير"
+            icon="i-lucide-search"
+          />
+
+          <UButton
+            color="neutral"
+            variant="ghost"
+            label="إعادة الفلاتر"
+            icon="i-lucide-rotate-ccw"
+            @click="resetFilters"
+          />
+        </div>
+      </div>
+    </template>
+
+    <div class="grid gap-3 rounded-2xl border border-border/50 bg-muted/20 p-4 md:grid-cols-2 xl:grid-cols-4">
+      <div class="flex flex-col gap-2 text-sm font-medium text-foreground">
+        المحافظة
+        <USelectMenu
+          v-model="governorate"
+          :items="governorateOptions"
+          placeholder="كل المحافظات"
+          multiple
+          class="w-full"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2 text-sm font-medium text-foreground">
+        المرحلة
+        <USelectMenu
+          v-model="stage"
+          :items="stageOptions"
+          placeholder="كل المراحل"
+          multiple
+          class="w-full"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2 text-sm font-medium text-foreground">
+        جنس المدرسة
+        <USelectMenu
+          v-model="gender"
+          :items="genderOptions"
+          placeholder="كل الأجناس"
+          multiple
+          class="w-full"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2 text-sm font-medium text-foreground">
+        وقت الدراسة
+        <USelectMenu
+          v-model="studyTime"
+          :items="studyTimeOptions"
+          placeholder="كل الأوقات"
+          multiple
+          class="w-full"
+        />
+      </div>
+    </div>
+
+    <div class="mt-5 overflow-x-auto rounded-2xl border border-border/50">
+      <table class="w-full min-w-[900px] border-collapse text-right text-sm">
+        <thead class="bg-muted text-xs uppercase text-muted-foreground">
+          <tr>
+            <th class="px-4 py-3 font-semibold">
+              الرقم الوزاري
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              اسم المدرسة
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              المحافظة
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              المرحلة
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              الجنس
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              السلطة
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              نوع التعليم
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              ملكية المبنى
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              وقت الدراسة
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              الفصول
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              الطلاب
+            </th>
+            <th class="px-4 py-3 font-semibold">
+              المدير
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-border bg-card">
+          <tr
+            v-for="school in paginatedRows"
+            :key="`${school.sourceRow}-${school.schoolName}`"
+            class="transition-colors hover:bg-muted/40"
+          >
+            <td class="whitespace-nowrap px-4 py-3 font-medium text-foreground">
+              {{ school.id || 'غير محدد' }}
+            </td>
+            <td class="max-w-[240px] px-4 py-3 font-medium text-foreground">
+              {{ school.schoolName || 'غير محدد' }}
+            </td>
+            <td class="px-4 py-3 text-muted-foreground">
+              {{ school.governorate || 'غير محدد' }}
+            </td>
+            <td class="px-4 py-3 text-muted-foreground">
+              {{ school.stage || 'غير محدد' }}
+            </td>
+            <td class="px-4 py-3">
+              <UBadge
+                v-if="school.gender"
+                size="xs"
+                color="neutral"
+                variant="subtle"
+              >
+                {{ school.gender }}
+              </UBadge>
+              <span
+                v-else
+                class="text-muted-foreground"
+              >غير محدد</span>
+            </td>
+            <td class="px-4 py-3 text-muted-foreground">
+              {{ school.authority || 'غير محدد' }}
+            </td>
+            <td class="px-4 py-3 text-muted-foreground">
+              {{ school.educationType || 'غير محدد' }}
+            </td>
+            <td class="px-4 py-3 text-muted-foreground">
+              {{ school.buildingOwnership || 'غير محدد' }}
+            </td>
+            <td class="px-4 py-3 text-muted-foreground">
+              {{ school.studyTime || 'غير محدد' }}
+            </td>
+            <td class="whitespace-nowrap px-4 py-3 text-foreground">
+              {{ formatNumber(school.classes) }}
+            </td>
+            <td class="whitespace-nowrap px-4 py-3 text-foreground">
+              {{ formatNumber(school.students) }}
+            </td>
+            <td class="px-4 py-3 text-muted-foreground">
+              {{ school.managerName || 'غير محدد' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      v-if="!paginatedRows.length"
+      class="flex flex-col items-center justify-center py-12 text-center"
+    >
+      <UIcon
+        name="i-lucide-database-zap"
+        class="mb-3 h-10 w-10 text-muted"
+      />
+      <p class="text-sm font-medium text-foreground">
+        لا توجد نتائج مطابقة
+      </p>
+      <p class="mt-1 text-sm text-muted-foreground">
+        جرّب تغيير البحث أو الفلاتر لعرض المزيد من البيانات.
+      </p>
+    </div>
+
+    <template #footer>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="text-sm text-muted-foreground">
+          عرض {{ pageStart }} - {{ pageEnd }} من {{ filteredRows.length }} سجل
+        </div>
+
+        <div class="flex items-center justify-between gap-2">
+          <label class="flex items-center gap-2 text-sm text-muted-foreground">
+            الصفوف
+            <select
+              v-model.number="pageSize"
+              class="rounded-xl border border-border/50 bg-card px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option :value="5">
+                5
+              </option>
+              <option :value="10">
+                10
+              </option>
+              <option :value="20">
+                20
+              </option>
+              <option :value="50">
+                50
+              </option>
+            </select>
+          </label>
+
+          <div class="flex items-center gap-2">
+            <UButton
+              size="xs"
+              color="neutral"
+              variant="ghost"
+              label="السابق"
+              :disabled="page === 1"
+              @click="goToPage(page - 1)"
+            />
+
+            <span class="min-w-16 text-center text-sm text-foreground">
+              صفحة {{ page }} من {{ totalPages }}
+            </span>
+
+            <UButton
+              size="xs"
+              color="neutral"
+              variant="ghost"
+              label="التالي"
+              :disabled="page === totalPages"
+              @click="goToPage(page + 1)"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+  </UCard>
+</template>
+</file>
+
+<file path="app/components/excel/ExcelKpiCards.vue">
+<script setup lang="ts">
+import type { SchoolRecord } from '~/types/school'
+
+const numberFormatter = new Intl.NumberFormat('ar')
+
+const props = defineProps<{
+  schools: SchoolRecord[]
+}>()
+
+const totalStages = computed(() => props.schools?.length || 0)
+const totalSchools = computed(() => {
+  const managers = (props.schools || [])
+    .map(school => String(school.managerName || '').trim())
+    .filter(name => Boolean(name))
+  return new Set(managers).size
+})
+const totalStudents = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.students || 0), 0))
+const totalClasses = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.classes || 0), 0))
+const governmentBuildings = computed(() => (props.schools || []).filter(school => school.buildingOwnership && school.buildingOwnership.includes('حكومي')).length)
+const governmentRatio = computed(() => totalStages.value ? Math.round((governmentBuildings.value / totalStages.value) * 100) : 0)
+
+// تعرض الأرقام الكبيرة بتنسيق عربي لتبدو واضحة داخل البطاقات.
+function formatNumber(value: number): string {
+  return numberFormatter.format(value)
+}
+
+const cards = computed(() => [
+  {
+    title: 'إجمالي المدارس',
+    value: formatNumber(totalSchools.value),
+    description: 'حسب عدد المدراء (مدرستين بمدير واحد تحسب كواحدة)',
+    icon: 'i-lucide-building-2'
+  },
+  {
+    title: 'إجمالي المراحل',
+    value: formatNumber(totalStages.value),
+    description: 'عدد السجلات المقروءة من الملف',
+    icon: 'i-lucide-layers'
+  },
+  {
+    title: 'إجمالي الطلاب',
+    value: formatNumber(totalStudents.value),
+    description: 'مجموع عمود جملة طلاب',
+    icon: 'i-lucide-users'
+  },
+  {
+    title: 'إجمالي الفصول',
+    value: formatNumber(totalClasses.value),
+    description: 'مجموع عمود فصول جملة',
+    icon: 'i-lucide-graduation-cap'
+  },
+  {
+    title: 'المباني الحكومية',
+    value: `${formatNumber(governmentRatio.value)}%`,
+    description: `${formatNumber(governmentBuildings.value)} من أصل ${formatNumber(totalStages.value)} مرحلة`,
+    icon: 'i-lucide-circle-help'
+  }
+])
+</script>
+
+<template>
+  <section
+    dir="rtl"
+    class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+  >
+    <article
+      v-for="card in cards"
+      :key="card.title"
+      class="rounded-2xl border border-border/50 bg-card p-5 shadow-sm"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-muted-foreground">
+            {{ card.title }}
+          </p>
+
+          <p class="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+            {{ card.value }}
+          </p>
+        </div>
+
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <img src="/img/logo.png" alt="" class="h-5 w-5 object-contain" />
+        </div>
+      </div>
+
+      <p class="mt-4 text-xs leading-5 text-muted-foreground">
+        {{ card.description }}
+      </p>
+    </article>
+  </section>
+</template>
+</file>
+
+<file path="app/components/excel/ExcelUploadZone.vue">
+<script setup lang="ts">
+const emit = defineEmits<{
+  'file-selected': [file: File]
+}>()
+
+const inputRef = ref<HTMLInputElement | null>(null)
+const isDragging = ref(false)
+
+// تفتح نافذة اختيار الملف من زر أو من الضغط على منطقة الرفع.
+function chooseFile() {
+  inputRef.value?.click()
+}
+
+// تستقبل الملف بعد اختياره من input وتخفي قيمته للسماح باختيار نفس الملف مرة أخرى.
+function onFileChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+
+  if (file) {
+    emit('file-selected', file)
+  }
+
+  input.value = ''
+}
+
+// تسمح بسحب الملف وإفلاته مباشرة داخل منطقة الرفع.
+function onDrop(files: FileList | null) {
+  const file = files?.[0]
+
+  if (file) {
+    emit('file-selected', file)
+  }
+
+  isDragging.value = false
+}
+</script>
+
+<template>
+  <section
+    dir="rtl"
+    class="rounded-3xl border border-dashed border-primary/40 bg-card p-6 text-right shadow-sm transition-colors sm:p-8"
+    :class="isDragging ? 'border-primary bg-primary/5' : 'hover:border-primary/70'"
+    @dragover.prevent="isDragging = true"
+    @dragleave.prevent="isDragging = false"
+    @drop.prevent="onDrop($event.dataTransfer?.files)"
+  >
+    <input
+      ref="inputRef"
+      type="file"
+      class="hidden"
+      accept=".xlsx,.xls,.xlsm,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+      @change="onFileChange"
+    >
+
+    <div class="mx-auto flex max-w-2xl flex-col items-center text-center">
+      <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <UIcon
+          name="i-lucide-table"
+          class="h-8 w-8"
+        />
+      </div>
+
+      <h2 class="text-xl font-semibold text-foreground">
+        رفع ملف Excel
+      </h2>
+
+      <p class="mt-2 max-w-xl text-sm leading-7 text-muted-foreground">
+        اسحب ملف Excel وأفلته هنا، أو اختره من الجهاز. سيقوم التطبيق بقراءة الأعمدة المطلوبة وتحويلها إلى لوحة بيانات تفاعلية.
+      </p>
+
+      <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+        <UButton
+          type="button"
+          label="اختيار ملف"
+          icon="i-lucide-upload"
+          @click="chooseFile"
+        />
+
+        <UButton
+          type="button"
+          color="neutral"
+          variant="ghost"
+          label="xlsx / xls / csv"
+          icon="i-lucide-file-spreadsheet"
+        />
+      </div>
+    </div>
+  </section>
+</template>
+</file>
+
+<file path="app/components/ministry/MinistryCharts.vue">
+<script setup lang="ts">
+import VueApexCharts from 'vue3-apexcharts'
+import type { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexOptions } from 'apexcharts'
+import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+
+const props = defineProps<{
+  schools: MinistrySchoolRecord[]
+}>()
+
+const ApexChart = VueApexCharts
+const fontFamily = 'IBM Plex Sans Arabic, sans-serif'
+const colors = ['#16a34a', '#2563eb', '#f97316', '#9333ea', '#0f766e', '#dc2626', '#ca8a04', '#4f46e5']
+
+interface DepartmentStaff {
+  department: string
+  teachers: number
+  admins: number
+}
+
+interface FacilityRegion {
+  region: string
+  computerLabs: number
+  physicsLabs: number
+  chemistryLabs: number
+}
+
+interface GenderDistributionItem {
+  gender: string
+  count: number
+  percentage: number
+}
+
+const numberFormatter = new Intl.NumberFormat('ar')
+
+function formatNumber(value: number): string {
+  const arabicFormatted = numberFormatter.format(value)
+  return arabicFormatted.replace(/[\u0660-\u0669]/g, digit => String(parseInt(digit, 36) - 10))
+}
+
+// Split grades by level: Primary (1-6), Middle (7-9), High (10-12)
+const stageLabels = ['الابتدائية 1-2-3-4-5-6', 'المتوسطة 1-2-3', 'الثانوية 1-2-3-4']
+const stageGradeRanges = [
+  [1, 2, 3, 4, 5, 6], // Primary
+  [7, 8, 9], // Middle
+  [10, 11, 12] // High
+]
+
+const stageStudentSeries = computed<ApexAxisChartSeries>(() => [
+  {
+    name: 'عدد الطلاب',
+    data: stageGradeRanges.map((grades) => {
+      return props.schools.reduce((sum, school) => {
+        return sum + grades.reduce((gradeSum, grade) => {
+          const gradeValue = school.students[`grade${grade}` as keyof typeof school.students]
+          return gradeSum + (typeof gradeValue === 'number' ? gradeValue : 0)
+        }, 0)
+      }, 0)
+    })
+  }
+])
+
+const gradeLabels = ['صف 1', 'صف 2', 'صف 3', 'صف 4', 'صف 5', 'صف 6', 'صف 7', 'صف 8', 'صف 9', 'صف 10', 'صف 11', 'صف 12']
+
+const gradeSeries = computed<ApexAxisChartSeries>(() => [
+  {
+    name: 'عدد الطلاب',
+    data: gradeLabels.map((label, index) => props.schools.reduce((sum, school) => {
+      const gradeValue = school.students[`grade${index + 1}` as keyof typeof school.students]
+      return sum + (typeof gradeValue === 'number' ? gradeValue : 0)
+    }, 0))
+  }
+])
+
+const totalStudents = computed(() => props.schools.reduce((sum, school) => sum + (school.students?.total || 0), 0))
+
+const genderDistribution = computed<GenderDistributionItem[]>(() => {
+  const counts = new Map<string, number>()
+  const total = props.schools.length || 1
+
+  for (const school of props.schools) {
+    const gender = school.identity.gender || 'غير محدد'
+    counts.set(gender, (counts.get(gender) || 0) + 1)
+  }
+
+  return Array.from(counts.entries())
+    .map(([gender, count]) => ({ gender, count, percentage: Math.round((count / total) * 100) }))
+    .sort((a, b) => b.count - a.count || a.gender.localeCompare(b.gender, 'ar'))
+})
+
+const genderSeries = computed<ApexNonAxisChartSeries>(() => genderDistribution.value.map(item => item.count))
+
+const genderCategories = computed(() => genderDistribution.value.map(item => item.gender))
+
+const genderChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'pie',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  colors: colors.slice(0, Math.max(genderCategories.value.length, 1)),
+  labels: genderCategories.value,
+  plotOptions: {
+    pie: {
+      donut: { size: '45%' }
+    }
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => `${formatNumber(val)}%`,
+    style: { fontFamily }
+  },
+  legend: { position: 'bottom', rtl: true, fontFamily }
+}))
+
+const departmentStaff = computed<DepartmentStaff[]>(() => {
+  const grouped = new Map<string, DepartmentStaff>()
+
+  for (const school of props.schools) {
+    const department = school.identity.educationDepartment || 'غير محدد'
+    const current = grouped.get(department) || { department, teachers: 0, admins: 0 }
+
+    current.teachers += school.staff.teachers
+    current.admins += school.staff.admins
+    grouped.set(department, current)
+  }
+
+  return Array.from(grouped.values())
+    .sort((a, b) => (b.teachers + b.admins) - (a.teachers + a.admins))
+    .slice(0, 10)
+})
+
+const staffSeries = computed<ApexAxisChartSeries>(() => [
+  {
+    name: 'المعلمون',
+    data: departmentStaff.value.map(item => item.teachers)
+  },
+  {
+    name: 'الإداريون',
+    data: departmentStaff.value.map(item => item.admins)
+  }
+])
+
+const stages = computed(() => Array.from(new Set(props.schools.map(school => school.identity.stage).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ar')))
+const authorities = computed(() => Array.from(new Set(props.schools.map(school => school.identity.authority).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ar')))
+
+const authorityStageSeries = computed<ApexAxisChartSeries>(() => authorities.value.map(authority => ({
+  name: authority,
+  data: stages.value.map(stage => props.schools.filter(school => school.identity.authority === authority && school.identity.stage === stage).length)
+})))
+
+const facilityRegions = computed<FacilityRegion[]>(() => {
+  const grouped = new Map<string, FacilityRegion>()
+
+  for (const school of props.schools) {
+    const region = school.identity.administrativeRegion || school.identity.educationDepartment || 'غير محدد'
+    const current = grouped.get(region) || { region, computerLabs: 0, physicsLabs: 0, chemistryLabs: 0 }
+
+    current.computerLabs += school.facilities.computerLabs
+    current.physicsLabs += school.facilities.physicsLabs
+    current.chemistryLabs += school.facilities.chemistryLabs
+    grouped.set(region, current)
+  }
+
+  return Array.from(grouped.values())
+    .sort((a, b) => (b.computerLabs + b.physicsLabs + b.chemistryLabs) - (a.computerLabs + a.physicsLabs + a.chemistryLabs))
+    .slice(0, 10)
+})
+
+const facilitySeries = computed<ApexAxisChartSeries>(() => [
+  {
+    name: 'معامل الكمبيوتر',
+    data: facilityRegions.value.map(item => item.computerLabs)
+  },
+  {
+    name: 'مختبرات فيزياء',
+    data: facilityRegions.value.map(item => item.physicsLabs)
+  },
+  {
+    name: 'مختبرات كيمياء',
+    data: facilityRegions.value.map(item => item.chemistryLabs)
+  }
+])
+
+const gradeChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 8,
+      columnWidth: '56%',
+      distributed: true
+    }
+  },
+  colors: colors.slice(0, gradeSeries.value[0]?.data.length || 1),
+  xaxis: {
+    categories: gradeLabels,
+    labels: { style: { fontFamily } },
+    title: { text: 'الصفوف الدراسية', style: { fontFamily } }
+  },
+  yaxis: {
+    title: { text: 'عدد الطلاب', style: { fontFamily } },
+    labels: { style: { fontFamily } }
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => formatNumber(val),
+    style: { fontFamily }
+  },
+  tooltip: { theme: 'light' }
+}))
+
+const staffChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 8,
+      columnWidth: '56%'
+    }
+  },
+  colors: ['#16a34a', '#2563eb'],
+  xaxis: {
+    categories: departmentStaff.value.map(item => item.department),
+    labels: {
+      style: { fontFamily },
+      rotate: -35
+    }
+  },
+  yaxis: {
+    title: { text: 'عدد الكادر', style: { fontFamily } },
+    labels: { style: { fontFamily } }
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => formatNumber(val),
+    style: { fontFamily }
+  },
+  tooltip: { theme: 'light' }
+}))
+
+const authorityStageChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false },
+    stacked: true
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 8,
+      columnWidth: '64%'
+    }
+  },
+  colors: colors.slice(0, authorities.value.length),
+  xaxis: {
+    categories: stages.value,
+    labels: { style: { fontFamily } }
+  },
+  yaxis: {
+    title: { text: 'عدد المدارس', style: { fontFamily } },
+    labels: { style: { fontFamily } }
+  },
+  legend: {
+    position: 'bottom',
+    rtl: true,
+    fontFamily,
+    fontSize: '12px'
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => formatNumber(val),
+    style: { fontFamily }
+  },
+  tooltip: { theme: 'light' }
+}))
+
+const facilityChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 8,
+      columnWidth: '56%',
+      distributed: true
+    }
+  },
+  colors: ['#16a34a', '#f97316', '#9333ea'],
+  xaxis: {
+    categories: facilityRegions.value.map(item => item.region),
+    labels: {
+      style: { fontFamily },
+      rotate: -35
+    }
+  },
+  yaxis: {
+    title: { text: 'عدد الغرف/المعامل', style: { fontFamily } },
+    labels: { style: { fontFamily } }
+  },
+  legend: {
+    position: 'bottom',
+    rtl: true,
+    fontFamily,
+    fontSize: '12px'
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => formatNumber(val),
+    style: { fontFamily }
+  },
+  tooltip: { theme: 'light' }
+}))
+
+const stageStudentChart = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false }
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 8,
+      columnWidth: '30%',
+      distributed: true
+    }
+  },
+  colors: ['#16a34a', '#2563eb', '#f97316'],
+  xaxis: {
+    categories: stageLabels,
+    labels: { style: { fontFamily } },
+    title: { text: 'المراحل الدراسية', style: { fontFamily } }
+  },
+  yaxis: {
+    title: { text: 'عدد الطلاب', style: { fontFamily } },
+    labels: { style: { fontFamily } }
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => formatNumber(val),
+    style: { fontFamily }
+  },
+  tooltip: { theme: 'light' }
+}))
+</script>
+
+<template>
+  <section
+    v-if="schools.length"
+    dir="rtl"
+    class="grid gap-6"
+  >
+    <div class="grid gap-6 xl:grid-cols-2">
+      <UCard>
+        <template #header>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-foreground">
+              توزيع المدارس حسب الجنس
+            </h2>
+            <UIcon
+              name="i-lucide-pie-chart"
+              class="h-5 w-5 text-primary"
+            />
+          </div>
+        </template>
+
+        <ApexChart
+          type="pie"
+          :options="genderChart"
+          :series="genderSeries"
+          height="320"
+        />
+      </UCard>
+
+      <UCard>
+        <template #header>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-foreground">
+              الطلاب حسب المرحلة
+            </h2>
+            <UIcon
+              name="i-lucide-users-round"
+              class="h-5 w-5 text-primary"
+            />
+          </div>
+        </template>
+
+        <ApexChart
+          type="bar"
+          :options="stageStudentChart"
+          :series="stageStudentSeries"
+          height="320"
+        />
+      </UCard>
+    </div>
+
+    <UCard>
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            توزيع المدارس حسب السلطة والمرحلة
+          </h2>
+          <UIcon
+            name="i-lucide-layers-3"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        type="bar"
+        :options="authorityStageChart"
+        :series="authorityStageSeries"
+        height="320"
+      />
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            توافر المعامل حسب المنطقة
+          </h2>
+          <UIcon
+            name="i-lucide-monitor-check"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        type="bar"
+        :options="facilityChart"
+        :series="facilitySeries"
+        height="320"
+      />
+    </UCard>
+
+    <UCard>
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            توزيع الطلاب حسب الصفوف
+          </h2>
+          <UIcon
+            name="i-lucide-chart-column"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        type="bar"
+        :options="gradeChart"
+        :series="gradeSeries"
+        height="300"
+      />
+    </UCard>
+  </section>
+</template>
+</file>
+
+<file path="app/components/ministry/MinistryDetailsModal.vue">
+<script setup lang="ts">
+import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+
+interface DetailSection {
+  key: string
+  label: string
+  rows: Array<[string, unknown]>
+}
+
+interface TabDef {
+  key: string
+  label: string
+  icon: string
+}
+
+const props = defineProps<{
+  school: MinistrySchoolRecord | null
+}>()
+
+const emit = defineEmits<{
+  close: []
+}>()
+
+const tabs: TabDef[] = [
+  { key: 'identity', label: 'البيانات الأساسية', icon: 'i-lucide-school' },
+  { key: 'students', label: 'إحصاءات الطلاب', icon: 'i-lucide-users' },
+  { key: 'staff', label: 'الموارد البشرية', icon: 'i-lucide-id-card' },
+  { key: 'facilities', label: 'التجهيزات', icon: 'i-lucide-monitor' },
+  { key: 'building', label: 'المبنى والتجهيزات', icon: 'i-lucide-building-2' },
+  { key: 'map', label: 'الخريطة', icon: 'i-lucide-map-pin' },
+  { key: 'classification', label: 'التصنيفات', icon: 'i-lucide-tag' }
+]
+
+const managerIdAliases = ['هوية المدير', 'هوية مدير المدرسة', 'رقم هوية المدير', 'هوية مدير المدرسة (الرقم الوطني)', 'الرقم الوطني للمدير', 'الرقم الوطني لمدير المدرسة', 'الهوية', 'رقم الهوية']
+const managerPhoneAliases = ['جوال المدير', 'جوال مدير المدرسة', 'هاتف المدير', 'هاتف مدير المدرسة', 'رقم جوال المدير', 'موبايل المدير', 'موبايل مدير المدرسة', 'رقم جوال مدير المدرسة']
+const managerEmailAliases = ['بريد المدير', 'بريد مدير المدرسة', 'ايميل المدير', 'ايميل مدير المدرسة', 'إيميل المدير', 'إيميل مدير المدرسة', 'البريد الإلكتروني للمدير', 'البريد الإلكتروني لمدير المدرسة', 'البريد الالكتروني للمدير', 'البريد الالكتروني لمدير المدرسة']
+
+const defaultTab = tabs[0]!
+const activeTab = ref(defaultTab.key)
+
+watch(
+  () => props.school?.sourceRow,
+  () => {
+    activeTab.value = defaultTab.key
+  }
+)
+
+const hasCoordinates = computed(() => {
+  const s = props.school
+  return s && s.building.latitude !== 0 && s.building.longitude !== 0
+})
+
+const googleMapsEmbedUrl = computed(() => {
+  const s = props.school
+  if (!s || !hasCoordinates.value) return ''
+  const lat = s.building.latitude
+  const lng = s.building.longitude
+  return `https://maps.google.com/maps?q=${lat},${lng}&t=k&z=17&ie=UTF8&iwloc=&output=embed`
+})
+
+const googleMapsLink = computed(() => {
+  const s = props.school
+  if (!s || !hasCoordinates.value) return ''
+  return `https://maps.google.com/maps?q=${s.building.latitude},${s.building.longitude}`
+})
+
+const sections = computed<DetailSection[]>(() => {
+  const school = props.school
+
+  if (!school) {
+    return []
+  }
+
+  return [
+    {
+      key: 'identity',
+      label: 'البيانات الأساسية',
+      rows: [
+        ['الرقم الوزاري', school.identity.id],
+        ['اسم المدرسة', school.identity.schoolName],
+        ['المدينة/القرية', school.identity.cityVillage],
+        ['إدارة التعليم', school.identity.educationDepartment],
+        ['الترميز الموحد', school.identity.unifiedCode],
+        ['المنطقة الإدارية', school.identity.administrativeRegion],
+        ['المحافظة', school.identity.mailAddress],
+        ['المرحلة الدراسية', school.identity.stage],
+        ['جنس المدرسة', school.identity.gender],
+        ['نوع التعليم', school.identity.educationType],
+        ['وقت الدراسة', school.identity.studyTime],
+        ['سنة التأسيس', school.identity.foundingYear],
+        ['الهاتف', school.identity.phone],
+        ['البريد الإلكتروني', school.identity.email]
+      ]
+    },
+    {
+      key: 'students',
+      label: 'إحصاءات الطلاب',
+      rows: [
+        ['فصول جملة', school.students.classes],
+        ['جملة طلاب', school.students.total],
+        ['جملة سعودي', school.students.saudi],
+        ['مستجدون', school.students.newcomers],
+        ['طلاب الصف 1', school.students.grade1],
+        ['سعودي الصف 1', school.students.saudi1],
+        ['طلاب الصف 2', school.students.grade2],
+        ['سعودي الصف 2', school.students.saudi2],
+        ['طلاب الصف 3', school.students.grade3],
+        ['سعودي الصف 3', school.students.saudi3],
+        ['طلاب الصف 4', school.students.grade4],
+        ['سعودي الصف 4', school.students.saudi4],
+        ['طلاب الصف 5', school.students.grade5],
+        ['سعودي الصف 5', school.students.saudi5],
+        ['طلاب الصف 6', school.students.grade6],
+        ['سعودي الصف 6', school.students.saudi6],
+        ['طلاب الصف 7', school.students.grade7],
+        ['سعودي الصف 7', school.students.saudi7],
+        ['طلاب الصف 8', school.students.grade8],
+        ['سعودي الصف 8', school.students.saudi8],
+        ['طلاب الصف 9', school.students.grade9],
+        ['سعودي الصف 9', school.students.saudi9],
+        ['طلاب الصف 10', school.students.grade10],
+        ['سعودي الصف 10', school.students.saudi10],
+        ['طلاب الصف 11', school.students.grade11],
+        ['سعودي الصف 11', school.students.saudi11],
+        ['طلاب الصف 12', school.students.grade12],
+        ['سعودي الصف 12', school.students.saudi12],
+        ['مستجدون سعودي', school.students.saudiNewcomers],
+        ['مستجدون حافلات', school.students.saudiBus],
+        ['مجموع الصفوف', school.students.gradeTotal],
+        ['فرق المطابقة', school.students.gradeTotalMismatch]
+      ]
+    },
+    {
+      key: 'staff',
+      label: 'الموارد البشرية',
+      rows: [
+        ['اسم مدير المدرسة', school.staff.managerName],
+        ['هوية المدير', staffValue(school, school.staff.managerId, managerIdAliases)],
+        ['جوال المدير', staffValue(school, school.staff.managerPhone, managerPhoneAliases)],
+        ['بريد المدير الإلكتروني', staffValue(school, school.staff.managerEmailOfficial, managerEmailAliases)],
+        ['بريد مدير المدرسة', staffValue(school, school.staff.managerEmailPersonal, managerEmailAliases)],
+        ['عدد المعلمين', school.staff.teachers],
+        ['معلمين سعوديين', school.staff.saudiTeachers],
+        ['عدد الإداريين', school.staff.admins],
+        ['إداريين سعوديين', school.staff.saudiAdmins],
+        ['عدد الوكلاء', school.staff.agents],
+        ['عدد الموجهين', school.staff.guidance],
+        ['عدد الأمناء', school.additional.librariansCount],
+        ['عدد محضري المختبر', school.additional.labPreparersCount],
+        ['عدد الخدم', school.additional.serviceStaff],
+        ['عدد العمال', school.additional.workers]
+      ]
+    },
+    {
+      key: 'facilities',
+      label: 'التجهيزات',
+      rows: [
+        ['معامل الكمبيوتر', school.facilities.computerLabs],
+        ['مختبرات فيزياء', school.facilities.physicsLabs],
+        ['مختبرات كيمياء', school.facilities.chemistryLabs],
+        ['غرف اللغة الإنجليزية', school.facilities.englishRooms],
+        ['غرف الخياطة', school.facilities.sewingRooms],
+        ['معامل الخياطة والتدبير المنزلي', school.facilities.homeEconomicsRooms],
+        ['عدد القاعات', school.additional.curriculumClassrooms],
+        ['عدد الحجرات', school.additional.rooms],
+        ['الإنترنت', school.facilities.internet ? 'متوفر ✓' : 'غير متوفر'],
+        ['المقصف', school.facilities.cafeteria ? 'متوفر ✓' : 'غير متوفر'],
+        ['حالة الماء', school.facilities.water ? 'متوفر ✓' : 'غير متوفر'],
+        ['توجد مكتبة', school.additional.libraryExists ? 'نعم ✓' : 'لا'],
+        ['المدرسة نائية', school.additional.remote ? 'نعم ✓' : 'لا'],
+        ['المدرسة ضمن مجمع', school.additional.inComplex ? 'نعم ✓' : 'لا']
+      ]
+    },
+    {
+      key: 'students',
+      label: 'إحصاءات الطلاب',
+      rows: [
+        ['فصول جملة', school.students.classes],
+        ['جملة طلاب', school.students.total],
+        ['جملة سعودي', school.students.saudi],
+        ['مستجدون', school.students.newcomers],
+        ['طلاب الصف 1', school.students.grade1],
+        ['سعودي الصف 1', school.students.saudi1],
+        ['طلاب الصف 2', school.students.grade2],
+        ['سعودي الصف 2', school.students.saudi2],
+        ['طلاب الصف 3', school.students.grade3],
+        ['سعودي الصف 3', school.students.saudi3],
+        ['طلاب الصف 4', school.students.grade4],
+        ['سعودي الصف 4', school.students.saudi4],
+        ['طلاب الصف 5', school.students.grade5],
+        ['سعودي الصف 5', school.students.saudi5],
+        ['طلاب الصف 6', school.students.grade6],
+        ['سعودي الصف 6', school.students.saudi6],
+        ['طلاب الصف 7', school.students.grade7],
+        ['سعودي الصف 7', school.students.saudi7],
+        ['طلاب الصف 8', school.students.grade8],
+        ['سعودي الصف 8', school.students.saudi8],
+        ['طلاب الصف 9', school.students.grade9],
+        ['سعودي الصف 9', school.students.saudi9],
+        ['مجموع الصفوف', school.students.gradeTotal],
+        ['فرق المطابقة', school.students.gradeTotalMismatch]
+      ]
+    },
+    {
+      key: 'staff',
+      label: 'الموارد البشرية',
+      rows: [
+        ['اسم مدير المدرسة', school.staff.managerName],
+        ['هوية المدير', staffValue(school, school.staff.managerId, managerIdAliases)],
+        ['جوال المدير', staffValue(school, school.staff.managerPhone, managerPhoneAliases)],
+        ['بريد المدير الإلكتروني', staffValue(school, school.staff.managerEmailOfficial, managerEmailAliases)],
+        ['بريد مدير المدرسة', staffValue(school, school.staff.managerEmailPersonal, managerEmailAliases)],
+        ['عدد المعلمين', school.staff.teachers],
+        ['معلمين سعوديين', school.staff.saudiTeachers],
+        ['عدد الإداريين', school.staff.admins],
+        ['إداريين سعوديين', school.staff.saudiAdmins],
+        ['عدد الوكلاء', school.staff.agents],
+        ['عدد الموجهين', school.staff.guidance]
+      ]
+    },
+    {
+      key: 'facilities',
+      label: 'التجهيزات',
+      rows: [
+        ['معامل الكمبيوتر', school.facilities.computerLabs],
+        ['مختبرات فيزياء', school.facilities.physicsLabs],
+        ['مختبرات كيمياء', school.facilities.chemistryLabs],
+        ['غرف اللغة الإنجليزية', school.facilities.englishRooms],
+        ['غرف الخياطة', school.facilities.sewingRooms],
+        ['معامل الخياطة والتدبير المنزلي', school.facilities.homeEconomicsRooms],
+        ['الإنترنت', school.facilities.internet ? 'متوفر ✓' : 'غير متوفر'],
+        ['المقصف', school.facilities.cafeteria ? 'متوفر ✓' : 'غير متوفر'],
+        ['حالة الماء', school.facilities.water ? 'متوفر ✓' : 'غير متوفر']
+      ]
+    },
+    {
+      key: 'building',
+      label: 'المبنى والتجهيزات',
+      rows: [
+        ['ملكية المبنى', school.building.ownership],
+        ['الإيجار', school.building.rent],
+        ['نوع الاشتراك', school.building.subscriptionType],
+        ['حالة الاستقلالية', school.building.independenceStatus],
+        ['نوع الطريق', school.building.roadType],
+        ['حالة الطريق', school.building.roadStatus],
+        ['المسافة عن أقرب ابتدائي', school.building.nearestPrimaryDistance],
+        ['المسافة عن أقرب متوسط', school.building.nearestMiddleDistance],
+        ['المسافة عن أقرب ثانوي', school.building.nearestHighDistance]
+      ]
+    },
+    {
+      key: 'classification',
+      label: 'التصنيفات',
+      rows: [
+        ['الطفولة المبكرة', school.classification.earlyChildhood ? 'نعم' : 'لا'],
+        ['المسارات', school.classification.pathways ? 'نعم' : 'لا']
+      ]
+    }
+  ]
+})
+
+const activeSection = computed(() => sections.value.find(section => section.key === activeTab.value) || sections.value[0] || { key: 'identity', label: 'البيانات الأساسية', rows: [] })
+
+function cleanText(value: unknown): string {
+  return String(value ?? '').replace(/\u00A0/g, ' ').trim()
+}
+
+function normalizeHeader(value: unknown): string {
+  return cleanText(value)
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ي/g, 'ى')
+    .toLocaleLowerCase('ar')
+}
+
+function findRawValue(school: MinistrySchoolRecord, aliases: string[]): unknown {
+  const normalizedAliases = aliases.map(normalizeHeader)
+  const match = Object.entries(school.raw).find(([key]) => normalizedAliases.includes(normalizeHeader(key)))
+
+  return match?.[1]
+}
+
+function staffValue(school: MinistrySchoolRecord, value: string, aliases: string[]): unknown {
+  return value || findRawValue(school, aliases)
+}
+
+function formatValue(value: unknown): string {
+  if (value === null || value === undefined || value === '') {
+    return 'غير محدد'
+  }
+
+  const str = String(value)
+  const converted = str.replace(/[\u0660-\u0669]/g, digit => String(parseInt(digit, 36) - 10))
+
+  if (typeof value === 'number' && !isNaN(Number(converted))) {
+    return Number(converted).toLocaleString('en-US')
+  }
+
+  return converted
+}
+</script>
+
+<template>
+  <div
+    v-if="school"
+    dir="rtl"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+    @click.self="emit('close')"
+  >
+    <section
+      class="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-3xl border border-accented/50 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-2xl transition-colors duration-200"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!-- Header -->
+      <header class="flex items-start justify-between gap-4 border-b border-accented/50 dark:border-zinc-800 bg-gradient-to-l from-primary/5 dark:from-primary/10 to-transparent px-6 py-4">
+        <div>
+          <p class="text-xs font-medium tracking-wide text-primary/80 dark:text-primary-400">
+            عرض التفاصيل
+          </p>
+
+          <h2 class="mt-1 text-xl font-semibold text-foreground dark:text-zinc-100">
+            {{ school.identity.schoolName || 'مدرسة غير مسماة' }}
+          </h2>
+
+          <p class="mt-0.5 text-sm text-muted-foreground dark:text-zinc-400">
+            الصف {{ school.sourceRow }} • {{ school.identity.educationDepartment || 'إدارة غير محددة' }}
+          </p>
+        </div>
+
+        <UButton
+          size="xs"
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-x"
+          aria-label="إغلاق"
+          @click="emit('close')"
+        />
+      </header>
+
+      <!-- Tabs -->
+      <div class="border-b border-accented/50 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 px-6">
+        <div class="flex gap-1 overflow-x-auto py-3">
+          <button
+            v-for="tab in tabs"
+            :key="tab.key"
+            type="button"
+            class="flex items-center gap-1.5 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-all duration-150"
+            :class="activeTab === tab.key
+              ? 'bg-primary text-white shadow-sm'
+              : 'text-muted-foreground dark:text-zinc-400 hover:bg-muted dark:hover:bg-zinc-800 hover:text-foreground dark:hover:text-zinc-200'"
+            @click="activeTab = tab.key"
+          >
+            <UIcon
+              :name="tab.icon"
+              class="h-3.5 w-3.5"
+            />
+            {{ tab.label }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div
+        class="overflow-y-auto px-6 py-5"
+        style="max-height: calc(92vh - 172px)"
+      >
+        <!-- Map tab -->
+        <template v-if="activeTab === 'map'">
+          <div
+            v-if="hasCoordinates"
+            class="flex flex-col gap-4"
+          >
+            <!-- Coordinates bar -->
+            <div class="flex items-center justify-between gap-3 rounded-2xl border border-accented/50 dark:border-zinc-800 bg-slate-50/80 dark:bg-zinc-800/40 p-4">
+              <div class="flex gap-6">
+                <div>
+                  <p class="text-xs text-muted-foreground dark:text-zinc-400">
+                    خط العرض
+                  </p>
+                  <p class="mt-1 font-semibold text-foreground dark:text-zinc-200">
+                    {{ school.building.latitude }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-xs text-muted-foreground dark:text-zinc-400">
+                    خط الطول
+                  </p>
+                  <p class="mt-1 font-semibold text-foreground dark:text-zinc-200">
+                    {{ school.building.longitude }}
+                  </p>
+                </div>
+              </div>
+              <a
+                :href="googleMapsLink"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              >
+                <UIcon
+                  name="i-lucide-external-link"
+                  class="h-4 w-4"
+                />
+                فتح في خرائط قوقل
+              </a>
+            </div>
+
+            <!-- Map iframe -->
+            <div class="overflow-hidden rounded-2xl border border-accented/50 dark:border-zinc-800 shadow-sm">
+              <iframe
+                :src="googleMapsEmbedUrl"
+                class="h-[400px] w-full invert-[0.05] hue-rotate-180 dark:invert dark:hue-rotate-180"
+                frameborder="0"
+                scrolling="no"
+                marginheight="0"
+                marginwidth="0"
+                loading="lazy"
+                allowfullscreen
+                :title="`موقع ${school.identity.schoolName}`"
+              />
+            </div>
+          </div>
+
+          <!-- No coordinates placeholder -->
+          <div
+            v-else
+            class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-accented/50 dark:border-zinc-800 py-16 text-center"
+          >
+            <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-muted/50 dark:bg-zinc-800/50">
+              <UIcon
+                name="i-lucide-map-off"
+                class="h-7 w-7 text-muted-foreground dark:text-zinc-400"
+              />
+            </div>
+            <p class="font-medium text-foreground dark:text-zinc-200">
+              لا تتوفر إحداثيات لهذه المدرسة
+            </p>
+            <p class="mt-2 text-sm text-muted-foreground dark:text-zinc-400">
+              لم يتم تسجيل خط العرض وخط الطول في ملف البيانات.
+            </p>
+          </div>
+        </template>
+
+        <!-- Data tabs -->
+        <template v-else>
+          <div class="grid gap-3 md:grid-cols-2">
+            <div
+              v-for="([label, value]) in activeSection.rows"
+              :key="String(label)"
+              class="rounded-2xl border border-accented/50 dark:border-zinc-800 bg-slate-50/60 dark:bg-zinc-800/30 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800/50"
+            >
+              <p class="text-xs font-medium text-muted-foreground dark:text-zinc-400">
+                {{ label }}
+              </p>
+
+              <p class="mt-2 break-words text-sm font-semibold text-foreground dark:text-zinc-200">
+                {{ formatValue(value) }}
+              </p>
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+  </div>
+</template>
+</file>
+
+<file path="app/components/ministry/MinistryFilters.vue">
+<script setup lang="ts">
+import type { MinistryFilters } from '~/types/ministrySchool'
+
+interface FilterOption {
+  key: keyof MinistryFilters
+  label: string
+  placeholder: string
+  options: string[]
+}
+
+const props = defineProps<{
+  filters: MinistryFilters
+  options: FilterOption[]
+}>()
+
+const emit = defineEmits<{
+  change: [key: keyof MinistryFilters, value: string[]]
+}>()
+
+const filterModels = ref<Record<keyof MinistryFilters, string[]>>({
+  educationDepartment: [],
+  administrativeRegion: [],
+  stage: [],
+  authority: [],
+  buildingOwnership: [],
+  studyTime: [],
+  educationType: [],
+  governorate: []
+})
+
+watch(
+  () => props.filters,
+  (newFilters) => {
+    filterModels.value = { ...newFilters }
+  },
+  { immediate: true, deep: true }
+)
+
+function updateFilter(key: keyof MinistryFilters, value: string[]) {
+  filterModels.value[key] = value
+  emit('change', key, value)
+}
+</script>
+
+<template>
+  <UCard dir="rtl">
+    <template #header>
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">
+            الفلترة المتقدمة
+          </h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            صفّ البيانات حسب إدارة التعليم، المنطقة، المرحلة، السلطة، نوع المبنى، وقت الدراسة، نوع التعليم والمحافظة.
+          </p>
+        </div>
+
+        <UIcon
+          name="i-lucide-sliders-horizontal"
+          class="h-5 w-5 text-primary"
+        />
+      </div>
+    </template>
+
+    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div
+        v-for="filter in props.options"
+        :key="filter.key"
+        class="flex flex-col gap-2 text-sm font-medium text-foreground"
+      >
+        {{ filter.label }}
+
+        <USelectMenu
+          v-model="filterModels[filter.key]"
+          :items="filter.options"
+          :placeholder="`كل ${filter.label}`"
+          multiple
+          class="w-full"
+          @update:model-value="updateFilter(filter.key, $event)"
+        />
+      </div>
+    </div>
+  </UCard>
+</template>
+</file>
+
+<file path="app/components/ministry/MinistryKpiCards.vue">
+<script setup lang="ts">
+import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+
+const props = defineProps<{
+  schools: MinistrySchoolRecord[]
+  warningCount: number
+}>()
+
+const totalStages = computed(() => props.schools?.length || 0)
+const totalSchools = computed(() => {
+  const managers = (props.schools || [])
+    .map(school => String(school.staff?.managerName || '').trim())
+    .filter(name => Boolean(name))
+  return new Set(managers).size
+})
+const uniqueManagers = computed(() => {
+  const ids = (props.schools || [])
+    .map(school => String(school.staff?.managerId || '').trim())
+    .filter(id => Boolean(id))
+  return new Set(ids)
+})
+const totalStudents = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.students?.total || 0), 0))
+const saudiStudents = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.students?.saudi || 0), 0))
+const saudiRatio = computed(() => totalStudents.value ? Math.round((saudiStudents.value / totalStudents.value) * 100) : 0)
+const totalStaff = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.staff?.teachers || 0) + (school.staff?.admins || 0), 0))
+const governmentBuildings = computed(() => (props.schools || []).filter(school => school.building?.ownership && school.building.ownership.includes('حكومي')).length)
+const governmentRatio = computed(() => totalStages.value ? Math.round((governmentBuildings.value / totalStages.value) * 100) : 0)
+
+const governmentBuildingsByManager = computed(() => {
+  const managerIds = new Set(uniqueManagers.value)
+  let count = 0
+  for (const school of props.schools || []) {
+    const managerId = String(school.staff?.managerId || '').trim()
+    if (managerId && managerIds.has(managerId) && school.building?.ownership && school.building.ownership.includes('حكومي')) {
+      count++
+      managerIds.delete(managerId)
+    }
+  }
+  return count
+})
+
+const governmentManagerRatio = computed(() => uniqueManagers.value.size ? Math.round((governmentBuildingsByManager.value / uniqueManagers.value.size) * 100) : 0)
+
+const mismatchedSchools = computed(() => (props.schools || []).filter(school => (school.students?.gradeTotalMismatch || 0) > 0).length)
+
+function formatNumber(value: number): string {
+  return value.toLocaleString('en-US')
+}
+
+const cards = computed(() => [
+  {
+    title: 'إجمالي المدارس',
+    value: formatNumber(totalSchools.value),
+    description: 'حسب عدد المباني المدرسية الفعلية',
+    icon: 'i-lucide-building-2'
+  },
+  {
+    title: 'إجمالي المراحل',
+    value: formatNumber(totalStages.value),
+    description: 'عدد السجلات المقروءة من الملف',
+    icon: 'i-lucide-layers'
+  },
+  {
+    title: 'إجمالي الطلاب',
+    value: formatNumber(totalStudents.value),
+    description: `نسبة السعوديين ${formatNumber(saudiRatio.value)}%`,
+    icon: 'i-lucide-users'
+  },
+  {
+    title: 'الكادر الوظيفي',
+    value: formatNumber(totalStaff.value),
+    description: 'معلمون وإداريون',
+    icon: 'i-lucide-id-card'
+  },
+  {
+    title: 'نسبة المدارس الحكومية حسب المراحل',
+    value: `${formatNumber(governmentRatio.value)}%`,
+    description: `${formatNumber(governmentBuildings.value)} من أصل ${formatNumber(totalStages.value)} مرحلة`,
+    icon: 'i-lucide-circle-help'
+  },
+  {
+    title: 'نسبة المدارس الحكومية حسب المدير',
+    value: `${formatNumber(governmentManagerRatio.value)}%`,
+    description: `${formatNumber(governmentBuildingsByManager.value)} من أصل ${formatNumber(uniqueManagers.value.size)} مدير`,
+    icon: 'i-lucide-user-check'
+  }
+])
+</script>
+
+<template>
+  <section
+    dir="rtl"
+    class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+  >
+    <article
+      v-for="card in cards"
+      :key="card.title"
+      class="rounded-2xl border border-accented/50 bg-card p-5 shadow-sm"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-muted-foreground">
+            {{ card.title }}
+          </p>
+
+          <p class="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+            {{ card.value }}
+          </p>
+        </div>
+
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <img src="/img/logo.png" alt="" class="h-10 w-10 object-contain" />
+        </div>
+      </div>
+
+      <p class="mt-4 text-xs leading-5 text-muted-foreground">
+        {{ card.description }}
+      </p>
+    </article>
+
+    <article class="rounded-2xl border border-amber-300/60 bg-amber-50 p-5 text-right dark:border-amber-700/60 dark:bg-amber-950/30">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-amber-700 dark:text-amber-300">
+            تنبيه جودة البيانات
+          </p>
+
+          <p class="mt-3 text-3xl font-semibold tracking-tight text-amber-800 dark:text-amber-100">
+            {{ formatNumber(mismatchedSchools) }}
+          </p>
+        </div>
+
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+          <UIcon
+            name="i-lucide-triangle-alert"
+            class="h-5 w-5"
+          />
+        </div>
+      </div>
+
+      <p class="mt-4 text-xs leading-5 text-amber-800/80 dark:text-amber-200/80">
+        مدارس يختلف فيها مجموع الصفوف 1-9 عن جملة طلاب.
+      </p>
+    </article>
+  </section>
+</template>
+</file>
+
+<file path="app/components/ministry/MinistryPowerTable.vue">
+<script setup lang="ts">
+import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+
+interface TableColumn {
+  key: string
+  label: string
+  width?: string
+  getValue: (school: MinistrySchoolRecord) => unknown
+}
+
+const props = defineProps<{
+  schools: MinistrySchoolRecord[]
+}>()
+
+const emit = defineEmits<{
+  'open-details': [school: MinistrySchoolRecord]
+}>()
+
+const numberFormatter = new Intl.NumberFormat('ar')
+const search = ref('')
+const page = ref(1)
+const pageSize = ref(5)
+
+const defaultColumns: TableColumn[] = [
+  { key: 'identity.id', label: 'الرقم الوزاري', width: 'min-w-[130px]', getValue: s => s.identity.id },
+  { key: 'identity.schoolName', label: 'اسم المدرسة', width: 'min-w-[220px]', getValue: s => s.identity.schoolName },
+  { key: 'identity.educationDepartment', label: 'إدارة التعليم', width: 'min-w-[180px]', getValue: s => s.identity.educationDepartment },
+  { key: 'identity.administrativeRegion', label: 'المنطقة الإدارية', width: 'min-w-[160px]', getValue: s => s.identity.administrativeRegion },
+  { key: 'identity.mailAddress', label: 'المحافظة', width: 'min-w-[140px]', getValue: s => s.identity.mailAddress },
+  { key: 'identity.stage', label: 'المرحلة الدراسية', width: 'min-w-[130px]', getValue: s => s.identity.stage },
+  { key: 'identity.gender', label: 'جنس المدرسة', width: 'min-w-[120px]', getValue: s => s.identity.gender },
+  { key: 'identity.authority', label: 'السلطة', width: 'min-w-[110px]', getValue: s => s.identity.authority },
+  { key: 'identity.studyTime', label: 'وقت الدراسة', width: 'min-w-[120px]', getValue: s => s.identity.studyTime },
+  { key: 'students.total', label: 'جملة طلاب', width: 'min-w-[110px]', getValue: s => s.students.total },
+  { key: 'students.classes', label: 'الفصول', width: 'min-w-[100px]', getValue: s => s.students.classes },
+  { key: 'staff.teachers', label: 'المعلمين', width: 'min-w-[100px]', getValue: s => s.staff.teachers },
+  { key: 'staff.managerName', label: 'المدير', width: 'min-w-[160px]', getValue: s => s.staff.managerName },
+  { key: 'building.ownership', label: 'ملكية المبنى', width: 'min-w-[120px]', getValue: s => s.building.ownership }
+]
+
+const visibleColumnKeys = ref<string[]>(defaultColumns.map(c => c.key))
+
+const filteredRows = computed(() => {
+  const keyword = search.value.toLocaleLowerCase('ar')
+
+  if (!keyword) {
+    return props.schools
+  }
+
+  return props.schools.filter((school) => {
+    const searchableText = [
+      school.identity.schoolName,
+      school.identity.id,
+      school.identity.educationDepartment,
+      school.identity.mailAddress
+    ].join(' ').toLocaleLowerCase('ar')
+
+    return searchableText.includes(keyword)
+  })
+})
+
+const visibleColumns = computed(() => defaultColumns.filter(column => visibleColumnKeys.value.includes(column.key)))
+
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredRows.value.length / pageSize.value)))
+const paginatedRows = computed(() => {
+  const start = (page.value - 1) * pageSize.value
+  return filteredRows.value.slice(start, start + pageSize.value)
+})
+const pageStart = computed(() => filteredRows.value.length ? (page.value - 1) * pageSize.value + 1 : 0)
+const pageEnd = computed(() => Math.min(page.value * pageSize.value, filteredRows.value.length))
+
+watch(totalPages, (value) => {
+  if (page.value > value) {
+    page.value = value
+  }
+})
+
+watch(search, () => {
+  page.value = 1
+})
+
+function formatValue(value: unknown): string {
+  if (value === null || value === undefined || value === '') {
+    return 'غير محدد'
+  }
+
+  if (typeof value === 'number') {
+    return numberFormatter.format(value)
+  }
+
+  return String(value)
+}
+
+function toggleColumn(key: string, checked: boolean) {
+  if (checked && !visibleColumnKeys.value.includes(key)) {
+    visibleColumnKeys.value.push(key)
+    return
+  }
+
+  visibleColumnKeys.value = visibleColumnKeys.value.filter(item => item !== key)
+}
+
+function goToPage(nextPage: number) {
+  page.value = Math.min(Math.max(nextPage, 1), totalPages.value)
+}
+
+function openDetails(school: MinistrySchoolRecord) {
+  emit('open-details', school)
+}
+</script>
+
+<template>
+  <UCard dir="rtl">
+    <template #header>
+      <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">
+            جدول المدارس
+          </h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            بحث سريع، تصفية، وتنقل بين الصفحات. اضغط على الصف لفتح التفاصيل.
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-2 sm:flex-row">
+          <UInput
+            v-model="search"
+            class="w-full sm:w-80"
+            placeholder="ابحث باسم المدرسة أو الرقم الوزاري أو الإدارة"
+            icon="i-lucide-search"
+          />
+        </div>
+      </div>
+    </template>
+
+    <details class="mb-4 rounded-2xl border border-accented/50 bg-muted/20 p-4">
+      <summary class="cursor-pointer text-sm font-semibold text-foreground">
+        إظهار/إخفاء الأعمدة
+      </summary>
+
+      <div class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <label
+          v-for="column in defaultColumns"
+          :key="column.key"
+          class="flex items-center gap-2 rounded-xl border border-accented/50 bg-card px-3 py-2 text-sm text-muted-foreground"
+        >
+          <input
+            :checked="visibleColumnKeys.includes(column.key)"
+            type="checkbox"
+            class="h-4 w-4 accent-primary"
+            @change="toggleColumn(column.key, ($event.target as HTMLInputElement).checked)"
+          >
+          <span class="truncate">{{ column.label }}</span>
+        </label>
+      </div>
+    </details>
+
+    <div class="overflow-x-auto rounded-2xl border border-accented/50">
+      <table class="w-full min-w-max border-collapse text-right text-sm">
+        <thead class="bg-muted text-xs uppercase text-muted-foreground">
+          <tr>
+            <th
+              v-for="column in visibleColumns"
+              :key="column.key"
+              class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold"
+              :class="column.width"
+            >
+              {{ column.label }}
+            </th>
+            <th class="sticky left-0 z-10 bg-default min-w-3 border-b border-accented/50 bg-card px-4 py-3 text-left">
+              الإجراءات
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-border bg-card">
+          <tr
+            v-for="school in paginatedRows"
+            :key="`${school.sourceRow}-${school.identity.schoolName}`"
+            class="transition-colors hover:bg-muted/40 cursor-pointer"
+            @click="openDetails(school)"
+          >
+            <td
+              v-for="column in visibleColumns"
+              :key="column.key"
+              class="whitespace-nowrap px-4 py-3 text-foreground"
+              :class="column.width"
+            >
+              {{ formatValue(column.getValue(school)) }}
+            </td>
+
+            <td
+              class="sticky left-0 z-10 bg-default min-w-3 border-r border-accented/50 bg-card px-4 py-3 text-left"
+              @click.stop
+            >
+              <UButton
+                size="xs"
+                color="neutral"
+                variant="ghost"
+                label="التفاصيل"
+                @click="openDetails(school)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      v-if="!paginatedRows.length"
+      class="flex flex-col items-center justify-center py-12 text-center"
+    >
+      <UIcon
+        name="i-lucide-database-zap"
+        class="mb-3 h-10 w-10 text-muted"
+      />
+      <p class="text-sm font-medium text-foreground">
+        لا توجد نتائج مطابقة
+      </p>
+      <p class="mt-1 text-sm text-muted-foreground">
+        جرّب تغيير البحث أو الفلاتر.
+      </p>
+    </div>
+
+    <template #footer>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="text-sm text-muted-foreground">
+          عرض {{ pageStart }} - {{ pageEnd }} من {{ filteredRows.length }} سجل
+        </div>
+
+        <div class="flex items-center justify-between gap-2">
+          <label class="flex items-center gap-2 text-sm text-muted-foreground">
+            الصفوف
+            <select
+              v-model.number="pageSize"
+              class="rounded-xl border border-accented/50 bg-card px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option :value="5">
+                5
+              </option>
+              <option :value="10">
+                10
+              </option>
+              <option :value="15">
+                15
+              </option>
+              <option :value="25">
+                25
+              </option>
+              <option :value="50">
+                50
+              </option>
+              <option :value="100">
+                100
+              </option>
+            </select>
+          </label>
+
+          <div class="flex items-center gap-2">
+            <UButton
+              size="xs"
+              color="neutral"
+              variant="ghost"
+              label="السابق"
+              :disabled="page === 1"
+              @click="goToPage(page - 1)"
+            />
+
+            <span class="min-w-20 text-center text-sm text-foreground">
+              صفحة {{ page }} من {{ totalPages }}
+            </span>
+
+            <UButton
+              size="xs"
+              color="neutral"
+              variant="ghost"
+              label="التالي"
+              :disabled="page === totalPages"
+              @click="goToPage(page + 1)"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+  </UCard>
+</template>
+</file>
+
+<file path="app/components/ministry/MinistryUploadZone.vue">
+<script setup lang="ts">
+const emit = defineEmits<{
+  'file-selected': [file: File]
+}>()
+
+const inputRef = ref<HTMLInputElement | null>(null)
+const isDragging = ref(false)
+
+// تفتح نافذة اختيار الملف من الزر أو من الضغط المباشر على منطقة الرفع.
+function chooseFile() {
+  inputRef.value?.click()
+}
+
+// تستقبل الملف بعد اختياره وتعيد تفريغ قيمة input للسماح باختيار نفس الملف مرة أخرى.
+function onFileChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+
+  if (file) {
+    emit('file-selected', file)
+  }
+
+  input.value = ''
+}
+
+// تتعامل مع حالة السحب والإفلات ثم تمرر الملف إلى مكون الصفحة.
+function onDrop(files: FileList | null) {
+  const file = files?.[0]
+
+  if (file) {
+    emit('file-selected', file)
+  }
+
+  isDragging.value = false
+}
+</script>
+
+<template>
+  <section
+    dir="rtl"
+    class="relative overflow-hidden rounded-3xl border border-dashed border-primary/40 bg-card p-6 text-right shadow-sm transition-colors sm:p-8"
+    :class="isDragging ? 'border-primary bg-primary/5' : 'hover:border-primary/70'"
+    @dragover.prevent="isDragging = true"
+    @dragleave.prevent="isDragging = false"
+    @drop.prevent="onDrop($event.dataTransfer?.files)"
+  >
+    <input
+      ref="inputRef"
+      type="file"
+      class="hidden"
+      accept=".xlsx,.xls,.xlsm,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+      @change="onFileChange"
+    >
+
+    <div class="relative mx-auto flex max-w-4xl flex-col items-center text-center">
+      <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <img
+          src="/img/logo.png"
+          alt="شعار الإدارة العامة للتعليم بمنطقة الباحة"
+          class="h-16 w-auto"
+        >
+      </div>
+
+      <h2 class="text-2xl font-semibold tracking-tight text-foreground">
+        استيراد الصيغة الوزارية الشاملة من برنامج نور
+      </h2>
+
+      <p class="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+        الإدارة العامة للتعليم بمنطقة الباحة - اسحب ملف Excel وأفلته هنا أو اختره من الجهاز.
+      </p>
+
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+        <UButton
+          type="button"
+          label="اختيار ملف Excel"
+          icon="i-lucide-upload-cloud"
+          size="lg"
+          @click="chooseFile"
+        />
+      </div>
+    </div>
+  </section>
+</template>
+</file>
+
+<file path="app/components/AppLogo.vue">
+<template>
+  <svg
+    width="1020"
+    height="200"
+    viewBox="0 0 1020 200"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M377 200C379.16 200 381 198.209 381 196V103C381 103 386 112 395 127L434 194C435.785 197.74 439.744 200 443 200H470V50H443C441.202 50 439 51.4941 439 54V148L421 116L385 55C383.248 51.8912 379.479 50 376 50H350V200H377Z"
+      fill="currentColor"
+    />
+    <path
+      d="M726 92H739C742.314 92 745 89.3137 745 86V60H773V92H800V116H773V159C773 169.5 778.057 174 787 174H800V200H783C759.948 200 745 185.071 745 160V116H726V92Z"
+      fill="currentColor"
+    />
+    <path
+      d="M591 92V154C591 168.004 585.742 179.809 578 188C570.258 196.191 559.566 200 545 200C530.434 200 518.742 196.191 511 188C503.389 179.809 498 168.004 498 154V92H514C517.412 92 520.769 92.622 523 95C525.231 97.2459 526 98.5652 526 102V154C526 162.059 526.457 167.037 530 171C533.543 174.831 537.914 176 545 176C552.217 176 555.457 174.831 559 171C562.543 167.037 563 162.059 563 154V102C563 98.5652 563.769 96.378 566 94C567.96 91.9107 570.028 91.9599 573 92C573.411 92.0055 574.586 92 575 92H591Z"
+      fill="currentColor"
+    />
+    <path
+      d="M676 144L710 92H684C680.723 92 677.812 93.1758 676 96L660 120L645 97C643.188 94.1758 639.277 92 636 92H611L645 143L608 200H634C637.25 200 640.182 196.787 642 194L660 167L679 195C680.818 197.787 683.75 200 687 200H713L676 144Z"
+      fill="currentColor"
+    />
+    <path
+      d="M168 200H279C282.542 200 285.932 198.756 289 197C292.068 195.244 295.23 193.041 297 190C298.77 186.959 300.002 183.51 300 179.999C299.998 176.488 298.773 173.04 297 170.001L222 41C220.23 37.96 218.067 35.7552 215 34C211.933 32.2448 207.542 31 204 31C200.458 31 197.067 32.2448 194 34C190.933 35.7552 188.77 37.96 187 41L168 74L130 9.99764C128.228 6.95784 126.068 3.75491 123 2C119.932 0.245087 116.542 0 113 0C109.458 0 106.068 0.245087 103 2C99.9323 3.75491 96.7717 6.95784 95 9.99764L2 170.001C0.226979 173.04 0.00154312 176.488 1.90993e-06 179.999C-0.0015393 183.51 0.229648 186.959 2 190C3.77035 193.04 6.93245 195.244 10 197C13.0675 198.756 16.4578 200 20 200H90C117.737 200 137.925 187.558 152 164L186 105L204 74L259 168H186L168 200ZM89 168H40L113 42L150 105L125.491 147.725C116.144 163.01 105.488 168 89 168Z"
+      fill="var(--ui-primary)"
+    />
+    <path
+      d="M958 60.0001H938C933.524 60.0001 929.926 59.9395 927 63C924.074 65.8905 925 67.5792 925 72V141C925 151.372 923.648 156.899 919 162C914.352 166.931 908.468 169 899 169C889.705 169 882.648 166.931 878 162C873.352 156.899 873 151.372 873 141V72.0001C873 67.5793 872.926 65.8906 870 63.0001C867.074 59.9396 863.476 60.0001 859 60.0001H840V141C840 159.023 845.016 173.458 855 184C865.156 194.542 879.893 200 899 200C918.107 200 932.844 194.542 943 184C953.156 173.458 958 159.023 958 141V60.0001Z"
+      fill="var(--ui-primary)"
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M1000 60.0233L1020 60V77L1020 128V156.007L1020 181L1020 189.004C1020 192.938 1019.98 194.429 1017 197.001C1014.02 199.725 1009.56 200 1005 200H986.001V181.006L986 130.012V70.0215C986 66.1576 986.016 64.5494 989 62.023C991.819 59.6358 995.437 60.0233 1000 60.0233Z"
+      fill="var(--ui-primary)"
+    />
+  </svg>
+</template>
+</file>
+
+<file path="app/components/TemplateMenu.vue">
+<template>
+  <UDropdownMenu
+    v-slot="{ open }"
+    :modal="false"
+    :items="[{
+      label: 'Starter',
+      to: 'https://starter-template.nuxt.dev/',
+      color: 'primary',
+      checked: true,
+      type: 'checkbox'
+    }, {
+      label: 'Landing',
+      to: 'https://landing-template.nuxt.dev/'
+    }, {
+      label: 'Docs',
+      to: 'https://docs-template.nuxt.dev/'
+    }, {
+      label: 'SaaS',
+      to: 'https://saas-template.nuxt.dev/'
+    }, {
+      label: 'Dashboard',
+      to: 'https://dashboard-template.nuxt.dev/'
+    }, {
+      label: 'Chat',
+      to: 'https://chat-template.nuxt.dev/'
+    }, {
+      label: 'Portfolio',
+      to: 'https://portfolio-template.nuxt.dev/'
+    }, {
+      label: 'Changelog',
+      to: 'https://changelog-template.nuxt.dev/'
+    }]"
+    :content="{ align: 'start' }"
+    :ui="{ content: 'min-w-fit' }"
+    size="xs"
+  >
+    <UButton
+      label="Starter"
+      variant="subtle"
+      trailing-icon="i-lucide-chevron-down"
+      size="xs"
+      class="-mb-[6px] font-semibold rounded-full truncate"
+      :class="[open && 'bg-primary/15']"
+      :ui="{
+        trailingIcon: ['transition-transform duration-200', open ? 'rotate-180' : undefined].filter(Boolean).join(' ')
+      }"
+    />
+  </UDropdownMenu>
+</template>
+</file>
+
+<file path="app/composables/useExcelSchools.ts">
+import * as XLSX from 'xlsx'
+import type { SchoolRecord } from '~/types/school'
+
+const SUPPORTED_EXTENSIONS = new Set(['.xlsx', '.xls', '.xlsm', '.csv'])
+
+const COLUMN_KEYS: Record<keyof Omit<SchoolRecord, 'raw' | 'sourceRow'>, string[]> = {
+  id: ['الرقم الوزاري', 'الرقم الوزاري (ID)', 'ID', 'رقم الوزارة', 'الرقم'],
+  schoolName: ['اسم المدرسة', 'المدرسة', 'اسم المدرسة/الروضة'],
+  cityVillage: ['المدينة/القرية', 'المدينة', 'القرية', 'المدينة او القرية', 'المدينة أو القرية'],
+  stage: ['المرحلة', 'المرحلة الدراسية'],
+  authority: ['السلطة', 'نوع السلطة', 'القطاع'],
+  gender: ['جنس المدرسة', 'جنس الطلاب', 'الجنس'],
+  schoolType: ['نوع المدرسة', 'نوع المؤسسة'],
+  educationType: ['نوع التعليم'],
+  managerName: ['اسم مدير المدرسة', 'مدير المدرسة', 'المدير', 'اسم مديرة المدرسة', 'مديرة المدرسة', 'المديرة'],
+  classes: ['فصول جملة', 'عدد الفصول', 'الفصول'],
+  students: ['جملة طلاب', 'عدد الطلاب', 'الطلاب', 'جملة الطلبة'],
+  attachment: ['مستقلة/ملحقة', 'مستقلة أو ملحقة', 'مستقلة - ملحقة'],
+  governorate: ['المحافظة'],
+  studyTime: ['وقت الدراسة', 'الدوام', 'الفترة الدراسية'],
+  buildingOwnership: ['ملكية المبنى', 'ملكية البناء', 'نوع الملكية']
+}
+
+function cleanText(value: unknown): string {
+  return String(value ?? '').replace(/\u00A0/g, ' ').trim()
+}
+
+function normalizeHeader(value: unknown): string {
+  return cleanText(value)
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ي/g, 'ى')
+    .toLocaleLowerCase('ar')
+}
+
+function toEnglishDigits(value: string): string {
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
+
+  return value.replace(/[٠-٩]/g, digit => String(arabicDigits.indexOf(digit)))
+}
+
+function parseNumber(value: unknown): number {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : 0
+  }
+
+  const normalized = toEnglishDigits(cleanText(value))
+    .replace(/,/g, '')
+    .replace(/[^\d.-]/g, '')
+
+  const parsed = Number(normalized)
+
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+function findColumnValue(row: Record<string, unknown>, keys: string[]): string {
+  for (const key of keys) {
+    if (Object.prototype.hasOwnProperty.call(row, key)) {
+      return cleanText(row[key])
+    }
+  }
+
+  const normalizedKeys = keys.map(normalizeHeader)
+  const matchedKey = Object.keys(row).find(key => normalizedKeys.includes(normalizeHeader(key)))
+
+  return matchedKey ? cleanText(row[matchedKey]) : ''
+}
+
+function hasMeaningfulData(record: Omit<SchoolRecord, 'raw' | 'sourceRow'>): boolean {
+  return Object.values(record).some((value) => {
+    if (typeof value === 'number') {
+      return value > 0
+    }
+
+    return cleanText(value).length > 0
+  })
+}
+
+function mapRowToSchool(row: Record<string, unknown>, sourceRow: number): SchoolRecord {
+  const mapped = {
+    id: findColumnValue(row, COLUMN_KEYS.id),
+    schoolName: findColumnValue(row, COLUMN_KEYS.schoolName),
+    cityVillage: findColumnValue(row, COLUMN_KEYS.cityVillage),
+    stage: findColumnValue(row, COLUMN_KEYS.stage),
+    authority: findColumnValue(row, COLUMN_KEYS.authority),
+    gender: findColumnValue(row, COLUMN_KEYS.gender),
+    schoolType: findColumnValue(row, COLUMN_KEYS.schoolType),
+    educationType: findColumnValue(row, COLUMN_KEYS.educationType),
+    managerName: findColumnValue(row, COLUMN_KEYS.managerName),
+    classes: parseNumber(findColumnValue(row, COLUMN_KEYS.classes)),
+    students: parseNumber(findColumnValue(row, COLUMN_KEYS.students)),
+    attachment: findColumnValue(row, COLUMN_KEYS.attachment),
+    governorate: findColumnValue(row, COLUMN_KEYS.governorate),
+    studyTime: findColumnValue(row, COLUMN_KEYS.studyTime),
+    buildingOwnership: findColumnValue(row, COLUMN_KEYS.buildingOwnership)
+  }
+
+  return {
+    ...mapped,
+    raw: row,
+    sourceRow
+  }
+}
+
+export function useExcelSchools() {
+  const schools = ref<SchoolRecord[]>([])
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+  const fileName = ref('')
+
+  const clearSchools = () => {
+    schools.value = []
+    fileName.value = ''
+    error.value = null
+  }
+
+  const readExcelFile = async (file: File) => {
+    loading.value = true
+    error.value = null
+    fileName.value = file.name
+
+    try {
+      const extension = file.name.slice(file.name.lastIndexOf('.')).toLocaleLowerCase()
+
+      if (!SUPPORTED_EXTENSIONS.has(extension)) {
+        throw new Error('يرجى اختيار ملف Excel بصيغة .xlsx أو .xls أو .xlsm أو .csv')
+      }
+
+      const arrayBuffer = await file.arrayBuffer()
+      const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true })
+
+      const firstSheetName = workbook.SheetNames[0] ?? ''
+
+      if (!firstSheetName) {
+        throw new Error('لا يحتوي الملف على أوراق بيانات')
+      }
+
+      const worksheet = workbook.Sheets[firstSheetName]!
+      const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(worksheet, { defval: '' })
+      const mappedRows = rows
+        .map((row, index) => mapRowToSchool(row, index + 2))
+        .filter(record => hasMeaningfulData(record))
+
+      if (!mappedRows.length) {
+        throw new Error('لم يتم العثور على بيانات متوافقة مع أعمدة المدارس المتوقعة')
+      }
+
+      schools.value = mappedRows
+    } catch (caughtError) {
+      const message = caughtError instanceof Error ? caughtError.message : 'حدث خطأ غير متوقع أثناء قراءة الملف'
+      error.value = message
+      schools.value = []
+    } finally {
+      loading.value = false
+    }
+  }
+
+  return {
+    schools,
+    loading,
+    error,
+    fileName,
+    readExcelFile,
+    clearSchools
+  }
+}
+</file>
+
+<file path="app/composables/useMinistryExcel.ts">
+import type { MinistryExcelPayload, MinistrySchoolRecord } from '~/types/ministrySchool'
+
+interface WorkerResponse {
+  id: number
+  type: 'parsed' | 'error'
+  payload?: MinistryExcelPayload
+  message?: string
+}
+
+let worker: Worker | null = null
+let nextJobId = 1
+
+export function useMinistryExcel() {
+  const schools = ref<MinistrySchoolRecord[]>([])
+  const headers = ref<string[]>([])
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+  const fileName = ref('')
+  const warningCount = ref(0)
+  const pendingJobId = ref<number | null>(null)
+
+  const ensureWorker = () => {
+    if (worker) {
+      return
+    }
+
+    worker = new Worker(new URL('../workers/excel.worker.ts', import.meta.url), { type: 'module' })
+
+    worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+      const response = event.data
+
+      if (response.id !== pendingJobId.value) {
+        return
+      }
+
+      if (response.type === 'error') {
+        error.value = response.message || 'حدث خطأ أثناء معالجة الملف'
+        loading.value = false
+        pendingJobId.value = null
+        return
+      }
+
+      const payload = response.payload
+
+      if (!payload) {
+        error.value = 'لم يتم استلام بيانات صالحة من ملف Excel'
+        loading.value = false
+        pendingJobId.value = null
+        return
+      }
+
+      schools.value = payload.schools
+      headers.value = payload.headers
+      warningCount.value = payload.warningCount
+      error.value = null
+      loading.value = false
+      pendingJobId.value = null
+    }
+
+    worker.onerror = (event) => {
+      error.value = event.message || 'تعطلت عملية معالجة ملف Excel داخل Web Worker'
+      loading.value = false
+      pendingJobId.value = null
+    }
+  }
+
+  const parseFile = async (file: File) => {
+    ensureWorker()
+
+    loading.value = true
+    error.value = null
+    fileName.value = file.name
+    pendingJobId.value = nextJobId
+
+    worker?.postMessage({
+      id: nextJobId,
+      type: 'parse',
+      file
+    })
+
+    nextJobId += 1
+  }
+
+  const clearSchools = () => {
+    schools.value = []
+    headers.value = []
+    fileName.value = ''
+    error.value = null
+    warningCount.value = 0
+    pendingJobId.value = null
+  }
+
+  onUnmounted(() => {
+    worker?.terminate()
+    worker = null
+  })
+
+  return {
+    schools,
+    headers,
+    loading,
+    error,
+    fileName,
+    warningCount,
+    parseFile,
+    clearSchools
+  }
+}
+</file>
+
+<file path="app/pages/index.vue">
+<script setup lang="ts">
+import type { MinistryFilters, MinistrySchoolRecord } from '~/types/ministrySchool'
+
+const {
+  schools,
+  headers,
+  loading,
+  error,
+  fileName,
+  warningCount,
+  parseFile,
+  clearSchools
+} = useMinistryExcel()
+
+const filters = reactive<MinistryFilters>({
+  educationDepartment: [],
+  administrativeRegion: [],
+  stage: [],
+  authority: [],
+  buildingOwnership: [],
+  studyTime: [],
+  educationType: [],
+  governorate: []
+})
+
+const selectedSchool = ref<MinistrySchoolRecord | null>(null)
+
+useHead({
+  title: 'لوحة الصيغة الوزارية الشاملة',
+  meta: [
+    { name: 'description', content: 'لوحة تحليل متقدمة لقراءة ملفات Excel الوزارية الشاملة من برنامج نور وعرض بيانات المدارس.' }
+  ]
+})
+
+// تستخرج القيم الفريدة من عمود محدد لاستخدامها في قوائم الفلاتر.
+function uniqueIdentityValues(field: keyof Pick<MinistrySchoolRecord['identity'], 'educationDepartment' | 'administrativeRegion' | 'stage' | 'authority' | 'studyTime' | 'educationType'>): string[] {
+  return Array.from(new Set(schools.value.map(school => school.identity[field]).filter(Boolean)))
+    .sort((a, b) => a.localeCompare(b, 'ar'))
+}
+
+const uniqueBuildingOwnership = computed(() => Array.from(new Set(schools.value.map(school => school.building.ownership).filter(Boolean)))
+  .sort((a, b) => a.localeCompare(b, 'ar')))
+
+const uniqueGovernorate = computed(() => Array.from(new Set(schools.value.map(school => school.additional.governorate).filter(Boolean)))
+  .sort((a, b) => a.localeCompare(b, 'ar')))
+
+const filterOptions = computed(() => [
+  { key: 'educationDepartment' as const, label: 'إدارة التعليم', placeholder: 'كل إدارات التعليم', options: uniqueIdentityValues('educationDepartment') },
+  { key: 'administrativeRegion' as const, label: 'المنطقة الإدارية', placeholder: 'كل المناطق', options: uniqueIdentityValues('administrativeRegion') },
+  { key: 'stage' as const, label: 'المرحلة', placeholder: 'كل المراحل', options: uniqueIdentityValues('stage') },
+  { key: 'authority' as const, label: 'السلطة', placeholder: 'كل السلطات', options: uniqueIdentityValues('authority') },
+  { key: 'buildingOwnership' as const, label: 'نوع المبنى', placeholder: 'كل أنواع المباني', options: uniqueBuildingOwnership.value },
+  { key: 'studyTime' as const, label: 'وقت الدراسة', placeholder: 'كل الأوقات', options: uniqueIdentityValues('studyTime') },
+  { key: 'educationType' as const, label: 'نوع التعليم', placeholder: 'كل أنواع التعليم', options: uniqueIdentityValues('educationType') },
+  { key: 'governorate' as const, label: 'المحافظة', placeholder: 'كل المحافظات', options: uniqueGovernorate.value }
+])
+
+// تطبق الفلاتر المتقدمة قبل تمرير البيانات إلى الرسوم والجداول.
+const filteredSchools = computed(() => schools.value.filter((school) => {
+  const identity = school.identity
+
+  return (!filters.educationDepartment.length || filters.educationDepartment.includes(identity.educationDepartment))
+    && (!filters.administrativeRegion.length || filters.administrativeRegion.includes(identity.administrativeRegion))
+    && (!filters.stage.length || filters.stage.includes(identity.stage))
+    && (!filters.authority.length || filters.authority.includes(identity.authority))
+    && (!filters.buildingOwnership.length || filters.buildingOwnership.includes(school.building.ownership))
+    && (!filters.studyTime.length || filters.studyTime.includes(identity.studyTime))
+    && (!filters.educationType.length || filters.educationType.includes(identity.educationType))
+    && (!filters.governorate.length || filters.governorate.includes(school.additional.governorate))
+}))
+
+async function handleFile(file: File) {
+  await parseFile(file)
+}
+
+function updateFilter(key: keyof MinistryFilters, value: string | string[]) {
+  filters[key] = value as string[]
+}
+
+function resetFilters() {
+  filters.educationDepartment = []
+  filters.administrativeRegion = []
+  filters.stage = []
+  filters.authority = []
+  filters.buildingOwnership = []
+  filters.studyTime = []
+  filters.educationType = []
+  filters.governorate = []
+}
+</script>
+
+<template>
+  <main
+    dir="rtl"
+    class="min-h-screen bg-background py-6 text-right sm:py-10"
+  >
+    <div class="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
+      <section class="mb-6 overflow-hidden rounded-3xl border border-accented/50 bg-card shadow-sm">
+        <div class="grid gap-6 p-6 lg:grid-cols-[1fr_360px] lg:p-8">
+          <div>
+            <div class="mb-3 flex items-center gap-3 text-xl font-medium text-primary">
+              <img
+                src="/img/logo.png"
+                alt="شعار الإدارة العامة للتعليم بمنطقة الباحة"
+                class="h-16 w-auto"
+              >
+              الإدارة العامة للتعليم بمنطقة الباحة
+            </div>
+
+            <h1 class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              لوحة تحليل البيانات الوزارية
+            </h1>
+
+            <p class="mt-3 max-w-4xl text-sm leading-7 text-muted-foreground">
+              استورد ملف Excel يحتوي على أكثر من 140 عموداً، وقم بتحليل الهوية، الطلاب، الكادر، التجهيزات، المبنى، الجغرافيا والتصنيفات الحديثة داخل واجهة سطح مكتب سريعة ومستقرة.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-accented/50 bg-muted/20 p-5">
+            <p class="text-xs font-medium text-muted-foreground">
+              الملف الحالي
+            </p>
+
+            <p class="mt-2 line-clamp-2 text-sm font-semibold text-foreground">
+              {{ fileName || 'لم يتم اختيار ملف بعد' }}
+            </p>
+
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <div class="rounded-xl bg-card p-3">
+                <p class="text-xs text-muted-foreground">
+                  السجلات
+                </p>
+                <p class="mt-1 text-2xl font-semibold text-foreground">
+                  {{ filteredSchools.length }}
+                </p>
+              </div>
+
+              <div class="rounded-xl bg-card p-3">
+                <p class="text-xs text-muted-foreground">
+                  الأعمدة
+                </p>
+                <p class="mt-1 text-2xl font-semibold text-foreground">
+                  {{ headers.length }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <MinistryUploadZone @file-selected="handleFile" />
+
+      <div
+        v-if="loading"
+        class="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-4"
+      >
+        <div class="mb-3 flex items-center justify-between text-sm font-medium text-primary">
+          <span>جاري قراءة ومعالجة ملف Excel داخل Web Worker...</span>
+          <UIcon
+            name="i-lucide-loader-2"
+            class="h-4 w-4 animate-spin"
+          />
+        </div>
+
+        <UProgress
+          indeterminate
+          color="primary"
+        />
+      </div>
+
+      <UAlert
+        v-if="error"
+        class="mt-6"
+        color="error"
+        variant="subtle"
+        title="تعذر قراءة الملف"
+        :description="error"
+      />
+
+      <UAlert
+        v-if="warningCount"
+        class="mt-6"
+        color="warning"
+        variant="subtle"
+        :title="`يوجد ${warningCount} مدرسة بها اختلاف بين مجموع الصفوف وجملة طلاب`"
+        description="تم عرض بيانات المدارس مع الاحتفاظ بعلامة تنبيه لجودة البيانات."
+      />
+
+      <template v-if="schools.length">
+        <div class="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 class="text-xl font-semibold text-foreground">
+              لوحة التحليل
+            </h2>
+            <p class="mt-1 text-sm text-muted-foreground">
+              مؤشرات ورسوم مبنية على البيانات المفلترة.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <UButton
+              size="sm"
+              color="neutral"
+              variant="ghost"
+              label="إعادة الفلاتر"
+              icon="i-lucide-rotate-ccw"
+              @click="resetFilters"
+            />
+
+            <UButton
+              size="sm"
+              color="neutral"
+              variant="ghost"
+              label="مسح البيانات"
+              icon="i-lucide-trash-2"
+              @click="clearSchools"
+            />
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <MinistryFilters
+            :filters="filters"
+            :options="filterOptions"
+            @change="updateFilter"
+          />
+        </div>
+
+        <div class="mt-6">
+          <MinistryKpiCards
+            :schools="filteredSchools"
+            :warning-count="warningCount"
+          />
+        </div>
+
+        <div class="mt-6">
+          <MinistryPowerTable
+            :schools="filteredSchools"
+            :headers="headers"
+            @open-details="selectedSchool = $event"
+          />
+        </div>
+
+        <div class="mt-6">
+          <MinistryCharts :schools="filteredSchools" />
+        </div>
+      </template>
+
+      <section
+        v-else
+        class="mt-6 grid gap-4 rounded-3xl border border-accented/50 bg-card p-6 shadow-sm md:grid-cols-3"
+      >
+        <div class="rounded-2xl bg-muted/50 p-5">
+          <UIcon
+            name="i-lucide-columns-4"
+            class="mb-3 h-6 w-6 text-primary"
+          />
+          <h3 class="text-sm font-semibold text-foreground">
+            Mapping شامل
+          </h3>
+          <p class="mt-2 text-sm leading-6 text-muted-foreground">
+            يتم التعرف على أعمدة الهوية، الطلاب، الكادر، التجهيزات، المبنى والجغرافيا حتى مع اختلاف تسميات الرؤوس.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-muted/50 p-5">
+          <UIcon
+            name="i-lucide-cpu"
+            class="mb-3 h-6 w-6 text-primary"
+          />
+          <h3 class="text-sm font-semibold text-foreground">
+            معالجة غير متزامنة
+          </h3>
+          <p class="mt-2 text-sm leading-6 text-muted-foreground">
+            يتم تشغيل Parsing داخل Web Worker لمنع تعليق واجهة Tauri عند استيراد ملفات كبيرة.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-muted/50 p-5">
+          <UIcon
+            name="i-lucide-table-properties"
+            class="mb-3 h-6 w-6 text-primary"
+          />
+          <h3 class="text-sm font-semibold text-foreground">
+            جدول قوي
+          </h3>
+          <p class="mt-2 text-sm leading-6 text-muted-foreground">
+            يدعم التمرير الأفقي، إخفاء الأعمدة، البحث، الفلاتر، الترقيم وعرض كافة التفاصيل.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <MinistryDetailsModal
+      :school="selectedSchool"
+      @close="selectedSchool = null"
+    />
+  </main>
+</template>
+</file>
+
+<file path="app/types/ministrySchool.ts">
+export type ColumnGroup = 'identity' | 'students' | 'staff' | 'facilities' | 'building' | 'classification' | 'additional' | 'raw'
+
+export interface IdentityData {
+  id: string
+  schoolName: string
+  cityVillage: string
+  educationDepartment: string
+  administrativeRegion: string
+  unifiedCode: string
+  stage: string
+  authority: string
+  educationType: string
+  studyTime: string
+  gender: string
+  foundingYear: string
+  phone: string
+  email: string
+  mailAddress: string
+}
+
+export interface StudentStats {
+  grade1: number
+  grade2: number
+  grade3: number
+  grade4: number
+  grade5: number
+  grade6: number
+  grade7: number
+  grade8: number
+  grade9: number
+  grade10: number
+  grade11: number
+  grade12: number
+  total: number
+  saudi: number
+  newcomers: number
+  gradeTotal: number
+  gradeTotalMismatch: number
+  classes: number
+  saudi1?: number
+  saudi2?: number
+  saudi3?: number
+  saudi4?: number
+  saudi5?: number
+  saudi6?: number
+  saudi7?: number
+  saudi8?: number
+  saudi9?: number
+  saudi10?: number
+  saudi11?: number
+  saudi12?: number
+  saudiBus?: number
+  saudiNewcomers?: number
+}
+
+export interface StaffStats {
+  teachers: number
+  saudiTeachers: number
+  admins: number
+  saudiAdmins: number
+  guidance: number
+  agents: number
+  managerName: string
+  managerId: string
+  managerPhone: string
+  managerEmailOfficial: string
+  managerEmailPersonal: string
+}
+
+export interface FacilityStats {
+  computerLabs: number
+  physicsLabs: number
+  chemistryLabs: number
+  englishRooms: number
+  sewingRooms: number
+  homeEconomicsRooms: number
+  internet: boolean
+  cafeteria: boolean
+  water: boolean
+}
+
+export interface BuildingData {
+  ownership: string
+  rent: number
+  latitude: number
+  longitude: number
+  roadStatus: string
+  roadType: string
+  subscriptionType: string
+  independenceStatus: string
+  nearestPrimaryDistance: number
+  nearestMiddleDistance: number
+  nearestHighDistance: number
+}
+
+export interface ClassificationData {
+  earlyChildhood: boolean
+  pathways: boolean
+}
+
+export interface AdditionalData {
+  educationOffice: string
+  schoolCount: number
+  createdAt: string
+  rooms: number
+  serviceStaff: number
+  workers: number
+  governmentBuildings: number
+  rentedBuildings: number
+  address: string
+  nearestPrimary: string
+  distance1: number
+  roadStatus1: string
+  sameRegion1: boolean
+  nearestMiddle: string
+  distance2: number
+  roadStatus2: string
+  sameRegion2: boolean
+  nearestHigh: string
+  distance3: number
+  roadStatus3: string
+  sameRegion3: boolean
+  asphaltDistance: number
+  dirtDistance: number
+  rockyDistance: number
+  managersCount: number
+  librariansCount: number
+  labPreparersCount: number
+  governorateNumber: string
+  governorate: string
+  administrativeCenterNumber: string
+  administrativeCenter: string
+  postalBox: string
+  postalCode: string
+  curriculumClassrooms: number
+  schoolBase: string
+  sharedSchoolMinistryNumber: string
+  remote: boolean
+  unitDepartmentOfficeCode: string
+  userId: string
+  investorName: string
+  investorEmail: string
+  investorPhone: string
+  curriculum: string
+  planType: string
+  classesMerged: boolean
+  schoolSystem: string
+  englishSchoolName: string
+  englishEducationDepartment: string
+  educationDepartmentCode: string
+  stageCode: string
+  coordinateNumber: string
+  associatedCoordinateSchoolName: string
+  coordinateType: string
+  schoolStatus: string
+  closingDate: string
+  maleStudentsInGirlsSchools: number
+  maleClassesInGirlsSchools: number
+  payroll: string
+  licenseNumber: string
+  commercialRegistration: string
+  certificateSchoolName: string
+  inComplex: boolean
+  libraryExists: boolean
+  waterStatus: string
+  cars: number
+  resourceManagersCount: number
+  activityLeadersCount: number
+  registrationOfficersCount: number
+  studentCounselorsCount: number
+  educationCategory: string
+  siteClassification: string
+  sectorCode: string
+  sector: string
+  farisSectorCode: string
+  capacity: number
+  femaleTeachersTeachingAssignedMaleStudents: number
+  segment: string
+}
+
+export interface MinistrySchoolRecord {
+  identity: IdentityData
+  students: StudentStats
+  staff: StaffStats
+  facilities: FacilityStats
+  building: BuildingData
+  classification: ClassificationData
+  additional: AdditionalData
+  raw: Record<string, unknown>
+  sourceRow: number
+}
+
+export interface MinistryExcelPayload {
+  schools: MinistrySchoolRecord[]
+  headers: string[]
+  warningCount: number
+}
+
+export interface MinistryFilters {
+  educationDepartment: string[]
+  administrativeRegion: string[]
+  stage: string[]
+  authority: string[]
+  buildingOwnership: string[]
+  studyTime: string[]
+  educationType: string[]
+  governorate: string[]
+}
+</file>
+
+<file path="app/types/school.ts">
+export interface SchoolRecord {
+  /** الرقم الوزاري للمدرسة */
+  id: string
+  /** اسم المدرسة */
+  schoolName: string
+  /** المدينة أو القرية */
+  cityVillage: string
+  /** المرحلة الدراسية */
+  stage: string
+  /** السلطة المشرفة على المدرسة */
+  authority: string
+  /** جنس المدرسة: بنين / بنات / مشترك */
+  gender: string
+  /** نوع المدرسة */
+  schoolType: string
+  /** نوع التعليم */
+  educationType: string
+  /** اسم مدير المدرسة */
+  managerName: string
+  /** إجمالي عدد الفصول */
+  classes: number
+  /** إجمالي عدد الطلاب */
+  students: number
+  /** مستقلة أو ملحقة */
+  attachment: string
+  /** المحافظة */
+  governorate: string
+  /** وقت الدراسة */
+  studyTime: string
+  /** ملكية المبنى */
+  buildingOwnership: string
+  /** الصف الأصلي كما ظهر في ملف Excel */
+  raw: Record<string, unknown>
+  /** رقم الصف داخل ورقة Excel */
+  sourceRow: number
+}
+
+export interface ExcelSchoolState {
+  schools: SchoolRecord[]
+  loading: boolean
+  error: string | null
+  fileName: string
+}
+</file>
+
+<file path="app/workers/excel.worker.ts">
+import * as XLSX from 'xlsx'
+import type { MinistryExcelPayload, MinistrySchoolRecord } from '~/types/ministrySchool'
+
+interface ColumnDefinition {
+  key: string
+  label: string
+  aliases: string[]
+}
+
+interface WorkerParseRequest {
+  id: number
+  type: 'parse'
+  file: File
+}
+
+declare const self: DedicatedWorkerGlobalScope
+
+const MINISTRY_COLUMN_HEADERS: string[] = [
+  'الرقم الوزاري',
+  'اسم المدرسة',
+  'المدينة/القرية',
+  'المنطقة الإدارية',
+  'الترميز الموحد لإدارة التعليم',
+  'إدارة التعليم',
+  'المرحلة',
+  'السلطة',
+  'مكتب التعليم',
+  'عدد المدارس',
+  'تاريخ الانشاء في النظام',
+  'جنس المدرسة',
+  'نوع المدرسة',
+  'نوع التعليم',
+  'هوية مدير المدرسة',
+  'اسم مدير المدرسة',
+  'البريد الإلكتروني لمدير المدرسة',
+  'بريد مدير المدرسة',
+  'جوال مدير المدرسة',
+  'صف1',
+  'طلاب1',
+  'سعودي1',
+  'صف2',
+  'طلاب2',
+  'سعودي2',
+  'صف3',
+  'طلاب3',
+  'سعودي3',
+  'صف4',
+  'طلاب4',
+  'سعودي4',
+  'صف5',
+  'طلاب5',
+  'سعودي5',
+  'صف6',
+  'طلاب6',
+  'سعودي6',
+  'صف7',
+  'طلاب7',
+  'سعودي7',
+  'صف8',
+  'طلاب8',
+  'سعودي8',
+  'صف9',
+  'طلاب9',
+  'سعودي9',
+  'فصول جملة',
+  'جملة طلاب',
+  'جملة سعودي',
+  'مستجدون',
+  'مستجدون سعودي',
+  'حجرات',
+  'معلمين',
+  'معلمين سعودي',
+  'إداريون',
+  'إداري سعودي',
+  'خدم',
+  'عمال',
+  'مستقلة/ملحقة',
+  'مباني حكومية',
+  'مباني مستاجرة',
+  'الإيجار',
+  'الهاتف',
+  'العنوان',
+  'سنة التأسيس',
+  'أقرب إبتدائية',
+  'مسافة1',
+  'حالة طريق1',
+  'نفس المنطقة1',
+  'أقرب متوسطة',
+  'مسافة 2',
+  'حالة طريق2',
+  'نفس المنطقة2',
+  'أقرب ثانوية',
+  'مسافة3',
+  'حالة طريق3',
+  'نفس المنطقة3',
+  'بعد إسفلت',
+  'بعد ترابي',
+  'بعد صخري',
+  'البريد الإلكتروني',
+  'عدد مديرو المدارس',
+  'عدد الوكلاء',
+  'عدد امناء المكتبة',
+  'عدد محضري المختبر',
+  'رقم المحافظة',
+  'المحافظة',
+  'رقم المركز الإداري',
+  'المركز الإداري',
+  'صندوق بريد',
+  'الرمز البريدي',
+  'عدد معامل الكمبيوتر',
+  'عدد غرف اللغة الإنجليزية',
+  'عدد غرف معامل الفيزياء',
+  'عدد غرف معامل الكيمياء',
+  'عدد غرف الخياطة',
+  'عدد معامل الخياطة والتدبير المنزلي',
+  'عدد القاعات_مقررات',
+  'نوع الاشتراكي',
+  'حالة الاستقلالية',
+  'المدرسة الاساسية',
+  'رقم وزاري للمدرسة المشتركة',
+  'المدرسة نائية',
+  'ترميز الادارة',
+  'ترميز وحدة/قسم/مكتب',
+  'رقم هوية المستخدم',
+  'إسم المستثمر',
+  'البريد الإلكتروني للمستثمر',
+  'جوال المستثمر',
+  'المنهج (للأجنبي)',
+  'نوع الخطة',
+  'هل الفصول مضمومة',
+  'خط العرض',
+  'خط الطول',
+  'نظام المدرسة',
+  'المدرسة باللغة الإنجليزية',
+  'إدارة التعليم باللغة الإنجليزية',
+  'ترميز الإدارة التعليمية',
+  'ترميز المرحلة الدراسية',
+  'رقم الإحداث',
+  'اسم المدرسةالمرتبطة بإحداث',
+  'نوع الإحداث',
+  'حالة المدرسة',
+  'تاريخ إغلاق المدرسة',
+  'عدد الطلاب البنين في مدارس البنات',
+  'عدد فصول البنين في مدارس البنات',
+  'مسير رواتب',
+  'رقم الترخيص',
+  'السجل التجاري',
+  'اسم المدرسة في الشهادة',
+  'ضمن مجمع',
+  'توجد مكتبة',
+  'يوجد مقصف',
+  'حالة الماء',
+  'يوجد انترنت',
+  'عدد السيارات',
+  'عدد أمناء المصادر',
+  'عدد رائدي النشاط',
+  'عدد مسؤولي التسجيل',
+  'عدد موجهي الطلاب',
+  'هل المدرسة مسارات',
+  'فئة التعليم',
+  'هل المدرسة مدرسة طفولة مبكرة (نعم او لا)',
+  'وقت الدراسة',
+  'تصنيف موقع المدرسة',
+  'ملكية المبنى',
+  'رمز القطاع',
+  'القطاع',
+  'رمز القطاع الخاص بفارس',
+  'الطاقة الإستيعابية',
+  'عدد المعلمات اللواتي يدرسن الطلبة البنين المسندين في مدارس البنات',
+  'الشريحة'
+]
+
+function indexToColumnLabel(index: number): string {
+  let label = ''
+
+  while (index > 0) {
+    const remainder = (index - 1) % 26
+    label = String.fromCharCode(65 + remainder) + label
+    index = Math.floor((index - 1) / 26)
+  }
+
+  return label
+}
+
+export const COLUMN_HEADERS_MAP: Record<string, string> = Object.fromEntries(
+  MINISTRY_COLUMN_HEADERS.map((label, index) => [indexToColumnLabel(index + 1), label])
+)
+
+function column(key: string, label: string, aliases: string[] = []): ColumnDefinition {
+  return { key, label, aliases: [label, ...aliases] }
+}
+
+const COLUMN_DEFINITIONS: ColumnDefinition[] = [
+  { key: 'identity.id', label: 'الرقم الوزاري', aliases: ['الرقم الوزاري', 'الرقم الوزاري (ID)', 'ID', 'رقم الوزارة', 'رقم المدرسة'] },
+  { key: 'identity.schoolName', label: 'اسم المدرسة', aliases: ['اسم المدرسة', 'المدرسة', 'اسم المدرسة/الروضة'] },
+  { key: 'identity.cityVillage', label: 'المدينة/القرية', aliases: ['المدينة/القرية', 'المدينة', 'القرية', 'المدينة او القرية', 'المدينة أو القرية'] },
+  { key: 'identity.administrativeRegion', label: 'المنطقة الإدارية', aliases: ['المنطقة الإدارية', 'المنطقة', 'النطاق الإداري', 'المنطقة التعليمية'] },
+  { key: 'identity.unifiedCode', label: 'الترميز الموحد', aliases: ['الترميز الموحد لإدارة التعليم', 'الترميز الموحد', 'الترميز', 'ترميز الادارة'] },
+  { key: 'identity.educationDepartment', label: 'إدارة التعليم', aliases: ['إدارة التعليم', 'ادارة التعليم', 'الإدارة التعليمية'] },
+  { key: 'identity.stage', label: 'المرحلة', aliases: ['المرحلة', 'المرحلة الدراسية'] },
+  { key: 'identity.authority', label: 'السلطة', aliases: ['السلطة', 'نوع السلطة'] },
+  { key: 'identity.educationType', label: 'نوع التعليم', aliases: ['نوع التعليم', 'التعليم'] },
+  { key: 'identity.studyTime', label: 'وقت الدراسة', aliases: ['وقت الدراسة', 'الدوام', 'الفترة الدراسية'] },
+  { key: 'identity.gender', label: 'جنس المدرسة', aliases: ['جنس المدرسة', 'الجنس', 'بنين / بنات', 'جنس'] },
+  { key: 'identity.foundingYear', label: 'سنة التأسيس', aliases: ['سنة التأسيس', ' العام الدراسي', 'التأسيس', 'سنة التأسيس'] },
+  { key: 'identity.phone', label: 'الهاتف', aliases: ['الهاتف', 'رقم الهاتف', 'الجوال', 'تليفون المدرسة', 'الهاتف/الجوال', 'جوال مدير المدرسة'] },
+  { key: 'identity.email', label: 'البريد الإلكتروني', aliases: ['البريد الإلكتروني', 'البريد', 'الإيميل', 'e-mail'] },
+  { key: 'identity.mailAddress', label: 'العنوان البريدي', aliases: ['العنوان البريدي', 'البريد', 'عنوان المدرسة', 'المحافظة'] },
+
+  { key: 'students.grade1', label: 'طلاب1', aliases: ['طلاب1', 'طلاب الصف 1', 'الصف الأول', 'الصف الاول', 'صف 1', 'صف1'] },
+  { key: 'students.grade2', label: 'طلاب2', aliases: ['طلاب2', 'طلاب الصف 2', 'الصف الثاني', 'صف 2', 'صف2'] },
+  { key: 'students.grade3', label: 'طلاب3', aliases: ['طلاب3', 'طلاب الصف 3', 'الصف الثالث', 'صف 3', 'صف3'] },
+  { key: 'students.grade4', label: 'طلاب4', aliases: ['طلاب4', 'طلاب الصف 4', 'الصف الرابع', 'صف 4', 'صف4', 'AA', 'AJ'] },
+  { key: 'students.saudi4', label: 'سعودي4', aliases: ['سعودي4', 'سعودي طلاب4', 'سعودي صف4', 'AB', 'AE'] },
+  { key: 'students.grade5', label: 'طلاب5', aliases: ['طلاب5', 'طلاب الصف 5', 'الصف الخامس', 'صف 5', 'صف5', 'AG'] },
+  { key: 'students.saudi5', label: 'سعودي5', aliases: ['سعودي5', 'سعودي طلاب5', 'سعودي صف5', 'AH'] },
+  { key: 'students.grade6', label: 'طلاب6', aliases: ['طلاب6', 'طلاب الصف 6', 'الصف السادس', 'صف 6', 'صف6', 'AM'] },
+  { key: 'students.saudi6', label: 'سعودي6', aliases: ['سعودي6', 'سعودي طلاب6', 'سعودي صف6', 'AK', 'AL'] },
+  { key: 'students.grade7', label: 'طلاب7', aliases: ['طلاب7', 'طلاب الصف 7', 'الصف السابع', 'صف 7', 'صف7'] },
+  { key: 'students.grade8', label: 'طلاب8', aliases: ['طلاب8', 'طلاب الصف 8', 'الصف الثامن', 'صف 8', 'صف8'] },
+  { key: 'students.grade9', label: 'طلاب9', aliases: ['طلاب9', 'طلاب الصف 9', 'الصف التاسع', 'صف 9', 'صف9'] },
+  { key: 'students.grade10', label: 'طلاب10', aliases: ['طلاب10', 'طلاب الصف 10', 'الصف العاشر', 'صف 10', 'صف10', 'AJ'] },
+  { key: 'students.grade11', label: 'طلاب11', aliases: ['طلاب11', 'طلاب الصف 11', 'الصف الحادي عشر', 'صف 11', 'صف11'] },
+  { key: 'students.grade12', label: 'طلاب12', aliases: ['طلاب12', 'طلاب الصف 12', 'الصف الثاني عشر', 'صف 12', 'صف12'] },
+  { key: 'students.total', label: 'جملة طلاب', aliases: ['جملة طلاب', 'إجمالي الطلاب', 'عدد الطلاب', 'الطلاب', 'جملة الطلبة'] },
+  { key: 'students.saudi', label: 'جملة سعودي', aliases: ['جملة سعودي', 'الطلاب السعوديون', 'السعوديون', 'إجمالي سعودي', 'عدد السعوديين'] },
+  { key: 'students.saudi1', label: 'سعودي1', aliases: ['سعودي1', 'سعودي طلاب1', 'الطلاب السعوديون1', 'سعودي الصف 1', 'سعودي صف1'] },
+  { key: 'students.saudi2', label: 'سعودي2', aliases: ['سعودي2', 'سعودي طلاب2', 'الطلاب السعوديون2', 'سعودي الصف 2', 'سعودي صف2'] },
+  { key: 'students.saudi10', label: 'سعودي10', aliases: ['سعودي10', 'سعودي طلاب10', 'سعودي صف10'] },
+  { key: 'students.saudi11', label: 'سعودي11', aliases: ['سعودي11', 'سعودي طلاب11', 'سعودي صف11'] },
+  { key: 'students.saudi12', label: 'سعودي12', aliases: ['سعودي12', 'سعودي طلاب12', 'سعودي صف12'] },
+  { key: 'students.saudiBus', label: 'سعودي حافلات', aliases: ['سعودي حافلات', 'سعودي الباص', 'حافلات سعودي'] },
+  { key: 'students.newcomers', label: 'مستجدون', aliases: ['مستجدون', 'المستجدون', 'طلاب مستجدون', 'الطلبة المستجدون'] },
+  { key: 'students.classes', label: 'فصول جملة', aliases: ['فصول جملة', 'عدد الفصول', 'الفصول', 'إجمالي الفصول'] },
+
+  { key: 'staff.teachers', label: 'معلمين', aliases: ['معلمين', 'عدد المعلمين', 'المعلمون', 'هيئة التدريس'] },
+  { key: 'staff.saudiTeachers', label: 'معلمين سعودي', aliases: ['معلمين سعودي', 'المعلمون السعوديون', 'معلمين سعوديين', 'عدد المعلمين السعوديين'] },
+  { key: 'staff.admins', label: 'إداريون', aliases: ['إداريون', 'الإداريون', 'عدد الإداريين', 'الكادر الإداري'] },
+  { key: 'staff.saudiAdmins', label: 'إداري سعودي', aliases: ['إداري سعودي', 'الإداريون السعوديون', 'إداريين سعوديين', 'عدد الإداريين السعوديين'] },
+  { key: 'staff.guidance', label: 'الموجهين', aliases: ['الموجهين', 'المرشدين', 'عدد الموجهين', 'عدد المرشدين'] },
+  { key: 'staff.agents', label: 'الوكلاء', aliases: ['الوكلاء', 'عدد الوكلاء', 'وكلاء المدرسة'] },
+  { key: 'staff.managerName', label: 'مدير المدرسة', aliases: ['مدير المدرسة', 'اسم المدير', 'المدير', 'مدير المدرسة P', 'مدير المدرسة/الرئيس', 'اسم مدير المدرسة', 'اسم مديرة المدرسة', 'مديرة المدرسة', 'المديرة'] },
+  { key: 'staff.managerId', label: 'هوية المدير', aliases: ['هوية المدير', 'هوية مدير المدرسة', 'رقم هوية المدير', 'هوية مدير المدرسة (الرقم الوطني)', 'الرقم الوطني للمدير', 'الهوية', 'رقم الهوية'] },
+  { key: 'staff.managerPhone', label: 'جوال المدير', aliases: ['جوال المدير', 'جوال مدير المدرسة', 'هاتف المدير', 'هاتف مدير المدرسة', 'رقم جوال المدير', 'موبايل المدير', 'موبايل مدير المدرسة', 'رقم جوال مدير المدرسة'] },
+  { key: 'staff.managerEmailOfficial', label: 'البريد الإلكتروني لمدير المدرسة', aliases: ['البريد الإلكتروني لمدير المدرسة', 'البريد الإلكتروني للمدير', 'البريد الالكتروني لمدير المدرسة', 'البريد الالكتروني للمدير', 'البريد الإلكتروني لمديرة المدرسة', 'البريد الالكتروني لمديرة المدرسة', 'ايميل مدير المدرسة', 'إيميل مدير المدرسة', 'ايميل المدير', 'إيميل المدير', 'بريد مدير المدرسة الرسمي', 'البريد الإلكتروني الرسمي'] },
+  { key: 'staff.managerEmailPersonal', label: 'بريد مدير المدرسة', aliases: ['بريد مدير المدرسة', 'بريد المدير', 'بريد مدير المدرسة الشخصي', 'البريد الإلكتروني الشخصي', 'ايميل مدير المدرسة الشخصي', 'إيميل مدير المدرسة الشخصي'] },
+
+  { key: 'facilities.computerLabs', label: 'عدد معامل الكمبيوتر', aliases: ['عدد معامل الكمبيوتر', 'معامل الكمبيوتر', 'معامل الحاسب', 'معامل الحاسب الآلي', 'أجهزة الحاسب', 'عدد معامل الكمبيوتر'] },
+  { key: 'facilities.physicsLabs', label: 'مختبرات فيزياء', aliases: ['مختبرات فيزياء', 'معمل فيزياء', 'معامل الفيزياء', 'مختبر الفيزياء', 'عدد غرف معامل الفيزياء'] },
+  { key: 'facilities.chemistryLabs', label: 'مختبرات كيمياء', aliases: ['مختبرات كيمياء', 'معمل كيمياء', 'معامل الكيمياء', 'مختبر الكيمياء', 'عدد غرف معامل الكيمياء'] },
+  { key: 'facilities.englishRooms', label: 'غرف الإنجليزية', aliases: ['غرف الإنجليزية', 'غرف اللغة الإنجليزية', 'غرف الانجليزية', 'معامل اللغة الإنجليزية', 'عدد غرف اللغة الإنجليزية'] },
+  { key: 'facilities.sewingRooms', label: 'غرف الخياطة', aliases: ['غرف الخياطة', 'عدد غرف الخياطة', 'غرف الخياطة والتدبير المنزلي'] },
+  { key: 'facilities.homeEconomicsRooms', label: 'معامل التدبير المنزلي', aliases: ['معامل الخياطة والتدبير المنزلي', 'عدد معامل الخياطة والتدبير المنزلي', 'معامل التدبير المنزلي', 'غرف التدبير المنزلي'] },
+  { key: 'facilities.internet', label: 'الإنترنت', aliases: ['الإنترنت', 'انترنت', 'الانترنت', 'الواي فاي', 'WiFi', 'يوجد انترنت'] },
+  { key: 'facilities.cafeteria', label: 'المقصف', aliases: ['المقصف', 'كافيتريا', 'بوفيه', 'مطعم', 'يوجد مقصف'] },
+  { key: 'facilities.water', label: 'الماء', aliases: ['الماء', 'مياه', 'خدمة المياه', 'شبكة المياه'] },
+
+  { key: 'building.ownership', label: 'ملكية المبنى', aliases: ['ملكية المبنى', 'ملكية البناء', 'نوع الملكية', 'ملكية المبنى حكومي/مستأجر'] },
+  { key: 'building.rent', label: 'الإيجار', aliases: ['الإيجار', 'قيمة الإيجار', 'الايجار', 'إيجار المبنى'] },
+  { key: 'building.latitude', label: 'خط العرض', aliases: ['خط العرض', 'latitude', 'Latitude', 'دائرة العرض'] },
+  { key: 'building.longitude', label: 'خط الطول', aliases: ['خط الطول', 'longitude', 'Longitude', 'خط الطول الجغرافي'] },
+  { key: 'building.roadStatus', label: 'حالة الطريق', aliases: ['حالة الطريق', 'حالة الوصول', 'الطريق', 'وصف الطريق'] },
+  { key: 'building.roadType', label: 'نوع الطريق', aliases: ['نوع الطريق', 'نوع الطريق', 'اسفلت', 'ترابي', 'صخري'] },
+  { key: 'building.subscriptionType', label: 'نوع الاشتراك', aliases: ['نوع الاشتراك', 'الاشتراك', 'type الاشتراك'] },
+  { key: 'building.independenceStatus', label: 'حالة الاستقلالية', aliases: ['حالة الاستقلالية', 'استقلالية', 'مستقلة', 'ملحقة'] },
+  { key: 'building.nearestPrimaryDistance', label: 'المسافة عن أقرب ابتدائي', aliases: ['المسافة عن أقرب ابتدائي', 'المسافة لمدرسة ابتدائية', 'ابتدائي قريب'] },
+  { key: 'building.nearestMiddleDistance', label: 'المسافة عن أقرب متوسط', aliases: ['المسافة عن أقرب متوسط', 'المسافة لمدرسة متوسطة', 'متوسط قريب'] },
+  { key: 'building.nearestHighDistance', label: 'المسافة عن أقرب ثانوي', aliases: ['المسافة عن أقرب ثانوي', 'المسافة لمدرسة ثانوية', 'ثانوي قريب'] },
+
+  { key: 'classification.earlyChildhood', label: 'هل المدرسة طفولة مبكرة', aliases: ['هل المدرسة طفولة مبكرة', 'طفولة مبكرة', 'مرحلة الطفولة المبكرة', 'روضة'] },
+  { key: 'classification.pathways', label: 'هل المدرسة مسارات', aliases: ['هل المدرسة مسارات', 'مسارات', 'مدارس المسارات', 'نظام المسارات'] },
+
+  column('students.schoolCount', 'عدد المدارس'),
+  column('additional.createdAt', 'تاريخ الانشاء في النظام', ['تاريخ الإنشاء في النظام', 'تاريخ الانشاء']),
+  column('identity.schoolType', 'نوع المدرسة', ['نوع المؤسسة', 'نوع المدرسة']),
+  column('additional.educationOffice', 'مكتب التعليم', ['مكتب التعليم', 'مكتب الإشراف', 'مكتب التربية']),
+  column('students.saudi3', 'سعودي3', ['سعودي3', 'سعودي طلاب3', 'سعودي صف3', 'الطلاب السعوديون3']),
+  column('students.saudiNewcomers', 'مستجدون سعودي', ['مستجدون سعودي', 'المستجدون السعوديون', 'طلاب مستجدون سعوديون']),
+  column('additional.rooms', 'حجرات', ['عدد الحجرات', 'عدد الغرف']),
+  column('additional.serviceStaff', 'خدم', ['عدد الخدم', 'الخدم']),
+  column('additional.workers', 'عمال', ['عدد العمال', 'العمال']),
+  column('additional.governmentBuildings', 'مباني حكومية', ['عدد المباني الحكومية', 'المباني الحكومية']),
+  column('additional.rentedBuildings', 'مباني مستاجرة', ['عدد المباني المستأجرة', 'المباني المستأجرة']),
+  column('additional.address', 'العنوان', ['العنوان', 'عنوان المدرسة']),
+  column('additional.nearestPrimary', 'أقرب إبتدائية', ['أقرب ابتدائية', 'المدرسة الابتدائية القريبة', 'أقرب مدرسة ابتدائية']),
+  column('additional.distance1', 'مسافة1', ['مسافة1', 'مسافة 1', 'المسافة 1']),
+  column('additional.roadStatus1', 'حالة طريق1', ['حالة طريق1', 'حالة الطريق 1', 'حالة طريق 1']),
+  column('additional.sameRegion1', 'نفس المنطقة1', ['نفس المنطقة1', 'نفس المنطقة 1']),
+  column('additional.nearestMiddle', 'أقرب متوسطة', ['أقرب متوسطة', 'المدرسة المتوسطة القريبة', 'أقرب مدرسة متوسطة']),
+  column('additional.distance2', 'مسافة 2', ['مسافة 2', 'مسافة2', 'المسافة 2']),
+  column('additional.roadStatus2', 'حالة طريق2', ['حالة طريق2', 'حالة الطريق 2', 'حالة طريق 2']),
+  column('additional.sameRegion2', 'نفس المنطقة2', ['نفس المنطقة2', 'نفس المنطقة 2']),
+  column('additional.nearestHigh', 'أقرب ثانوية', ['أقرب ثانوية', 'المدرسة الثانوية القريبة', 'أقرب مدرسة ثانوية']),
+  column('additional.distance3', 'مسافة3', ['مسافة3', 'مسافة 3', 'المسافة 3']),
+  column('additional.roadStatus3', 'حالة طريق3', ['حالة طريق3', 'حالة الطريق 3', 'حالة طريق 3']),
+  column('additional.sameRegion3', 'نفس المنطقة3', ['نفس المنطقة3', 'نفس المنطقة 3']),
+  column('additional.asphaltDistance', 'بعد إسفلت', ['بعد إسفلت', 'المسافة على الإسفلت']),
+  column('additional.dirtDistance', 'بعد ترابي', ['بعد ترابي', 'المسافة على التراب']),
+  column('additional.rockyDistance', 'بعد صخري', ['بعد صخري', 'المسافة على الصخر']),
+  column('additional.managersCount', 'عدد مديرو المدارس', ['عدد مديرو المدارس', 'عدد مديري المدارس', 'عدد المديرين']),
+  column('additional.librariansCount', 'عدد امناء المكتبة', ['عدد امناء المكتبة', 'عدد أمناء المكتبة', 'أمناء المكتبة']),
+  column('additional.labPreparersCount', 'عدد محضري المختبر', ['عدد محضري المختبر', 'محضري المختبر', 'محضرو المختبرات']),
+  column('additional.governorateNumber', 'رقم المحافظة', ['رقم المحافظة']),
+  column('additional.governorate', 'المحافظة', ['المحافظة']),
+  column('additional.administrativeCenterNumber', 'رقم المركز الإداري', ['رقم المركز الإداري']),
+  column('additional.administrativeCenter', 'المركز الإداري', ['المركز الإداري']),
+  column('additional.postalBox', 'صندوق بريد', ['صندوق بريد', 'ص.ب', 'صندوق البريد']),
+  column('additional.postalCode', 'الرمز البريدي', ['الرمز البريدي']),
+  column('additional.curriculumClassrooms', 'عدد القاعات_مقررات', ['عدد القاعات_مقررات', 'عدد القاعات مقررات', 'القاعات مقررات']),
+  column('building.subscriptionType', 'نوع الاشتراكي', ['نوع الاشتراك', 'نوع الاشتراكي', 'الاشتراك']),
+  column('additional.schoolBase', 'المدرسة الاساسية', ['المدرسة الاساسية', 'المدرسة الأساسية', 'المدرسة الأم']),
+  column('additional.sharedSchoolMinistryNumber', 'رقم وزاري للمدرسة المشتركة', ['رقم وزاري للمدرسة المشتركة', 'الرقم الوزاري للمدرسة المشتركة']),
+  column('additional.remote', 'المدرسة نائية', ['المدرسة نائية', 'مدرسة نائية', 'نائية']),
+  column('additional.unitDepartmentOfficeCode', 'ترميز وحدة/قسم/مكتب', ['ترميز وحدة/قسم/مكتب', 'ترميز الوحدة', 'ترميز القسم', 'ترميز المكتب']),
+  column('additional.userId', 'رقم هوية المستخدم', ['رقم هوية المستخدم', 'هوية المستخدم']),
+  column('additional.investorName', 'إسم المستثمر', ['إسم المستثمر', 'اسم المستثمر']),
+  column('additional.investorEmail', 'البريد الإلكتروني للمستثمر', ['البريد الإلكتروني للمستثمر', 'ايميل المستثمر', 'إيميل المستثمر']),
+  column('additional.investorPhone', 'جوال المستثمر', ['جوال المستثمر']),
+  column('additional.curriculum', 'المنهج (للأجنبي)', ['المنهج (للأجنبي)', 'المنهج للأجنبي', 'المنهج']),
+  column('additional.planType', 'نوع الخطة', ['نوع الخطة', 'الخطة']),
+  column('additional.classesMerged', 'هل الفصول مضمومة', ['هل الفصول مضمومة', 'الفصول مضمومة', 'فصول مضمومة']),
+  column('additional.schoolSystem', 'نظام المدرسة', ['نظام المدرسة']),
+  column('additional.englishSchoolName', 'المدرسة باللغة الإنجليزية', ['المدرسة باللغة الإنجليزية', 'اسم المدرسة بالإنجليزية', 'اسم المدرسة بالانجليزية']),
+  column('additional.englishEducationDepartment', 'إدارة التعليم باللغة الإنجليزية', ['إدارة التعليم باللغة الإنجليزية', 'اسم الإدارة بالإنجليزية', 'اسم الادارة بالانجليزية']),
+  column('additional.educationDepartmentCode', 'ترميز الإدارة التعليمية', ['ترميز الإدارة التعليمية', 'ترميز الادارة التعليمية']),
+  column('additional.stageCode', 'ترميز المرحلة الدراسية', ['ترميز المرحلة الدراسية', 'ترميز المرحلة']),
+  column('additional.coordinateNumber', 'رقم الإحداث', ['رقم الإحداث', 'رقم الاحداث']),
+  column('additional.associatedCoordinateSchoolName', 'اسم المدرسةالمرتبطة بإحداث', ['اسم المدرسةالمرتبطة بإحداث', 'اسم المدرسة المرتبطة بإحداث', 'اسم المدرسة المرتبطة باحداث']),
+  column('additional.coordinateType', 'نوع الإحداث', ['نوع الإحداث', 'نوع الاحداث']),
+  column('additional.schoolStatus', 'حالة المدرسة', ['حالة المدرسة']),
+  column('additional.closingDate', 'تاريخ إغلاق المدرسة', ['تاريخ إغلاق المدرسة', 'تاريخ الاغلاق']),
+  column('additional.maleStudentsInGirlsSchools', 'عدد الطلاب البنين في مدارس البنات', ['عدد الطلاب البنين في مدارس البنات', 'الطلاب البنين في مدارس البنات']),
+  column('additional.maleClassesInGirlsSchools', 'عدد فصول البنين في مدارس البنات', ['عدد فصول البنين في مدارس البنات', 'فصول البنين في مدارس البنات']),
+  column('additional.payroll', 'مسير رواتب', ['مسير رواتب', 'مسير الرواتب']),
+  column('additional.licenseNumber', 'رقم الترخيص', ['رقم الترخيص']),
+  column('additional.commercialRegistration', 'السجل التجاري', ['السجل التجاري']),
+  column('additional.certificateSchoolName', 'اسم المدرسة في الشهادة', ['اسم المدرسة في الشهادة']),
+  column('additional.inComplex', 'ضمن مجمع', ['ضمن مجمع', 'المدرسة ضمن مجمع', 'مجمع']),
+  column('additional.libraryExists', 'توجد مكتبة', ['توجد مكتبة', 'يوجد مكتبة', 'مكتبة']),
+  column('additional.waterStatus', 'حالة الماء', ['حالة الماء', 'حالة المياه']),
+  column('additional.cars', 'عدد السيارات', ['عدد السيارات', 'السيارات']),
+  column('additional.resourceManagersCount', 'عدد أمناء المصادر', ['عدد أمناء المصادر', 'أمناء المصادر']),
+  column('additional.activityLeadersCount', 'عدد رائدي النشاط', ['عدد رائدي النشاط', 'رواد النشاط']),
+  column('additional.registrationOfficersCount', 'عدد مسؤولي التسجيل', ['عدد مسؤولي التسجيل', 'مسؤولي التسجيل']),
+  column('staff.guidance', 'عدد موجهي الطلاب', ['عدد موجهي الطلاب', 'موجهي الطلاب', 'عدد الموجهين', 'الموجهين', 'المرشدين']),
+  column('additional.educationCategory', 'فئة التعليم', ['فئة التعليم']),
+  column('additional.siteClassification', 'تصنيف موقع المدرسة', ['تصنيف موقع المدرسة', 'تصنيف الموقع']),
+  column('additional.sectorCode', 'رمز القطاع', ['رمز القطاع']),
+  column('additional.sector', 'القطاع', ['القطاع']),
+  column('additional.farisSectorCode', 'رمز القطاع الخاص بفارس', ['رمز القطاع الخاص بفارس', 'رمز فارس']),
+  column('additional.capacity', 'الطاقة الإستيعابية', ['الطاقة الإستيعابية', 'الطاقة الاستيعابية', 'القدرة الاستيعابية']),
+  column('additional.femaleTeachersTeachingAssignedMaleStudents', 'عدد المعلمات اللواتي يدرسن الطلبة البنين المسندين في مدارس البنات', ['عدد المعلمات اللواتي يدرسن الطلبة البنين المسندين في مدارس البنات', 'المعلمات اللواتي يدرسن الطلبة البنين المسندين في مدارس البنات']),
+  column('additional.segment', 'الشريحة', ['الشريحة'])
+]
+
+function cleanText(value: unknown): string {
+  return String(value ?? '')
+    .replace(/\u00A0/g, ' ')
+    .replace(/ـ/g, '')
+    .trim()
+}
+
+function normalizeHeader(value: unknown): string {
+  return cleanText(value)
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/[()]/g, '')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ي/g, 'ى')
+    .toLocaleLowerCase('ar')
+}
+
+function toEnglishDigits(value: string): string {
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
+
+  return value.replace(/[٠-٩]/g, digit => String(arabicDigits.indexOf(digit)))
+}
+
+function parseNumber(value: unknown): number {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : 0
+  }
+
+  const normalized = toEnglishDigits(cleanText(value))
+    .replace(/,/g, '')
+    .replace(/[^\d.-]/g, '')
+  const parsed = Number(normalized)
+
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+function parseBoolean(value: unknown): boolean {
+  const normalized = normalizeHeader(value)
+
+  return ['نعم', 'yes', 'true', '1', 'متاح', 'موجود', 'متوفر', 'فعال', 'يعمل', 'صالحه'].includes(normalized)
+}
+
+function findColumnValue(row: Record<string, unknown>, aliases: string[]): string {
+  for (const alias of aliases) {
+    if (Object.prototype.hasOwnProperty.call(row, alias)) {
+      return cleanText(row[alias])
+    }
+  }
+
+  const normalizedAliases = aliases.map(normalizeHeader)
+  const matchedKey = Object.keys(row).find(key => normalizedAliases.includes(normalizeHeader(key)))
+
+  return matchedKey ? cleanText(row[matchedKey]) : ''
+}
+
+function setNestedValue(record: Record<string, unknown>, key: string, value: unknown) {
+  const [parent, child] = key.split('.')
+
+  if (!parent || !child) {
+    return
+  }
+
+  const parentValue = record[parent]
+
+  if (!parentValue || typeof parentValue !== 'object') {
+    return
+  }
+
+  const parentRecord = parentValue as Record<string, unknown>
+  parentRecord[child] = value
+}
+
+function createEmptySchool(sourceRow: number, raw: Record<string, unknown>): MinistrySchoolRecord {
+  return {
+    identity: {
+      id: '',
+      schoolName: '',
+      cityVillage: '',
+      educationDepartment: '',
+      administrativeRegion: '',
+      unifiedCode: '',
+      stage: '',
+      authority: '',
+      educationType: '',
+      studyTime: '',
+      gender: '',
+      foundingYear: '',
+      phone: '',
+      email: '',
+      mailAddress: ''
+    },
+    students: {
+      grade1: 0,
+      grade2: 0,
+      grade3: 0,
+      grade4: 0,
+      grade5: 0,
+      grade6: 0,
+      grade7: 0,
+      grade8: 0,
+      grade9: 0,
+      grade10: 0,
+      grade11: 0,
+      grade12: 0,
+      total: 0,
+      saudi: 0,
+      newcomers: 0,
+      gradeTotal: 0,
+      gradeTotalMismatch: 0,
+      classes: 0,
+      saudi1: 0,
+      saudi2: 0,
+      saudi3: 0,
+      saudi4: 0,
+      saudi5: 0,
+      saudi6: 0,
+      saudi7: 0,
+      saudi8: 0,
+      saudi9: 0,
+      saudi10: 0,
+      saudi11: 0,
+      saudi12: 0,
+      saudiBus: 0,
+      saudiNewcomers: 0
+    },
+    staff: {
+      teachers: 0,
+      saudiTeachers: 0,
+      admins: 0,
+      saudiAdmins: 0,
+      guidance: 0,
+      agents: 0,
+      managerName: '',
+      managerId: '',
+      managerPhone: '',
+      managerEmailOfficial: '',
+      managerEmailPersonal: ''
+    },
+    facilities: {
+      computerLabs: 0,
+      physicsLabs: 0,
+      chemistryLabs: 0,
+      englishRooms: 0,
+      sewingRooms: 0,
+      homeEconomicsRooms: 0,
+      internet: false,
+      cafeteria: false,
+      water: false
+    },
+    building: {
+      ownership: '',
+      rent: 0,
+      latitude: 0,
+      longitude: 0,
+      roadStatus: '',
+      roadType: '',
+      subscriptionType: '',
+      independenceStatus: '',
+      nearestPrimaryDistance: 0,
+      nearestMiddleDistance: 0,
+      nearestHighDistance: 0
+    },
+    classification: {
+      earlyChildhood: false,
+      pathways: false
+    },
+    additional: {
+      educationOffice: '',
+      schoolCount: 0,
+      createdAt: '',
+      rooms: 0,
+      serviceStaff: 0,
+      workers: 0,
+      governmentBuildings: 0,
+      rentedBuildings: 0,
+      address: '',
+      nearestPrimary: '',
+      distance1: 0,
+      roadStatus1: '',
+      sameRegion1: false,
+      nearestMiddle: '',
+      distance2: 0,
+      roadStatus2: '',
+      sameRegion2: false,
+      nearestHigh: '',
+      distance3: 0,
+      roadStatus3: '',
+      sameRegion3: false,
+      asphaltDistance: 0,
+      dirtDistance: 0,
+      rockyDistance: 0,
+      managersCount: 0,
+      librariansCount: 0,
+      labPreparersCount: 0,
+      governorateNumber: '',
+      governorate: '',
+      administrativeCenterNumber: '',
+      administrativeCenter: '',
+      postalBox: '',
+      postalCode: '',
+      curriculumClassrooms: 0,
+      schoolBase: '',
+      sharedSchoolMinistryNumber: '',
+      remote: false,
+      unitDepartmentOfficeCode: '',
+      userId: '',
+      investorName: '',
+      investorEmail: '',
+      investorPhone: '',
+      curriculum: '',
+      planType: '',
+      classesMerged: false,
+      schoolSystem: '',
+      englishSchoolName: '',
+      englishEducationDepartment: '',
+      educationDepartmentCode: '',
+      stageCode: '',
+      coordinateNumber: '',
+      associatedCoordinateSchoolName: '',
+      coordinateType: '',
+      schoolStatus: '',
+      closingDate: '',
+      maleStudentsInGirlsSchools: 0,
+      maleClassesInGirlsSchools: 0,
+      payroll: '',
+      licenseNumber: '',
+      commercialRegistration: '',
+      certificateSchoolName: '',
+      inComplex: false,
+      libraryExists: false,
+      waterStatus: '',
+      cars: 0,
+      resourceManagersCount: 0,
+      activityLeadersCount: 0,
+      registrationOfficersCount: 0,
+      studentCounselorsCount: 0,
+      educationCategory: '',
+      siteClassification: '',
+      sectorCode: '',
+      sector: '',
+      farisSectorCode: '',
+      capacity: 0,
+      femaleTeachersTeachingAssignedMaleStudents: 0,
+      segment: ''
+    },
+    raw,
+    sourceRow
+  }
+}
+
+function hasMeaningfulData(school: MinistrySchoolRecord): boolean {
+  const mappedValues = [
+    school.identity.id,
+    school.identity.schoolName,
+    school.identity.educationDepartment,
+    school.identity.administrativeRegion,
+    school.students.total,
+    school.staff.teachers,
+    school.staff.managerName,
+    school.facilities.computerLabs,
+    school.building.ownership
+  ]
+
+  return mappedValues.some((value) => {
+    if (typeof value === 'number') {
+      return value > 0
+    }
+
+    return cleanText(value).length > 0
+  }) || Object.values(school.raw).some(value => cleanText(value).length > 0)
+}
+
+function mapRowToSchool(row: Record<string, unknown>, sourceRow: number): MinistrySchoolRecord {
+  const school = createEmptySchool(sourceRow, row)
+  const record = school as unknown as Record<string, unknown>
+
+  for (const definition of COLUMN_DEFINITIONS) {
+    const value = findColumnValue(row, definition.aliases)
+
+    if (!value) {
+      continue
+    }
+
+    const numericKeys = [
+      'students.total', 'students.saudi', 'students.newcomers', 'students.saudiNewcomers', 'students.classes',
+      'students.saudi1', 'students.saudi2', 'students.saudi3', 'students.saudi4', 'students.saudi5',
+      'students.saudi6', 'students.saudi7', 'students.saudi8', 'students.saudi9',
+      'students.saudiBus',
+      'staff.teachers', 'staff.saudiTeachers', 'staff.admins', 'staff.saudiAdmins', 'staff.guidance', 'staff.agents',
+      'facilities.computerLabs', 'facilities.physicsLabs', 'facilities.chemistryLabs', 'facilities.englishRooms',
+      'building.rent', 'building.latitude', 'building.longitude',
+      'building.nearestPrimaryDistance', 'building.nearestMiddleDistance', 'building.nearestHighDistance',
+      'additional.schoolCount', 'additional.rooms', 'additional.serviceStaff', 'additional.workers',
+      'additional.governmentBuildings', 'additional.rentedBuildings', 'additional.distance1', 'additional.distance2',
+      'additional.distance3', 'additional.asphaltDistance', 'additional.dirtDistance', 'additional.rockyDistance',
+      'additional.managersCount', 'additional.librariansCount', 'additional.labPreparersCount',
+      'additional.curriculumClassrooms', 'additional.maleStudentsInGirlsSchools', 'additional.maleClassesInGirlsSchools',
+      'additional.cars', 'additional.resourceManagersCount', 'additional.activityLeadersCount',
+      'additional.registrationOfficersCount', 'additional.capacity',
+      'additional.femaleTeachersTeachingAssignedMaleStudents'
+    ]
+
+    const booleanKeys = [
+      'facilities.internet', 'facilities.cafeteria', 'facilities.water',
+      'classification.earlyChildhood', 'classification.pathways',
+      'additional.sameRegion1', 'additional.sameRegion2', 'additional.sameRegion3',
+      'additional.remote', 'additional.classesMerged', 'additional.inComplex', 'additional.libraryExists'
+    ]
+
+    if (definition.key.startsWith('students.grade') || numericKeys.includes(definition.key)) {
+      setNestedValue(record, definition.key, parseNumber(value))
+      continue
+    }
+
+    if (booleanKeys.includes(definition.key)) {
+      setNestedValue(record, definition.key, parseBoolean(value))
+      continue
+    }
+
+    setNestedValue(record, definition.key, cleanText(value))
+  }
+
+  const grades = [
+    school.students.grade1,
+    school.students.grade2,
+    school.students.grade3,
+    school.students.grade4,
+    school.students.grade5,
+    school.students.grade6,
+    school.students.grade7,
+    school.students.grade8,
+    school.students.grade9,
+    school.students.grade10,
+    school.students.grade11,
+    school.students.grade12
+  ]
+
+  school.students.gradeTotal = grades.reduce((sum, value) => sum + value, 0)
+  school.students.gradeTotalMismatch = school.students.total ? Math.abs(school.students.gradeTotal - school.students.total) : 0
+
+  return school
+}
+
+function extractHeaders(worksheet: XLSX.WorkSheet): string[] {
+  const firstRow = XLSX.utils.sheet_to_json<unknown[]>(worksheet, { header: 1, defval: '' })[0] || []
+
+  return firstRow
+    .map(cleanText)
+    .filter(Boolean)
+}
+
+async function parseExcelFile(file: File): Promise<MinistryExcelPayload> {
+  const arrayBuffer = await file.arrayBuffer()
+  const workbook = XLSX.read(arrayBuffer, { type: 'array', cellDates: true })
+  const firstSheetName = workbook.SheetNames[0] ?? ''
+
+  if (!firstSheetName) {
+    throw new Error('لا يحتوي الملف على أوراق بيانات')
+  }
+
+  const worksheet = workbook.Sheets[firstSheetName]!
+  const headers = extractHeaders(worksheet)
+  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(worksheet, { defval: '' })
+  const schools = rows
+    .map((row, index) => mapRowToSchool(row, index + 2))
+    .filter(hasMeaningfulData)
+
+  if (!schools.length) {
+    throw new Error('لم يتم العثور على بيانات مدارس متوافقة مع الصيغة الوزارية')
+  }
+
+  const warningCount = schools.filter(school => school.students.gradeTotalMismatch > 0).length
+
+  return {
+    schools,
+    headers,
+    warningCount
+  }
+}
+
+self.onmessage = async (event: MessageEvent<WorkerParseRequest>) => {
+  const { id, type, file } = event.data
+
+  if (type !== 'parse') {
+    return
+  }
+
+  try {
+    const payload = await parseExcelFile(file)
+
+    self.postMessage({
+      id,
+      type: 'parsed',
+      payload
+    })
+  } catch (caughtError) {
+    const message = caughtError instanceof Error ? caughtError.message : 'حدث خطأ غير متوقع أثناء معالجة الملف'
+
+    self.postMessage({
+      id,
+      type: 'error',
+      message
+    })
+  }
+}
+</file>
+
+<file path="app/app.config.ts">
+export default defineAppConfig({
+  ui: {
+    colors: {
+      primary: 'green',
+      neutral: 'slate'
+    }
+  }
+})
+</file>
+
+<file path="app/app.vue">
+<script setup>
+useHead({
+  meta: [
+    { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+  ],
+  link: [
+    { rel: 'icon', href: '/favicon.ico' }
+  ],
+  htmlAttrs: {
+    lang: 'ar',
+    dir: 'rtl'
+  }
+})
+
+const title = 'لوحة تحليل ملفات Excel'
+const description = 'لوحة تحليل تفاعلية لقراءة ملفات Excel وعرض إحصائيات المدارس باستخدام Nuxt و Tauri.'
+const isAboutOpen = ref(false)
+
+useSeoMeta({
+  title,
+  description,
+  ogTitle: title,
+  ogDescription: description
+})
+</script>
+
+<template>
+  <UApp>
+    <UHeader>
+      <template #left>
+        <NuxtLink
+          to="/"
+          class="flex items-center gap-3 text-sm font-semibold"
+        >
+          <img
+            src="/img/logo.png"
+            alt="شعار الإدارة العامة للتعليم بمنطقة الباحة"
+            class="h-12 w-auto"
+          >
+          الإدارة العامة للتعليم بمنطقة الباحة
+        </NuxtLink>
+      </template>
+
+      <template #right>
+        <UButton
+          label="حول التطبيق"
+          variant="ghost"
+          icon="i-lucide-info"
+          @click="isAboutOpen = true"
+        />
+        <UColorModeButton />
+      </template>
+    </UHeader>
+
+    <UModal
+      v-model:open="isAboutOpen"
+      title="حول التطبيق"
+      description="نبذة مختصرة عن لوحة تحليل ملفات Excel"
+      class="max-w-2xl"
+    >
+      <template #body>
+        <div class="space-y-4 text-right leading-7">
+          <p>
+            هذا التطبيق يساعدك على قراءة ملفات Excel الوزارية الشاملة وتحليل بيانات المدارس بسرعة، مع عرض مؤشرات إدارية ورسوم بيانية وجداول تفاعلية تدعم البحث والفلترة والتصدير.
+          </p>
+          <p>
+            تم بناؤه كواجهة سطح مكتب ليكون أداة محلية مستقرة وسهلة الاستخدام لإدارة ومتابعة بيانات المدارس الصادرة من برنامج نور.
+          </p>
+          <p>
+            برمجة وتصميم: محمد عبدالرحمن - فكرة: هاشم العمري
+          </p>
+        </div>
+      </template>
+    </UModal>
+
+    <UMain>
+      <NuxtPage />
+    </UMain>
+
+    <USeparator />
+
+    <UFooter>
+      <template #left>
+        <p class="text-sm text-muted">
+          برمجة وتصميم: محمد عبدالرحمن - فكرة: هاشم العمري
+        </p>
+      </template>
+    </UFooter>
+  </UApp>
+</template>
+</file>
+
+<file path="src-tauri/capabilities/default.json">
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "enables the default permissions",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default"
+  ]
+}
+</file>
+
+<file path="src-tauri/icons/android/mipmap-anydpi-v26/ic_launcher.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+  <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+  <background android:drawable="@color/ic_launcher_background"/>
+</adaptive-icon>
+</file>
+
+<file path="src-tauri/icons/android/values/ic_launcher_background.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="ic_launcher_background">#fff</color>
+</resources>
+</file>
+
+<file path="src-tauri/src/lib.rs">
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() {
+  tauri::Builder::default()
+    .setup(|app| {
+      if cfg!(debug_assertions) {
+        app.handle().plugin(
+          tauri_plugin_log::Builder::default()
+            .level(log::LevelFilter::Info)
+            .build(),
+        )?;
+      }
+      Ok(())
+    })
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}
+</file>
+
+<file path="src-tauri/src/main.rs">
+// Prevents additional console window on Windows in release, DO NOT REMOVE!!
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+fn main() {
+  testapp_lib::run();
+}
+</file>
+
+<file path="src-tauri/.gitignore">
+# Generated by Cargo
+# will have compiled files and executables
+/target/
+/gen/schemas
+</file>
+
+<file path="src-tauri/build.rs">
+fn main() {
+  tauri_build::build()
+}
+</file>
+
+<file path="src-tauri/Cargo.toml">
+[package]
+name = "testapp"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "testapp_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.2", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.11.2", features = [] }
+tauri-plugin-log = "2"
+</file>
+
+<file path="src-tauri/tauri.conf.json">
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Moe Noor Data",
+  "version": "0.1.0",
+  "identifier": "com.moenoordata.desktop",
+  "build": {
+    "frontendDist": "../.output/public",
+    "devUrl": "http://localhost:3000",
+    "beforeDevCommand": "pnpm dev --port 3000",
+    "beforeBuildCommand": "TAURI_APP=true pnpm build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Moe Noor Data",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    }
+  }
+}
+</file>
+
+<file path=".editorconfig">
+# editorconfig.org
+root = true
+
+[*]
+indent_size = 2
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.md]
+trim_trailing_whitespace = false
+</file>
+
+<file path=".gitignore">
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+</file>
+
+<file path="eslint.config.mjs">
+// @ts-check
+import withNuxt from './.nuxt/eslint.config.mjs'
+
+export default withNuxt({
+  ignores: ['src-tauri/target/**']
+})
+</file>
+
+<file path="fix-paths.mjs">
+import fs from 'fs'
+import path from 'path'
+
+const indexPath = path.join(process.cwd(), '.output', 'public', 'index.html')
+const html = fs.readFileSync(indexPath, 'utf-8')
+
+let fixed = html
+  .replace(/href="\/([^\/][^"]*)"/g, 'href="./$1"')
+  .replace(/src="\/([^\/][^"]*)"/g, 'src="./$1"')
+
+if (html !== fixed) {
+  fs.writeFileSync(indexPath, fixed)
+  console.log('Fixed relative paths in index.html')
+}
+</file>
+
+<file path="LICENSE">
+MIT License
+
+Copyright (c) 2025 Nuxt UI Templates
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</file>
+
+<file path="nuxt.config.ts">
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/ui'
+  ],
+
+  ssr: false,
+
+  devtools: {
+    enabled: true
+  },
+  app: {
+    baseURL: './',
+    buildAssetsDir: './_nuxt/'
+  },
+
+  css: ['~/assets/css/main.css'],
+
+  nitro: {
+    preset: 'static',
+    output: {
+      publicDir: '.output/public'
+    }
+  },
+
+  compatibilityDate: '2025-01-15',
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  }
+})
+</file>
+
+<file path="package.json">
+{
+  "name": "testApp",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "postbuild": "node fix-paths.mjs",
+    "dev": "nuxt dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.111",
+    "@iconify-json/simple-icons": "^1.2.85",
+    "@nuxt/ui": "^4.8.2",
+    "@tauri-apps/api": "^2.11.0",
+    "@tauri-apps/plugin-log": "^2.8.0",
+    "apexcharts": "^5.15.0",
+    "nuxt": "^4.4.8",
+    "tailwindcss": "^4.3.0",
+    "vue3-apexcharts": "^1.11.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.15.2",
+    "@tauri-apps/cli": "^2.11.2",
+    "eslint": "^10.4.1",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.3"
+  },
+  "packageManager": "pnpm@11.5.2"
+}
+</file>
+
+<file path="pnpm-workspace.yaml">
+allowBuilds:
+  '@parcel/watcher': false
+  '@tailwindcss/oxide': false
+  esbuild: false
+  unrs-resolver: false
+  vue-demi: false
+</file>
+
+<file path="README.md">
+# Nuxt Starter Template
+
+[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+
+Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+
+- [Live demo](https://starter-template.nuxt.dev/)
+- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+
+<a href="https://starter-template.nuxt.dev/" target="_blank">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
+    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
+  </picture>
+</a>
+
+> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
+
+## Quick Start
+
+```bash [Terminal]
+npm create nuxt@latest -- -t ui
+```
+
+## Deploy your own
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
+
+## Setup
+
+Make sure to install the dependencies:
+
+```bash
+pnpm install
+```
+
+## Development Server
+
+Start the development server on `http://localhost:3000`:
+
+```bash
+pnpm dev
+```
+
+## Production
+
+Build the application for production:
+
+```bash
+pnpm build
+```
+
+Locally preview production build:
+
+```bash
+pnpm preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Renovate integration
+
+Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
+</file>
+
+<file path="renovate.json">
+{
+  "extends": [
+    "github>nuxt/renovate-config-nuxt"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [{
+    "matchDepTypes": ["resolutions"],
+    "enabled": false
+  }],
+  "postUpdateOptions": ["pnpmDedupe"]
+}
+</file>
+
+<file path="tsconfig.json">
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "files": [],
+  "references": [
+    { "path": "./.nuxt/tsconfig.app.json" },
+    { "path": "./.nuxt/tsconfig.server.json" },
+    { "path": "./.nuxt/tsconfig.shared.json" },
+    { "path": "./.nuxt/tsconfig.node.json" }
+  ]
+}
+</file>
+
+</files>

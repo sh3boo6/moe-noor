@@ -26,7 +26,7 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <UHeader :ui="{toggle: 'hidden'}">
+    <UHeader :ui="{ toggle: 'hidden' }">
       <template #left>
         <NuxtLink
           to="/"
@@ -49,7 +49,10 @@ useSeoMeta({
           @click="isAboutOpen = true"
         />
         <UColorModeButton />
-        <UAvatar class="me-1 border border-default" src="/img/avatar.PNG" />
+        <UAvatar
+          class="me-1 border border-default"
+          src="/img/avatar.PNG"
+        />
       </template>
     </UHeader>
 
@@ -82,7 +85,10 @@ useSeoMeta({
 
     <UFooter>
       <template #left>
-        <UAvatar class="me-1 border border-default" src="/img/avatar.PNG" />
+        <UAvatar
+          class="me-1 border border-default"
+          src="/img/avatar.PNG"
+        />
         <p class="text-sm text-muted">
           برمجة وتصميم: محمد عبدالرحمن - فكرة: هاشم العمري
         </p>

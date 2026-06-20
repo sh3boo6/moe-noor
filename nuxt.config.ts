@@ -1,8 +1,6 @@
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/ui'
-  ],
+
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@vite-pwa/nuxt'],
   ssr: false,
 
   devtools: {
@@ -10,7 +8,12 @@ export default defineNuxtConfig({
   },
   app: {
     baseURL: '/',
-    buildAssetsDir: '/_nuxt/'
+    buildAssetsDir: '/_nuxt/',
+    head: {
+      link: [
+        { rel: 'manifest', href: '/manifest.webmanifest' }
+      ]
+    }
   },
 
   css: ['~/assets/css/main.css'],
@@ -30,6 +33,48 @@ export default defineNuxtConfig({
         commaDangle: 'never',
         braceStyle: '1tbs'
       }
+    }
+  },
+
+  pwa: {
+    registerType: 'autoUpdate',
+    registerWebManifestInRouteRules: true,
+    injectRegister: 'inline',
+    manifest: {
+      name: 'Nuxt 4 PWA',
+      short_name: 'NuxtPWA',
+      description: 'A Nuxt 4 Progressive Web App',
+      theme_color: '#4A90E2',
+      icons: [
+        {
+          src: 'icons/icon-192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: 'icons/icon-512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
+    },
+    workbox: {
+      runtimeCaching: [
+        {
+          urlPattern: 'http://localhost:3000/.*',
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'api-cache',
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 86400
+            }
+          }
+        }
+      ]
+    },
+    client: {
+      installPrompt: true
     }
   }
 })
