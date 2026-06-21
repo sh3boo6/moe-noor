@@ -91,6 +91,12 @@ async function handleFile(file: File) {
   await parseFile(file)
 }
 
+function clearAll() {
+  clearSchools()
+  uploadDate.value = ''
+  resetFilters()
+}
+
 function updateFilter(key: keyof MinistryFilters, value: string | string[]) {
   filters[key] = value as string[]
 }
@@ -105,6 +111,7 @@ function resetFilters() {
   filters.studyTime = []
   filters.educationType = []
   filters.governorate = []
+  uploadDate.value = ''
 }
 </script>
 
@@ -238,7 +245,7 @@ function resetFilters() {
               variant="ghost"
               label="مسح البيانات"
               icon="i-lucide-trash-2"
-              @click="clearSchools"
+              @click="clearAll"
             />
           </div>
         </div>
