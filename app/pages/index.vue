@@ -2,6 +2,8 @@
 import type { MinistryFilters, MinistrySchoolRecord } from '~/types/ministrySchool'
 import { normalizeGender } from '~/utils/normalize'
 
+const toast = useToast()
+
 const {
   schools,
   headers,
@@ -97,6 +99,13 @@ function clearAll() {
   resetFilters()
 }
 
+function successAction(title: string) {
+  toast.add({
+    title: title,
+    icon: 'i-lucide-check-circle'
+  })
+}
+
 function updateFilter(key: keyof MinistryFilters, value: string | string[]) {
   filters[key] = value as string[]
 }
@@ -111,7 +120,8 @@ function resetFilters() {
   filters.studyTime = []
   filters.educationType = []
   filters.governorate = []
-  uploadDate.value = ''
+  //uploadDate.value = ''
+  successAction('تمت العملية بنجاح')
 }
 </script>
 
@@ -142,13 +152,13 @@ function resetFilters() {
           </div>
 
           <div class="rounded-2xl border border-accented/50 bg-muted/20 p-5">
-            <p class="text-xs font-medium text-muted-foreground">
-              الملف الحالي
+            <p class="text-xs font-medium text-muted-foreground flex justify-between items-start">
+              <span>الملف الحالي</span>
+              <span class="text-primary/80 text-xs">{{ uploadDate || '' }}</span>
             </p>
 
-            <p class="mt-2 line-clamp-2 text-sm font-semibold text-foreground flex justify-between items-start">
+            <p class="mt-2 line-clamp-2 text-sm font-semibold text-foreground">
               <span>{{ fileName || 'لم يتم اختيار ملف بعد' }}</span>
-              <span class="text-primary/50 text-xs">{{ uploadDate || '' }}</span>
             </p>
 
             <div class="mt-4 grid grid-cols-2 gap-3">
