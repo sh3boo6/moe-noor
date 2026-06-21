@@ -26,6 +26,7 @@ const filters = reactive<MinistryFilters>({
 })
 
 const selectedSchool = ref<MinistrySchoolRecord | null>(null)
+const uploadDate = ref<string>('')
 
 useHead({
   title: 'لوحة الصيغة الوزارية الشاملة',
@@ -75,6 +76,16 @@ const filteredSchools = computed(() => schools.value.filter((school) => {
     && (!filters.educationType.length || filters.educationType.includes(identity.educationType))
     && (!filters.governorate.length || filters.governorate.includes(school.additional.governorate))
 }))
+
+function updateUploadDate(data: { uploadedAt: string }) {
+  uploadDate.value = new Date(data.uploadedAt).toLocaleString('ar-SA', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 
 async function handleFile(file: File) {
   await parseFile(file)
@@ -128,8 +139,9 @@ function resetFilters() {
               الملف الحالي
             </p>
 
-            <p class="mt-2 line-clamp-2 text-sm font-semibold text-foreground">
-              {{ fileName || 'لم يتم اختيار ملف بعد' }}
+            <p class="mt-2 line-clamp-2 text-sm font-semibold text-foreground flex justify-between items-start">
+              <span>{{ fileName || 'لم يتم اختيار ملف بعد' }}</span>
+              <span class="text-primary/50 text-xs">{{ uploadDate || '' }}</span>
             </p>
 
             <div class="mt-4 grid grid-cols-2 gap-3">
@@ -155,7 +167,11 @@ function resetFilters() {
         </div>
       </section>
 
-      <MinistryUploadZone @file-selected="handleFile" />
+      <MinistryUploadZone
+        v-if="!fileName"
+        @file-selected="handleFile"
+        @file-stored="updateUploadDate"
+      />
 
       <div
         v-if="loading"

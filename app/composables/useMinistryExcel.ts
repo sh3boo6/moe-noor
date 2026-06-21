@@ -89,6 +89,7 @@ export function useMinistryExcel() {
     error.value = null
     warningCount.value = 0
     pendingJobId.value = null
+    localStorage.removeItem('ministry_pending_excel')
   }
 
   onUnmounted(() => {

@@ -40,7 +40,7 @@ onUnmounted(() => {
   <div
     v-if="isVisible"
     :class="{ 'opacity-0': isFading }"
-    class="fixed overflow-auto inset-0 z-[999999] flex top-0 left-0 right-0 bottom-0 items-center justify-center bg-white dark:bg-[#10172a] transition-opacity duration-300"
+    class="fixed overflow-auto inset-0 z-[999999] flex top-0 left-0 right-0 bottom-0 items-center justify-center bg-default dark:bg-[#0e172b] transition-opacity duration-300"
   >
     <img
       :src="introImage"
