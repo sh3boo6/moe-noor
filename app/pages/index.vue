@@ -110,12 +110,11 @@ function resetFilters() {
               <img
                 src="/img/logo.png"
                 alt="شعار وزارة التعليم"
-                class="h-16 w-auto"
+                class="h-16 w-auto hidden lg:flex"
               >
-              وزارة التعليم
             </div>
 
-            <h1 class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            <h1 class="text-xl font-semibold tracking-tight text-foreground">
               لوحة تحليل البيانات الوزارية
             </h1>
 

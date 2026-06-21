@@ -26,6 +26,7 @@ useSeoMeta({
 
 <template>
   <UApp>
+    <AppIntro />
     <UHeader :ui="{ toggle: 'hidden' }">
       <template #left>
         <NuxtLink

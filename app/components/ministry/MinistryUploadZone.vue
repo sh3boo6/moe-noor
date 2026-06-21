@@ -53,7 +53,7 @@ function onDrop(files: FileList | null) {
     >
 
     <div class="relative mx-auto flex max-w-4xl flex-col items-center text-center">
-      <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+      <div class="hidden lg:flex mb-5 h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
         <img
           src="/img/logo.png"
           alt="شعار وزارة التعليم"
