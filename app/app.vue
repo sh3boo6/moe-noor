@@ -50,10 +50,6 @@ useSeoMeta({
           @click="isAboutOpen = true"
         />
         <UColorModeButton />
-        <UAvatar
-          class="me-1 border border-default"
-          src="/img/avatar.PNG"
-        />
       </template>
     </UHeader>
 
@@ -87,7 +83,8 @@ useSeoMeta({
     <UFooter>
       <template #left>
         <UAvatar
-          class="me-1 border border-default"
+          class="me-2 border border-default"
+          size="2xl"
           src="/img/avatar.PNG"
         />
         <p class="text-sm text-muted">
