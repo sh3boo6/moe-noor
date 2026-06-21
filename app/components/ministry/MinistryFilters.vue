@@ -74,7 +74,7 @@ function updateFilter(key: keyof MinistryFilters, value: string[]) {
         <USelectMenu
           v-model="filterModels[filter.key]"
           :items="filter.options"
-          :placeholder="`كل ${filter.label}`"
+          :placeholder="`الكل`"
           multiple
           class="w-full"
           @update:model-value="updateFilter(filter.key, $event)"
