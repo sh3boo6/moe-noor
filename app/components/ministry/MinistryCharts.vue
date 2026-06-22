@@ -369,17 +369,97 @@ const _departmentStaff = computed<DepartmentStaff[]>(() => {
   }
 
   return Array.from(grouped.values())
-    .sort((a, b) => (b.teachers + b.admins) - (a.teachers + b.admins))
+    .sort((a, b) => (b.teachers + b.admins) - (a.teachers + a.admins))
     .slice(0, 10)
 })
+
+const staffSeries = computed<ApexAxisChartSeries>(() => [
+  {
+    name: 'المعلمون',
+    data: _departmentStaff.value.map(item => item.teachers)
+  },
+  {
+    name: 'الإداريون',
+    data: _departmentStaff.value.map(item => item.admins)
+  }
+])
+
+const staffChartOptions = computed<ApexOptions>(() => ({
+  chart: {
+    type: 'bar',
+    fontFamily,
+    toolbar: { show: false },
+    stacked: true,
+    background: isDark.value ? '#1e293b' : '#ffffff',
+    theme: { mode: isDark.value ? 'dark' : 'light' },
+    foreColor: isDark.value ? '#e2e8f0' : '#374151'
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 6,
+      columnWidth: '50%'
+    }
+  },
+  colors: ['#16a34a', '#f97316'],
+  xaxis: {
+    categories: _departmentStaff.value.map(item => item.department),
+    title: { text: 'إدارة التعليم' }
+  },
+  yaxis: {
+    title: { text: 'عدد الكادر' }
+  },
+  grid: { show: false },
+  legend: {
+    position: 'bottom',
+    rtl: true,
+    fontFamily
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => formatNumber(val)
+  }
+}) as unknown as ApexOptions)
 
 const stages = computed(() => Array.from(new Set(props.schools.map(school => school.identity.stage).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ar')))
 const authorities = computed(() => Array.from(new Set(props.schools.map(school => school.identity.authority).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ar')))
 
-const authorityStageSeries = computed<ApexAxisChartSeries>(() => authorities.value.map(authority => ({
-  name: authority,
-  data: stages.value.map(stage => props.schools.filter(school => school.identity.authority === authority && school.identity.stage === stage).length)
-})))
+function buildAuthorityGenderSeries() {
+  const stageAuthorities = authorities.value
+
+  const boysData: number[] = []
+  const girlsData: number[] = []
+
+  for (const authority of stageAuthorities) {
+    let boys = 0
+    let girls = 0
+    for (const school of props.schools) {
+      if (school.identity.authority === authority) {
+        const gender = normalizeGender(school.identity.gender || '')
+        const schoolCount = school.additional?.schoolCount || 1
+        if (gender === 'بنين') {
+          boys += schoolCount
+        } else if (gender === 'بنات') {
+          girls += schoolCount
+        } else {
+          boys += schoolCount / 2
+          girls += schoolCount / 2
+        }
+      }
+    }
+    boysData.push(boys)
+    girlsData.push(girls)
+  }
+
+  const series: ApexAxisChartSeries = [
+    { name: 'بنين', data: boysData },
+    { name: 'بنات', data: girlsData }
+  ]
+  return { authorities: stageAuthorities, series }
+}
+
+const authorityGenderData = computed(() => buildAuthorityGenderSeries())
+
+const authorityStageGenderSeries = computed<ApexAxisChartSeries>(() => authorityGenderData.value.series)
 
 const authorityStageChart = computed<ApexOptions>(() => ({
   chart: {
@@ -394,13 +474,17 @@ const authorityStageChart = computed<ApexOptions>(() => ({
   plotOptions: {
     bar: {
       borderRadius: 8,
-      columnWidth: '64%'
+      columnWidth: '48%'
     }
   },
-  colors: seriesColors.slice(0, authorities.value.length),
+  colors: ['#2563eb', '#db2777'],
   xaxis: {
-    categories: stages.value,
-    title: { text: 'المراحل الدراسية' }
+    categories: authorityGenderData.value.authorities.map((auth, idx) => {
+      const boys = getSeriesValue(authorityGenderData.value.series, 0, idx)
+      const girls = getSeriesValue(authorityGenderData.value.series, 1, idx)
+      return `${auth}\nالإجمالي: ${formatNumber(boys + girls)}`
+    }),
+    title: { text: 'السلطة' }
   },
   yaxis: {
     title: { text: 'عدد المدارس' }
@@ -409,14 +493,196 @@ const authorityStageChart = computed<ApexOptions>(() => ({
   legend: {
     position: 'bottom',
     rtl: true,
-    fontFamily,
-    fontSize: '12px'
+    fontFamily
   },
   dataLabels: {
     enabled: true,
+    style: { fontFamily, fontSize: '10px' },
     formatter: (val: number) => formatNumber(val)
   }
 }) as unknown as ApexOptions)
+
+const authorityStageGenderTotal = computed(() => getSeriesTotal(authorityGenderData.value.series))
+
+const governorates = computed(() => Array.from(new Set(props.schools.map(s => s.additional?.governorate).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ar')))
+
+function buildGovernorateStageGenderSeries() {
+  const stageGovernorates = governorates.value
+
+  const boysData: number[] = []
+  const girlsData: number[] = []
+
+  for (const governorate of stageGovernorates) {
+    let boys = 0
+    let girls = 0
+    for (const school of props.schools) {
+      if (school.additional?.governorate === governorate) {
+        const gender = normalizeGender(school.identity.gender || '')
+        const schoolCount = school.additional?.schoolCount || 1
+        if (gender === 'بنين') {
+          boys += schoolCount
+        } else if (gender === 'بنات') {
+          girls += schoolCount
+        } else {
+          boys += schoolCount / 2
+          girls += schoolCount / 2
+        }
+      }
+    }
+    boysData.push(boys)
+    girlsData.push(girls)
+  }
+
+  return {
+    governorates: stageGovernorates,
+    boysData,
+    girlsData
+  }
+}
+
+const governorateStageGenderData = computed(() => buildGovernorateStageGenderSeries())
+
+const governorateStageGenderSeries = computed<ApexAxisChartSeries>(() => [
+  { name: 'بنين', data: governorateStageGenderData.value.boysData },
+  { name: 'بنات', data: governorateStageGenderData.value.girlsData }
+])
+
+const governorateStageGenderChart = computed<ApexOptions>(() => {
+  const series = governorateStageGenderSeries.value
+  return {
+    chart: {
+      type: 'bar',
+      fontFamily,
+      toolbar: { show: false },
+      stacked: true,
+      background: isDark.value ? '#1e293b' : '#ffffff',
+      theme: { mode: isDark.value ? 'dark' : 'light' },
+      foreColor: isDark.value ? '#e2e8f0' : '#374151'
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 8,
+        columnWidth: '48%'
+      }
+    },
+    colors: ['#2563eb', '#db2777'],
+    xaxis: {
+      categories: governorateStageGenderData.value.governorates.map((label, index) => {
+        const total = getSeriesValue(series, 0, index) + getSeriesValue(series, 1, index)
+        return `${label}\nالإجمالي: ${formatNumber(total)}`
+      }),
+      title: { text: 'المحافظة' }
+    },
+    yaxis: {
+      title: { text: 'عدد المدارس' }
+    },
+    grid: { show: false },
+    legend: {
+      position: 'bottom',
+      rtl: true,
+      fontFamily
+    },
+    dataLabels: {
+      enabled: true,
+      style: { fontFamily, fontSize: '10px' },
+      formatter: (val: number) => formatNumber(val)
+    }
+  } as unknown as ApexOptions
+})
+
+const governorateStageGenderTotal = computed(() => getSeriesTotal(governorateStageGenderSeries.value))
+
+// --- المنطق الجديد: توزيع الكادر التعليمي والإداري حسب المحافظة (بنين / بنات) ---
+function buildGovernorateStaffGenderSeries() {
+  const stageGovernorates = governorates.value
+
+  const boysData: number[] = []
+  const girlsData: number[] = []
+
+  for (const governorate of stageGovernorates) {
+    let boys = 0
+    let girls = 0
+
+    for (const school of props.schools) {
+      if (school.additional?.governorate === governorate) {
+        const gender = normalizeGender(school.identity.gender || '')
+        const totalStaff = (typeof school.staff.teachers === 'number' ? school.staff.teachers : 0) +
+                           (typeof school.staff.admins === 'number' ? school.staff.admins : 0)
+
+        if (gender === 'بنين') {
+          boys += totalStaff
+        } else if (gender === 'بنات') {
+          girls += totalStaff
+        } else {
+          boys += totalStaff / 2
+          girls += totalStaff / 2
+        }
+      }
+    }
+    // نقوم بالتقريب لتجنب وجود أنصاف أشخاص في حال كانت المدرسة مختلطة وتم قسمة كادرها
+    boysData.push(Math.round(boys))
+    girlsData.push(Math.round(girls))
+  }
+
+  return {
+    governorates: stageGovernorates,
+    boysData,
+    girlsData
+  }
+}
+
+const governorateStaffGenderData = computed(() => buildGovernorateStaffGenderSeries())
+
+const governorateStaffGenderSeries = computed<ApexAxisChartSeries>(() => [
+  { name: 'بنين', data: governorateStaffGenderData.value.boysData },
+  { name: 'بنات', data: governorateStaffGenderData.value.girlsData }
+])
+
+const governorateStaffGenderTotal = computed(() => getSeriesTotal(governorateStaffGenderSeries.value))
+
+const governorateStaffGenderChart = computed<ApexOptions>(() => {
+  const series = governorateStaffGenderSeries.value
+  return {
+    chart: {
+      type: 'bar',
+      fontFamily,
+      toolbar: { show: false },
+      stacked: true,
+      background: isDark.value ? '#1e293b' : '#ffffff',
+      theme: { mode: isDark.value ? 'dark' : 'light' },
+      foreColor: isDark.value ? '#e2e8f0' : '#374151'
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 8,
+        columnWidth: '48%'
+      }
+    },
+    colors: ['#2563eb', '#db2777'],
+    xaxis: {
+      categories: governorateStaffGenderData.value.governorates.map((label, index) => {
+        const total = getSeriesValue(series, 0, index) + getSeriesValue(series, 1, index)
+        return `${label}\nالإجمالي: ${formatNumber(total)}`
+      }),
+      title: { text: 'المحافظة' }
+    },
+    yaxis: {
+      title: { text: 'عدد الكادر التعليمي والإداري' }
+    },
+    grid: { show: false },
+    legend: {
+      position: 'bottom',
+      rtl: true,
+      fontFamily
+    },
+    dataLabels: {
+      enabled: true,
+      style: { fontFamily, fontSize: '10px' },
+      formatter: (val: number) => formatNumber(val)
+    }
+  } as unknown as ApexOptions
+})
+// ----------------------------------------------------------------------------------
 
 const facilityRegions = computed<FacilityRegion[]>(() => {
   const grouped = new Map<string, FacilityRegion>()
@@ -432,7 +698,7 @@ const facilityRegions = computed<FacilityRegion[]>(() => {
   }
 
   return Array.from(grouped.values())
-    .sort((a, b) => (b.computerLabs + b.physicsLabs + b.chemistryLabs) - (a.computerLabs + b.physicsLabs + b.chemistryLabs))
+    .sort((a, b) => (b.computerLabs + b.physicsLabs + b.chemistryLabs) - (a.computerLabs + a.physicsLabs + a.chemistryLabs))
     .slice(0, 10)
 })
 
@@ -464,7 +730,7 @@ const facilityChart = computed<ApexOptions>(() => ({
     bar: {
       borderRadius: 8,
       columnWidth: '56%',
-      distributed: true
+      distributed: false
     }
   },
   colors: ['#16a34a', '#f97316', '#9333ea'],
@@ -594,7 +860,7 @@ const chartKey = computed(() => Date.now())
       <template #header>
         <div class="flex items-center justify-between gap-3">
           <h2 class="text-lg font-semibold text-foreground">
-            توزيع المراحل حسب السلطة
+            توزيع المراحل حسب السلطة - بنين / بنات ({{ formatNumber(authorityStageGenderTotal) }})
           </h2>
           <UIcon
             name="i-lucide-layers-3"
@@ -607,7 +873,76 @@ const chartKey = computed(() => Date.now())
         :key="chartKey"
         type="bar"
         :options="authorityStageChart"
-        :series="authorityStageSeries"
+        :series="authorityStageGenderSeries"
+        height="320"
+      />
+    </UCard>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+      <UCard v-if="governorates.length">
+        <template #header>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-foreground">
+              توزيع المراحل حسب المحافظة - بنين / بنات ({{ formatNumber(governorateStageGenderTotal) }})
+            </h2>
+            <UIcon
+              name="i-lucide-map"
+              class="h-5 w-5 text-primary"
+            />
+          </div>
+        </template>
+
+        <ApexChart
+          :key="chartKey"
+          type="bar"
+          :options="governorateStageGenderChart"
+          :series="governorateStageGenderSeries"
+          height="320"
+        />
+      </UCard>
+
+      <!-- البطاقة الجديدة: توزيع الكادر التعليمي والإداري حسب المحافظة -->
+      <UCard v-if="governorates.length">
+        <template #header>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-foreground">
+              توزيع الكادر التعليمي والإداري حسب المحافظة - بنين / بنات ({{ formatNumber(governorateStaffGenderTotal) }})
+            </h2>
+            <UIcon
+              name="i-lucide-contact"
+              class="h-5 w-5 text-primary"
+            />
+          </div>
+        </template>
+
+        <ApexChart
+          :key="chartKey"
+          type="bar"
+          :options="governorateStaffGenderChart"
+          :series="governorateStaffGenderSeries"
+          height="320"
+        />
+      </UCard>
+    </div>
+
+    <UCard v-if="_departmentStaff.length">
+      <template #header>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="text-lg font-semibold text-foreground">
+            توزيع الكادر التعليمي والإداري لأعلى 10 إدارات تعليمية
+          </h2>
+          <UIcon
+            name="i-lucide-contact-2"
+            class="h-5 w-5 text-primary"
+          />
+        </div>
+      </template>
+
+      <ApexChart
+        :key="chartKey"
+        type="bar"
+        :options="staffChartOptions"
+        :series="staffSeries"
         height="320"
       />
     </UCard>

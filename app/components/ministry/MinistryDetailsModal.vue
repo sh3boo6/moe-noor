@@ -336,7 +336,7 @@ function formatValue(value: unknown): string {
                 class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
                 <UIcon name="i-lucide-map-pin size-5" />
-                <span class="ms-1 hidden lg:inline-block">Open On Google Maps</span>
+                <span class="ms-1 hidden lg:inline-block">فتح في Google Maps</span>
               </a>
             </div>
 

@@ -115,7 +115,7 @@ function openDetails(school: MinistrySchoolRecord) {
       <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <div>
           <h2 class="text-lg font-semibold text-foreground">
-            جدول المدارس
+            جدول المدارس حسب المراحل الدراسية
           </h2>
           <p class="mt-1 text-sm text-muted-foreground">
             بحث سريع، تصفية، وتنقل بين الصفحات. اضغط على الصف لفتح التفاصيل.

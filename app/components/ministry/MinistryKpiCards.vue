@@ -53,14 +53,8 @@ const cards = computed(() => [
   {
     title: 'إجمالي المدارس',
     value: formatNumber(totalSchools.value),
-    description: 'حسب عدد المباني المدرسية الفعلية',
+    description: `حسب عدد المباني المدرسية الفعلية ${totalSchools.value !== totalStages.value ? `، إجمالي المراحل ${formatNumber(totalStages.value)}` : ''}`,
     icon: 'i-lucide-building-2'
-  },
-  {
-    title: 'إجمالي المراحل',
-    value: formatNumber(totalStages.value),
-    description: 'عدد السجلات المقروءة من الملف',
-    icon: 'i-lucide-layers'
   },
   {
     title: 'إجمالي الطلاب',
