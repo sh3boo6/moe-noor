@@ -93,6 +93,13 @@ async function handleFile(file: File) {
   await parseFile(file)
 }
 
+const showConfirmClear = ref(false)
+
+function confirmClearAll() {
+  clearAll()
+  showConfirmClear.value = false
+}
+
 function clearAll() {
   clearSchools()
   uploadDate.value = ''
@@ -102,7 +109,8 @@ function clearAll() {
 function successAction(title: string) {
   toast.add({
     title: title,
-    icon: 'i-lucide-check-circle'
+    icon: 'i-lucide-check-circle',
+    duration: 1250
   })
 }
 
@@ -120,7 +128,6 @@ function resetFilters() {
   filters.studyTime = []
   filters.educationType = []
   filters.governorate = []
-  //uploadDate.value = ''
   successAction('تمت العملية بنجاح')
 }
 </script>
@@ -255,10 +262,37 @@ function resetFilters() {
               variant="ghost"
               label="مسح البيانات"
               icon="i-lucide-trash-2"
-              @click="clearAll"
+              @click="showConfirmClear = true"
             />
           </div>
         </div>
+
+        <UModal v-model:open="showConfirmClear">
+          <template #content>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold">
+                تأكيد مسح البيانات
+              </h3>
+              <p class="mt-2 text-sm text-muted-foreground">
+                هل أنت متأكد من رغبتك في مسح جميع البيانات والفلاتر المحملة؟
+                لا يمكن التراجع عن هذه العملية.
+              </p>
+              <div class="mt-6 flex justify-end gap-2">
+                <UButton
+                  color="neutral"
+                  variant="soft"
+                  label="إلغاء"
+                  @click="showConfirmClear = false"
+                />
+                <UButton
+                  color="error"
+                  label="نعم، مسح البيانات"
+                  @click="confirmClearAll"
+                />
+              </div>
+            </div>
+          </template>
+        </UModal>
 
         <div class="mt-5">
           <MinistryFilters

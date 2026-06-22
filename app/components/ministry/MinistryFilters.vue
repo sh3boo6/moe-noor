@@ -73,6 +73,7 @@ function updateFilter(key: keyof MinistryFilters, value: string[]) {
 
         <USelectMenu
           v-model="filterModels[filter.key]"
+          size="xl"
           :items="filter.options"
           :placeholder="`الكل`"
           multiple
