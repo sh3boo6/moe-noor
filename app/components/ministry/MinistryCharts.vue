@@ -21,11 +21,15 @@ interface DepartmentStaff {
   admins: number
 }
 
-export interface FacilityRegion {
-  region: string
-  computerLabs: number
-  physicsLabs: number
-  chemistryLabs: number
+export interface FacilityData {
+  name: string
+  compBoys: number
+  compGirls: number
+  physBoys: number
+  physGirls: number
+  chemBoys: number
+  chemGirls: number
+  total: number
 }
 
 const numberFormatter = new Intl.NumberFormat('ar')
@@ -420,7 +424,6 @@ const staffChartOptions = computed<ApexOptions>(() => ({
   }
 }) as unknown as ApexOptions)
 
-const stages = computed(() => Array.from(new Set(props.schools.map(school => school.identity.stage).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ar')))
 const authorities = computed(() => Array.from(new Set(props.schools.map(school => school.identity.authority).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ar')))
 
 function buildAuthorityGenderSeries() {
@@ -458,7 +461,6 @@ function buildAuthorityGenderSeries() {
 }
 
 const authorityGenderData = computed(() => buildAuthorityGenderSeries())
-
 const authorityStageGenderSeries = computed<ApexAxisChartSeries>(() => authorityGenderData.value.series)
 
 const authorityStageChart = computed<ApexOptions>(() => ({
@@ -592,19 +594,29 @@ const governorateStageGenderChart = computed<ApexOptions>(() => {
 
 const governorateStageGenderTotal = computed(() => getSeriesTotal(governorateStageGenderSeries.value))
 
-// --- المنطق الجديد: توزيع الكادر التعليمي والإداري حسب المحافظة (بنين / بنات) ---
-function buildGovernorateStaffGenderSeries() {
-  const stageGovernorates = governorates.value
+// --- جلب قائمة المحافظات أو المناطق مع بديل في حال عدم وجود البيانات ---
+const regionList = computed(() => {
+  const regions = new Set<string>()
+  for (const school of props.schools) {
+    const region = school.additional?.governorate || school.identity.administrativeRegion || school.identity.educationDepartment || 'غير محدد'
+    regions.add(region)
+  }
+  return Array.from(regions).sort((a, b) => a.localeCompare(b, 'ar'))
+})
 
+function buildRegionStaffGenderSeries() {
+  const regions = regionList.value
   const boysData: number[] = []
   const girlsData: number[] = []
 
-  for (const governorate of stageGovernorates) {
+  for (const region of regions) {
     let boys = 0
     let girls = 0
 
     for (const school of props.schools) {
-      if (school.additional?.governorate === governorate) {
+      const schoolRegion = school.additional?.governorate || school.identity.administrativeRegion || school.identity.educationDepartment || 'غير محدد'
+
+      if (schoolRegion === region) {
         const gender = normalizeGender(school.identity.gender || '')
         const totalStaff = (typeof school.staff.teachers === 'number' ? school.staff.teachers : 0) +
                            (typeof school.staff.admins === 'number' ? school.staff.admins : 0)
@@ -619,29 +631,24 @@ function buildGovernorateStaffGenderSeries() {
         }
       }
     }
-    // نقوم بالتقريب لتجنب وجود أنصاف أشخاص في حال كانت المدرسة مختلطة وتم قسمة كادرها
     boysData.push(Math.round(boys))
     girlsData.push(Math.round(girls))
   }
 
-  return {
-    governorates: stageGovernorates,
-    boysData,
-    girlsData
-  }
+  return { regions, boysData, girlsData }
 }
 
-const governorateStaffGenderData = computed(() => buildGovernorateStaffGenderSeries())
+const regionStaffGenderData = computed(() => buildRegionStaffGenderSeries())
 
-const governorateStaffGenderSeries = computed<ApexAxisChartSeries>(() => [
-  { name: 'بنين', data: governorateStaffGenderData.value.boysData },
-  { name: 'بنات', data: governorateStaffGenderData.value.girlsData }
+const regionStaffGenderSeries = computed<ApexAxisChartSeries>(() => [
+  { name: 'بنين', data: regionStaffGenderData.value.boysData },
+  { name: 'بنات', data: regionStaffGenderData.value.girlsData }
 ])
 
-const governorateStaffGenderTotal = computed(() => getSeriesTotal(governorateStaffGenderSeries.value))
+const regionStaffGenderTotal = computed(() => getSeriesTotal(regionStaffGenderSeries.value))
 
-const governorateStaffGenderChart = computed<ApexOptions>(() => {
-  const series = governorateStaffGenderSeries.value
+const regionStaffGenderChart = computed<ApexOptions>(() => {
+  const series = regionStaffGenderSeries.value
   return {
     chart: {
       type: 'bar',
@@ -653,106 +660,137 @@ const governorateStaffGenderChart = computed<ApexOptions>(() => {
       foreColor: isDark.value ? '#e2e8f0' : '#374151'
     },
     plotOptions: {
-      bar: {
-        borderRadius: 8,
-        columnWidth: '48%'
-      }
+      bar: { borderRadius: 8, columnWidth: '48%' }
     },
     colors: ['#2563eb', '#db2777'],
     xaxis: {
-      categories: governorateStaffGenderData.value.governorates.map((label, index) => {
+      categories: regionStaffGenderData.value.regions.map((label, index) => {
         const total = getSeriesValue(series, 0, index) + getSeriesValue(series, 1, index)
         return `${label}\nالإجمالي: ${formatNumber(total)}`
       }),
-      title: { text: 'المحافظة' }
+      title: { text: 'المنطقة / المحافظة' }
     },
-    yaxis: {
-      title: { text: 'عدد الكادر التعليمي والإداري' }
-    },
+    yaxis: { title: { text: 'عدد الكادر التعليمي والإداري' } },
     grid: { show: false },
-    legend: {
-      position: 'bottom',
-      rtl: true,
-      fontFamily
+    legend: { position: 'bottom', rtl: true, fontFamily },
+    dataLabels: { enabled: true, style: { fontFamily, fontSize: '10px' }, formatter: (val: number) => formatNumber(val) }
+  } as unknown as ApexOptions
+})
+
+// --- المنطق الجديد: توافر المعامل حسب المنطقة والمحافظة (بنين / بنات) ---
+
+// ألوان مخصصة لتمييز المعامل والجنس بوضوح (أزرق للكمبيوتر، أخضر للفيزياء، بنفسجي للكيمياء - الدرجة الداكنة للبنين والفاتحة للبنات)
+const facilityGenderColors = ['#1e3a8a', '#3b82f6', '#14532d', '#22c55e', '#581c87', '#a855f7']
+
+function buildFacilityChartOptions(categories: string[], titleX: string): ApexOptions {
+  return {
+    chart: {
+      type: 'bar',
+      fontFamily,
+      toolbar: { show: false },
+      stacked: true,
+      background: isDark.value ? '#1e293b' : '#ffffff',
+      theme: { mode: isDark.value ? 'dark' : 'light' },
+      foreColor: isDark.value ? '#e2e8f0' : '#374151'
     },
+    plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
+    colors: facilityGenderColors,
+    xaxis: {
+      categories: categories,
+      title: { text: titleX }
+    },
+    yaxis: { title: { text: 'عدد المعامل' } },
+    grid: { show: false },
+    legend: { position: 'bottom', rtl: true, fontFamily, fontSize: '11px', markers: { radius: 12 } },
     dataLabels: {
       enabled: true,
       style: { fontFamily, fontSize: '10px' },
-      formatter: (val: number) => formatNumber(val)
+      formatter: (val: number) => val > 0 ? formatNumber(val) : '' // لا نظهر الصفر لتفادي الفوضى في التراكم
     }
   } as unknown as ApexOptions
-})
-// ----------------------------------------------------------------------------------
+}
 
-const facilityRegions = computed<FacilityRegion[]>(() => {
-  const grouped = new Map<string, FacilityRegion>()
-
+// 1. المعامل حسب المنطقة
+const facilityRegionData = computed(() => {
+  const grouped = new Map<string, FacilityData>()
   for (const school of props.schools) {
     const region = school.identity.administrativeRegion || school.identity.educationDepartment || 'غير محدد'
-    const current = grouped.get(region) || { region, computerLabs: 0, physicsLabs: 0, chemistryLabs: 0 }
+    const current = grouped.get(region) || { name: region, compBoys: 0, compGirls: 0, physBoys: 0, physGirls: 0, chemBoys: 0, chemGirls: 0, total: 0 }
 
-    current.computerLabs += school.facilities.computerLabs
-    current.physicsLabs += school.facilities.physicsLabs
-    current.chemistryLabs += school.facilities.chemistryLabs
+    const gender = normalizeGender(school.identity.gender || '')
+    const comp = school.facilities.computerLabs || 0
+    const phys = school.facilities.physicsLabs || 0
+    const chem = school.facilities.chemistryLabs || 0
+
+    if (gender === 'بنين') {
+      current.compBoys += comp; current.physBoys += phys; current.chemBoys += chem
+    } else if (gender === 'بنات') {
+      current.compGirls += comp; current.physGirls += phys; current.chemGirls += chem
+    } else {
+      current.compBoys += comp / 2; current.physBoys += phys / 2; current.chemBoys += chem / 2
+      current.compGirls += comp / 2; current.physGirls += phys / 2; current.chemGirls += chem / 2
+    }
+    current.total += comp + phys + chem
     grouped.set(region, current)
   }
-
-  return Array.from(grouped.values())
-    .sort((a, b) => (b.computerLabs + b.physicsLabs + b.chemistryLabs) - (a.computerLabs + a.physicsLabs + a.chemistryLabs))
-    .slice(0, 10)
+  return Array.from(grouped.values()).sort((a, b) => b.total - a.total).slice(0, 10)
 })
 
-const facilitySeries = computed<ApexAxisChartSeries>(() => [
-  {
-    name: 'معامل الكمبيوتر',
-    data: facilityRegions.value.map(item => item.computerLabs)
-  },
-  {
-    name: 'مختبرات فيزياء',
-    data: facilityRegions.value.map(item => item.physicsLabs)
-  },
-  {
-    name: 'مختبرات كيمياء',
-    data: facilityRegions.value.map(item => item.chemistryLabs)
-  }
+const facilityRegionSeries = computed<ApexAxisChartSeries>(() => [
+  { name: 'كمبيوتر (بنين)', data: facilityRegionData.value.map(item => Math.round(item.compBoys)) },
+  { name: 'كمبيوتر (بنات)', data: facilityRegionData.value.map(item => Math.round(item.compGirls)) },
+  { name: 'فيزياء (بنين)', data: facilityRegionData.value.map(item => Math.round(item.physBoys)) },
+  { name: 'فيزياء (بنات)', data: facilityRegionData.value.map(item => Math.round(item.physGirls)) },
+  { name: 'كيمياء (بنين)', data: facilityRegionData.value.map(item => Math.round(item.chemBoys)) },
+  { name: 'كيمياء (بنات)', data: facilityRegionData.value.map(item => Math.round(item.chemGirls)) }
 ])
 
-const facilityChart = computed<ApexOptions>(() => ({
-  chart: {
-    type: 'bar',
-    fontFamily,
-    toolbar: { show: false },
-    background: isDark.value ? '#1e293b' : '#ffffff',
-    theme: { mode: isDark.value ? 'dark' : 'light' },
-    foreColor: isDark.value ? '#e2e8f0' : '#374151'
-  },
-  plotOptions: {
-    bar: {
-      borderRadius: 8,
-      columnWidth: '56%',
-      distributed: false
+const facilityRegionChart = computed<ApexOptions>(() => {
+  const categories = facilityRegionData.value.map(item => `${item.name}\nإجمالي: ${formatNumber(item.total)}`)
+  return buildFacilityChartOptions(categories, 'المنطقة')
+})
+const facilityRegionTotal = computed(() => getSeriesTotal(facilityRegionSeries.value))
+
+// 2. المعامل حسب المحافظة
+const facilityGovernorateData = computed(() => {
+  const grouped = new Map<string, FacilityData>()
+  for (const school of props.schools) {
+    const gov = school.additional?.governorate || school.identity.administrativeRegion || 'غير محدد'
+    const current = grouped.get(gov) || { name: gov, compBoys: 0, compGirls: 0, physBoys: 0, physGirls: 0, chemBoys: 0, chemGirls: 0, total: 0 }
+
+    const gender = normalizeGender(school.identity.gender || '')
+    const comp = school.facilities.computerLabs || 0
+    const phys = school.facilities.physicsLabs || 0
+    const chem = school.facilities.chemistryLabs || 0
+
+    if (gender === 'بنين') {
+      current.compBoys += comp; current.physBoys += phys; current.chemBoys += chem
+    } else if (gender === 'بنات') {
+      current.compGirls += comp; current.physGirls += phys; current.chemGirls += chem
+    } else {
+      current.compBoys += comp / 2; current.physBoys += phys / 2; current.chemBoys += chem / 2
+      current.compGirls += comp / 2; current.physGirls += phys / 2; current.chemGirls += chem / 2
     }
-  },
-  colors: ['#16a34a', '#f97316', '#9333ea'],
-  xaxis: {
-    categories: facilityRegions.value.map(item => item.region),
-    title: { text: 'المنطقة' }
-  },
-  yaxis: {
-    title: { text: 'عدد الغرف/المعامل' }
-  },
-  grid: { show: false },
-  legend: {
-    position: 'bottom',
-    rtl: true,
-    fontFamily,
-    fontSize: '12px'
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: (val: number) => formatNumber(val)
+    current.total += comp + phys + chem
+    grouped.set(gov, current)
   }
-}) as unknown as ApexOptions)
+  return Array.from(grouped.values()).sort((a, b) => b.total - a.total).slice(0, 10)
+})
+
+const facilityGovernorateSeries = computed<ApexAxisChartSeries>(() => [
+  { name: 'كمبيوتر (بنين)', data: facilityGovernorateData.value.map(item => Math.round(item.compBoys)) },
+  { name: 'كمبيوتر (بنات)', data: facilityGovernorateData.value.map(item => Math.round(item.compGirls)) },
+  { name: 'فيزياء (بنين)', data: facilityGovernorateData.value.map(item => Math.round(item.physBoys)) },
+  { name: 'فيزياء (بنات)', data: facilityGovernorateData.value.map(item => Math.round(item.physGirls)) },
+  { name: 'كيمياء (بنين)', data: facilityGovernorateData.value.map(item => Math.round(item.chemBoys)) },
+  { name: 'كيمياء (بنات)', data: facilityGovernorateData.value.map(item => Math.round(item.chemGirls)) }
+])
+
+const facilityGovernorateChart = computed<ApexOptions>(() => {
+  const categories = facilityGovernorateData.value.map(item => `${item.name}\nإجمالي: ${formatNumber(item.total)}`)
+  return buildFacilityChartOptions(categories, 'المحافظة')
+})
+const facilityGovernorateTotal = computed(() => getSeriesTotal(facilityGovernorateSeries.value))
 
 const stageStudentChart = computed<ApexOptions>(() => {
   return {
@@ -901,12 +939,11 @@ const chartKey = computed(() => Date.now())
         />
       </UCard>
 
-      <!-- البطاقة الجديدة: توزيع الكادر التعليمي والإداري حسب المحافظة -->
       <UCard v-if="governorates.length">
         <template #header>
           <div class="flex items-center justify-between gap-3">
             <h2 class="text-lg font-semibold text-foreground">
-              توزيع الكادر التعليمي والإداري حسب المحافظة - بنين / بنات ({{ formatNumber(governorateStaffGenderTotal) }})
+              توزيع الكادر التعليمي والإداري حسب المحافظة - بنين / بنات ({{ formatNumber(regionStaffGenderTotal) }})
             </h2>
             <UIcon
               name="i-lucide-contact"
@@ -918,8 +955,8 @@ const chartKey = computed(() => Date.now())
         <ApexChart
           :key="chartKey"
           type="bar"
-          :options="governorateStaffGenderChart"
-          :series="governorateStaffGenderSeries"
+          :options="regionStaffGenderChart"
+          :series="regionStaffGenderSeries"
           height="320"
         />
       </UCard>
@@ -1037,27 +1074,52 @@ const chartKey = computed(() => Date.now())
       </UCard>
     </div>
 
-    <UCard>
-      <template #header>
-        <div class="flex items-center justify-between gap-3">
-          <h2 class="text-lg font-semibold text-foreground">
-            توافر المعامل حسب المنطقة
-          </h2>
-          <UIcon
-            name="i-lucide-monitor-check"
-            class="h-5 w-5 text-primary"
-          />
-        </div>
-      </template>
+    <!-- البطاقات الجديدة للمعامل (المنطقة والمحافظة) -->
+    <div class="grid gap-6 xl:grid-cols-2">
+      <UCard>
+        <template #header>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-foreground">
+              توافر المعامل حسب المنطقة - بنين / بنات ({{ formatNumber(facilityRegionTotal) }})
+            </h2>
+            <UIcon
+              name="i-lucide-monitor-check"
+              class="h-5 w-5 text-primary"
+            />
+          </div>
+        </template>
 
-      <ApexChart
-        :key="chartKey"
-        type="bar"
-        :options="facilityChart"
-        :series="facilitySeries"
-        height="320"
-      />
-    </UCard>
+        <ApexChart
+          :key="chartKey"
+          type="bar"
+          :options="facilityRegionChart"
+          :series="facilityRegionSeries"
+          height="320"
+        />
+      </UCard>
+
+      <UCard>
+        <template #header>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-foreground">
+              توافر المعامل حسب المحافظة - بنين / بنات ({{ formatNumber(facilityGovernorateTotal) }})
+            </h2>
+            <UIcon
+              name="i-lucide-map-pin"
+              class="h-5 w-5 text-primary"
+            />
+          </div>
+        </template>
+
+        <ApexChart
+          :key="chartKey"
+          type="bar"
+          :options="facilityGovernorateChart"
+          :series="facilityGovernorateSeries"
+          height="320"
+        />
+      </UCard>
+    </div>
 
     <div class="grid gap-6 xl:grid-cols-2">
       <UCard>
