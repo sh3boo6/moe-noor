@@ -1120,7 +1120,7 @@ const chartKey = computed(() => Date.now())
         />
       </UCard>
     </div>
-
+    <!-- توزيع الطلاب حسب الصفوف -->
     <div class="grid gap-6 xl:grid-cols-2">
       <UCard>
         <template #header>
