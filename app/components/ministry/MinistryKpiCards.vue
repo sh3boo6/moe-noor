@@ -45,6 +45,10 @@ const governmentManagerRatio = computed(() => uniqueManagers.value.size ? Math.r
 
 const mismatchedSchools = computed(() => (props.schools || []).filter(school => (school.students?.gradeTotalMismatch || 0) > 0).length)
 
+const totalClasses = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.students?.classes || 0), 0))
+const classDensityPerStage = computed(() => totalStages.value ? (totalClasses.value / totalStages.value).toFixed(1) : '0')
+const studentTeacherRatio = computed(() => totalTeachers.value ? (totalStudents.value / totalTeachers.value).toFixed(1) : '0')
+
 function formatNumber(value: number): string {
   return value.toLocaleString('en-US')
 }
@@ -91,6 +95,18 @@ const cards = computed(() => [
     value: `${formatNumber(governmentManagerRatio.value)}%`,
     description: `${formatNumber(governmentBuildingsByManager.value)} من أصل ${formatNumber(uniqueManagers.value.size)} مبنى`,
     icon: 'i-lucide-user-check'
+  },
+  {
+    title: 'كثافة الفصول لكل مرحلة',
+    value: classDensityPerStage.value,
+    description: `${formatNumber(totalClasses.value)} فصل من أصل ${formatNumber(totalStages.value)} مرحلة`,
+    icon: 'i-lucide-layers'
+  },
+  {
+    title: 'معدل معلم لكل طالب',
+    value: studentTeacherRatio.value,
+    description: `${formatNumber(totalStudents.value)} طالب / ${formatNumber(totalTeachers.value)} معلم`,
+    icon: 'i-lucide-ratio'
   }
 ])
 </script>
@@ -130,7 +146,7 @@ const cards = computed(() => [
       </p>
     </article>
 
-    <article class="sm:col-span-2 xl:col-span-4 rounded-2xl border border-amber-300/60 bg-amber-50 p-5 text-right dark:border-amber-700/60 dark:bg-amber-950/30 row-span-2 xl:row-span-4">
+    <article class="sm:col-span-2 xl:col-span-3 rounded-2xl border border-amber-300/60 bg-amber-50 p-5 text-right dark:border-amber-700/60 dark:bg-amber-950/30">
       <div class="flex items-start justify-between gap-4">
         <div>
           <p class="text-sm font-medium text-amber-700 dark:text-amber-300">

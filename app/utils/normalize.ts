@@ -57,11 +57,7 @@ export function normalizeGender(gender: string): string {
     return 'بنين'
   }
 
-  if (normalized === 'بنات' || normalized === 'للبنات') {
-    return 'بنات'
-  }
-
-  if (normalized.includes('بنات')) {
+  if (normalized === 'بنات' || normalized === 'للبنات' || normalized.includes('بنات') || normalized === 'كبيرات') {
     return 'بنات'
   }
 

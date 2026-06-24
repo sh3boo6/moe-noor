@@ -71,10 +71,17 @@ useSeoMeta({
       <template #header>
         <div class="flex justify-between items-center gap-2 w-full">
           <div class="flex items-center gap-3">
-            <UIcon name="i-lucide-info" class="size-10 text-primary" />
+            <UIcon
+              name="i-lucide-info"
+              class="size-10 text-primary"
+            />
             <div>
-              <h3 class="text-lg font-semibold">حول التطبيق</h3>
-              <p class="text-sm text-muted">نبذة مختصرة عن لوحة تحليل ملفات Excel</p>
+              <h3 class="text-lg font-semibold">
+                حول التطبيق
+              </h3>
+              <p class="text-sm text-muted">
+                نبذة مختصرة عن لوحة تحليل ملفات Excel
+              </p>
             </div>
           </div>
           <UButton
@@ -93,7 +100,9 @@ useSeoMeta({
           <p>
             تم بناؤه كواجهة سطح مكتب ليكون أداة محلية مستقرة وسهلة الاستخدام لإدارة ومتابعة بيانات المدارس الصادرة من برنامج نور.
           </p>
-          <p class="text-sm font-semibold text-center">تابعنا على القنوات التالية</p>
+          <p class="text-sm font-semibold text-center">
+            تابعنا على القنوات التالية
+          </p>
           <div class="flex justify-around items-center mx-auto p-4 border border-dotted border-default/95 rounded-lg">
             <a
               v-for="link in social"
