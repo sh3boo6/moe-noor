@@ -11,6 +11,7 @@ export type ColumnGroup
 export interface IdentityData {
   id: string
   schoolName: string
+  schoolType: string
   cityVillage: string
   educationDepartment: string
   administrativeRegion: string

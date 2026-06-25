@@ -98,12 +98,12 @@ useSeoMeta({
             هذا التطبيق يساعدك على قراءة ملفات Excel الوزارية الشاملة وتحليل بيانات المدارس بسرعة، مع عرض مؤشرات إدارية ورسوم بيانية وجداول تفاعلية تدعم البحث والفلترة والتصدير.
           </p>
           <p>
-            تم بناؤه كواجهة سطح مكتب ليكون أداة محلية مستقرة وسهلة الاستخدام لإدارة ومتابعة بيانات المدارس الصادرة من برنامج نور.
+            تم بناؤه كواجهة ويب و سطح مكتب ليكون أداة محلية مستقرة وسهلة الاستخدام لإدارة ومتابعة بيانات المدارس الصادرة من برنامج نور.
           </p>
           <p class="text-sm font-semibold text-center">
             تابعنا على القنوات التالية
           </p>
-          <div class="flex justify-around items-center mx-auto p-4 border border-dotted border-default/95 rounded-lg">
+          <div class="flex justify-around items-center mx-auto p-4 border border-dotted border-default/95 rounded-xl">
             <a
               v-for="link in social"
               :key="link.name"

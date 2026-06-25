@@ -49,6 +49,13 @@ const totalClasses = computed(() => (props.schools || []).reduce((sum, school) =
 const classDensityPerStage = computed(() => totalStages.value ? (totalClasses.value / totalStages.value).toFixed(1) : '0')
 const studentTeacherRatio = computed(() => totalTeachers.value ? (totalStudents.value / totalTeachers.value).toFixed(1) : '0')
 
+const avgStudentsPerSchool = computed(() => totalSchools.value ? (totalStudents.value / totalSchools.value).toFixed(0) : '0')
+const avgTeachersPerSchool = computed(() => totalSchools.value ? (totalTeachers.value / totalSchools.value).toFixed(0) : '0')
+const avgAdminsPerSchool = computed(() => totalSchools.value ? (totalAdmins.value / totalSchools.value).toFixed(1) : '0')
+const adminTeacherRatio = computed(() => totalTeachers.value ? ((totalAdmins.value / totalTeachers.value) * 100).toFixed(1) : '0')
+const teachersStaffRatio = computed(() => totalStaff.value ? ((totalTeachers.value / totalStaff.value) * 100).toFixed(1) : '0')
+const avgStagesPerSchool = computed(() => totalSchools.value ? (totalStages.value / totalSchools.value).toFixed(1) : '0')
+
 function formatNumber(value: number): string {
   return value.toLocaleString('en-US')
 }
@@ -103,10 +110,46 @@ const cards = computed(() => [
     icon: 'i-lucide-layers'
   },
   {
-    title: 'معدل معلم لكل طالب',
+    title: 'معدل الطلاب لكل معلم',
     value: studentTeacherRatio.value,
     description: `${formatNumber(totalStudents.value)} طالب / ${formatNumber(totalTeachers.value)} معلم`,
     icon: 'i-lucide-ratio'
+  },
+  {
+    title: 'متوسط الطلاب لكل مدرسة',
+    value: avgStudentsPerSchool.value,
+    description: 'حجم المدارس بشكل عام',
+    icon: 'i-lucide-users'
+  },
+  {
+    title: 'متوسط المعلمين لكل مدرسة',
+    value: avgTeachersPerSchool.value,
+    description: 'مؤشر توزيع الكادر',
+    icon: 'i-lucide-user-check'
+  },
+  {
+    title: 'متوسط الإداريين لكل مدرسة',
+    value: avgAdminsPerSchool.value,
+    description: 'تقييم الكادر الإداري',
+    icon: 'i-lucide-briefcase'
+  },
+  {
+    title: 'نسبة الإداريين إلى المعلمين',
+    value: `${adminTeacherRatio.value}%`,
+    description: 'التوازن بين الكادر التعليمي والإداري',
+    icon: 'i-lucide-scale'
+  },
+  {
+    title: 'نسبة المعلمين من إجمالي الكادر',
+    value: `${teachersStaffRatio.value}%`,
+    description: 'قياس كفاءة التوزيع الوظيفي',
+    icon: 'i-lucide-percent'
+  },
+  {
+    title: 'متوسط المراحل لكل مدرسة',
+    value: avgStagesPerSchool.value,
+    description: 'مدى انتشار المدارس المشتركة',
+    icon: 'i-lucide-layers'
   }
 ])
 </script>
@@ -146,7 +189,7 @@ const cards = computed(() => [
       </p>
     </article>
 
-    <article class="sm:col-span-2 xl:col-span-3 rounded-2xl border border-amber-300/60 bg-amber-50 p-5 text-right dark:border-amber-700/60 dark:bg-amber-950/30">
+    <article class="rounded-2xl border border-amber-300/60 bg-amber-50 p-5 text-right dark:border-amber-700/60 dark:bg-amber-950/30">
       <div class="flex items-start justify-between gap-4">
         <div>
           <p class="text-sm font-medium text-amber-700 dark:text-amber-300">

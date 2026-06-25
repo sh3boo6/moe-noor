@@ -41,6 +41,12 @@ function updateFilter(key: keyof MinistryFilters, value: string[]) {
   filterModels.value[key] = value
   emit('change', key, value)
 }
+
+// دالة لمسح قيم فلتر معين وإرسال التحديث للمكون الأب
+function clearFilter(key: keyof MinistryFilters) {
+  filterModels.value[key] = []
+  emit('change', key, [])
+}
 </script>
 
 <template>
@@ -69,7 +75,20 @@ function updateFilter(key: keyof MinistryFilters, value: string[]) {
         :key="filter.key"
         class="flex flex-col gap-2 text-sm font-medium text-foreground"
       >
-        {{ filter.label }}
+        <div class="flex items-center justify-between">
+          <span>{{ filter.label }}</span>
+
+          <UButton
+            v-if="filterModels[filter.key]?.length > 0"
+            variant="link"
+            color="red"
+            size="xs"
+            class="p-0 underline decoration-dotted hover:text-red-600"
+            @click="clearFilter(filter.key)"
+          >
+            مسح التحديد
+          </UButton>
+        </div>
 
         <USelectMenu
           v-model="filterModels[filter.key]"

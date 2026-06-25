@@ -204,9 +204,9 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   { key: 'identity.studyTime', label: 'وقت الدراسة', aliases: ['وقت الدراسة', 'الدوام', 'الفترة الدراسية'] },
   { key: 'identity.gender', label: 'جنس المدرسة', aliases: ['جنس المدرسة', 'الجنس', 'بنين / بنات', 'جنس'] },
   { key: 'identity.foundingYear', label: 'سنة التأسيس', aliases: ['سنة التأسيس', ' العام الدراسي', 'التأسيس', 'سنة التأسيس'] },
-  { key: 'identity.phone', label: 'الهاتف', aliases: ['الهاتف', 'رقم الهاتف', 'الجوال', 'تليفون المدرسة', 'الهاتف/الجوال', 'جوال مدير المدرسة'] },
+  { key: 'identity.phone', label: 'الهاتف', aliases: ['الهاتف', 'رقم الهاتف', 'الجوال', 'تليفون المدرسة', 'الهاتف/الجوال'] },
   { key: 'identity.email', label: 'البريد الإلكتروني', aliases: ['البريد الإلكتروني', 'البريد', 'الإيميل', 'e-mail'] },
-  { key: 'identity.mailAddress', label: 'العنوان البريدي', aliases: ['العنوان البريدي', 'البريد', 'عنوان المدرسة', 'المحافظة'] },
+  { key: 'identity.mailAddress', label: 'العنوان البريدي', aliases: ['العنوان البريدي', 'البريد', 'عنوان المدرسة'] },
 
   { key: 'students.grade1', label: 'طلاب1', aliases: ['طلاب1', 'طلاب الصف 1', 'الصف الأول', 'الصف الاول', 'صف 1', 'صف1'] },
   { key: 'students.grade2', label: 'طلاب2', aliases: ['طلاب2', 'طلاب الصف 2', 'الصف الثاني', 'صف 2', 'صف2'] },
@@ -408,6 +408,7 @@ function createEmptySchool(sourceRow: number, raw: Record<string, unknown>): Min
     identity: {
       id: '',
       schoolName: '',
+      schoolType: '',
       cityVillage: '',
       educationDepartment: '',
       administrativeRegion: '',

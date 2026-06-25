@@ -88,8 +88,11 @@ const sections = computed<DetailSection[]>(() => {
         ['المرحلة الدراسية', school.identity.stage],
         ['جنس المدرسة', school.identity.gender],
         ['نوع التعليم', school.identity.educationType],
+        ['نوع المدرسة', school.identity.schoolType],
         ['وقت الدراسة', school.identity.studyTime],
         ['سنة التأسيس', school.identity.foundingYear],
+        ['تاريخ الإنشاء في النظام', school.additional.createdAt],
+        ['تاريخ إغلاق المدرسة', school.additional.closingDate],
         ['الهاتف', school.identity.phone],
         ['البريد الإلكتروني', school.identity.email]
       ]
@@ -185,7 +188,10 @@ const sections = computed<DetailSection[]>(() => {
         ['حالة الطريق', school.building.roadStatus],
         ['المسافة عن أقرب ابتدائي', school.building.nearestPrimaryDistance],
         ['المسافة عن أقرب متوسط', school.building.nearestMiddleDistance],
-        ['المسافة عن أقرب ثانوي', school.building.nearestHighDistance]
+        ['المسافة عن أقرب ثانوي', school.building.nearestHighDistance],
+        ['رقم المحافظة', school.additional.governorateNumber],
+        ['المركز الإداري', school.additional.administrativeCenterNumber],
+        ['الرمز البريدي', school.additional.postalCode]
       ]
     },
     {
@@ -223,7 +229,7 @@ function staffValue(school: MinistrySchoolRecord, value: string, aliases: string
 }
 
 function formatValue(value: unknown): string {
-  if (value === null || value === undefined || value === '') {
+  if (value === null || value === undefined || value === '' || value === 0) {
     return 'غير محدد'
   }
 
