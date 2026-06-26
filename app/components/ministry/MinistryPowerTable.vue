@@ -35,6 +35,7 @@ const defaultColumns: TableColumn[] = [
   { key: 'students.classes', label: 'الفصول', width: 'min-w-[100px]', getValue: s => s.students.classes },
   { key: 'staff.teachers', label: 'المعلمين', width: 'min-w-[100px]', getValue: s => s.staff.teachers },
   { key: 'staff.managerName', label: 'المدير', width: 'min-w-[160px]', getValue: s => s.staff.managerName },
+  { key: 'staff.managerId', label: 'هوية المدير', width: 'min-w-[140px]', getValue: s => s.staff.managerId }, // العمود الجديد
   { key: 'building.ownership', label: 'ملكية المبنى', width: 'min-w-[120px]', getValue: s => s.building.ownership }
 ]
 
@@ -48,11 +49,14 @@ const filteredRows = computed(() => {
   }
 
   return props.schools.filter((school) => {
+    // تم إضافة اسم المدير ورقم هويته هنا لتمكين البحث من خلالهما
     const searchableText = [
       school.identity.schoolName,
       school.identity.id,
       school.identity.educationDepartment,
-      school.identity.mailAddress
+      school.identity.mailAddress,
+      school.staff.managerName,
+      school.staff.managerId
     ].join(' ').toLocaleLowerCase('ar')
 
     return searchableText.includes(keyword)
@@ -75,7 +79,21 @@ watch(totalPages, (value) => {
   }
 })
 
-watch(search, () => {
+// دالة تحويل الأرقام الشرقية (٠-٩) إلى غربية (0-9)
+function convertArabicNumbers(str: string): string {
+  const arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g]
+  for (let i = 0; i < 10; i++) {
+    str = str.replace(arabicNumbers[i], String(i))
+  }
+  return str
+}
+
+// مراقبة حقل البحث وتحويل القيم فوراً مع إعادة الصفحة للأولى
+watch(search, (newValue) => {
+  const normalized = convertArabicNumbers(newValue)
+  if (newValue !== normalized) {
+    search.value = normalized
+  }
   page.value = 1
 })
 
@@ -126,7 +144,7 @@ function openDetails(school: MinistrySchoolRecord) {
           <UInput
             v-model="search"
             class="w-full sm:w-80"
-            placeholder="ابحث باسم المدرسة أو الرقم الوزاري أو الإدارة"
+            placeholder="ابحث باسم المدرسة، المدير، الهوية أو الرقم الوزاري"
             icon="i-lucide-search"
           />
         </div>
@@ -176,7 +194,7 @@ function openDetails(school: MinistrySchoolRecord) {
         <tbody class="divide-y divide-border bg-card">
           <tr
             v-for="school in paginatedRows"
-            :key="`${school.sourceRow}-${school.identity.schoolName}`"
+            :key="`row-${school.identity.id}-${school.identity.schoolName}`"
             class="transition-colors hover:bg-muted/40 cursor-pointer"
             @click="openDetails(school)"
           >
@@ -235,24 +253,12 @@ function openDetails(school: MinistrySchoolRecord) {
               v-model.number="pageSize"
               class="rounded-xl border border-accented/50 bg-card px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-primary"
             >
-              <option :value="5">
-                5
-              </option>
-              <option :value="10">
-                10
-              </option>
-              <option :value="15">
-                15
-              </option>
-              <option :value="25">
-                25
-              </option>
-              <option :value="50">
-                50
-              </option>
-              <option :value="100">
-                100
-              </option>
+              <option :value="5">5</option>
+              <option :value="10">10</option>
+              <option :value="15">15</option>
+              <option :value="25">25</option>
+              <option :value="50">50</option>
+              <option :value="100">100</option>
             </select>
           </label>
 

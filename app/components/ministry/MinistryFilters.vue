@@ -82,11 +82,12 @@ function clearFilter(key: keyof MinistryFilters) {
             v-if="filterModels[filter.key]?.length > 0"
             variant="link"
             color="red"
+            trailing-icon="i-lucide-funnel-x"
             size="xs"
             class="p-0 underline decoration-dotted hover:text-red-600"
             @click="clearFilter(filter.key)"
           >
-            مسح التحديد
+            الكل
           </UButton>
         </div>
 

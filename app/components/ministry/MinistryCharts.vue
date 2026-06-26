@@ -1007,7 +1007,7 @@ const chartKey = computed(() => Date.now())
       />
     </UCard>
 
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="grid gap-6 xl:grid-cols-2 xl:[&>*:last-child]:col-span-2">
       <UCard>
         <template #header>
           <div class="flex items-center justify-between gap-3">
@@ -1166,7 +1166,7 @@ const chartKey = computed(() => Date.now())
       </UCard>
     </div>
     <!-- توزيع الطلاب حسب الصفوف -->
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="grid gap-6 xl:grid-cols-2 xl:[&>*:last-child]:col-span-2">
       <UCard>
         <template #header>
           <div class="flex items-center justify-between gap-3">
