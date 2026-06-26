@@ -13,7 +13,6 @@ const props = defineProps<{
 
 const ApexChart = VueApexCharts
 const fontFamily = 'IBM Plex Sans Arabic, sans-serif'
-const seriesColors = ['#16a34a', '#2563eb', '#f97316', '#9333ea', '#0f766e', '#dc2626', '#ca8a04', '#4f46e5']
 
 interface DepartmentStaff {
   department: string

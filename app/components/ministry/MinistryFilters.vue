@@ -69,7 +69,7 @@ function clearFilter(key: keyof MinistryFilters) {
       </div>
     </template>
 
-    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4 xl:[&>*:last-child]:col-span-full">
       <div
         v-for="filter in props.options"
         :key="filter.key"
@@ -84,7 +84,7 @@ function clearFilter(key: keyof MinistryFilters) {
             color="red"
             trailing-icon="i-lucide-funnel-x"
             size="xs"
-            class="p-0 underline decoration-dotted hover:text-red-600"
+            class="p-0 underline cursor-pointer decoration-dotted hover:text-red-600"
             @click="clearFilter(filter.key)"
           >
             الكل

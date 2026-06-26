@@ -35,7 +35,12 @@ useSeoMeta({
 <template>
   <UApp :toaster="toaster">
     <AppIntro />
-    <UHeader :ui="{ toggle: 'hidden' }">
+    <UHeader
+      :ui="{
+        toggle: 'hidden',
+        container: 'max-w-full mx-auto px-4 sm:px-6 lg:px-8'
+      }"
+    >
       <template #left>
         <NuxtLink
           to="/"
@@ -130,7 +135,11 @@ useSeoMeta({
 
     <USeparator />
 
-    <UFooter>
+    <UFooter
+      :ui="{
+        container: 'max-w-full mx-auto px-4 sm:px-6 lg:px-8'
+      }"
+    >
       <template #left>
         <UAvatar
           class="me-2 border border-default"
