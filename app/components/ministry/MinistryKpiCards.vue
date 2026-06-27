@@ -170,7 +170,7 @@ const cards = computed(() => [
             {{ card.title }}
           </p>
 
-          <p class="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+          <p class="mt-3 text-3xl text-primary font-semibold tracking-tight text-foreground">
             {{ card.value }}
           </p>
         </div>
