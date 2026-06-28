@@ -46,9 +46,9 @@ const osIcon = computed(() => {
 })
 
 const downloadLinks = computed(() => ({
-  Windows: 'https://github.com/sh3boo6/moe-noor/releases/latest/download/MoeNoorData_windows_x64.msi',
-  macOS: 'https://github.com/sh3boo6/moe-noor/releases/latest/download/MoeNoorData_macos_aarch64.dmg',
-  Linux: 'https://github.com/sh3boo6/moe-noor/releases/latest/download/MoeNoorData_linux_x64.AppImage'
+  Windows: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_x64.msi',
+  macOS: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_aarch64.dmg',
+  Linux: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_x64.AppImage'
 }))
 
 const detectedOsDownloadLink = computed(() => downloadLinks.value[osName.value])
