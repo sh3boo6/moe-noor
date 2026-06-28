@@ -1,7 +1,6 @@
 [package]
-name = "testapp"
-version = "0.1.0"
-description = "A Tauri App"
+name = "moe-noor-data"
+description = "Moe Noor Data Desktop App"
 authors = ["you"]
 license = ""
 repository = ""
@@ -9,7 +8,7 @@ edition = "2021"
 rust-version = "1.77.2"
 
 [lib]
-name = "testapp_lib"
+name = "moe_noor_data_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
