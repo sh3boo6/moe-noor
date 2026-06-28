@@ -46,7 +46,7 @@ const osIcon = computed(() => {
 })
 
 const downloadLinks = computed(() => ({
-  Windows: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.1/Moe.Noor.Data.0.1.0.exe',
+  Windows: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.1/Moe.Noor.Data%20.0.1.0.exe',
   macOS: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_aarch64.dmg',
   Linux: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_x64.AppImage'
 }))
@@ -222,15 +222,6 @@ useSeoMeta({
               icon="i-simple-icons-apple"
             >
               macOS
-            </UButton>
-            <UButton
-              :href="downloadLinks.Linux"
-              variant="outline"
-              color="neutral"
-              size="sm"
-              icon="i-simple-icons-linux"
-            >
-              Linux
             </UButton>
           </div>
         </ClientOnly>
