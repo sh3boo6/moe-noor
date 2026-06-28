@@ -1,6 +1,11 @@
 export default defineNuxtConfig({
 
-  modules: ['@nuxt/eslint', '@nuxt/ui', '@vite-pwa/nuxt'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/ui',
+    '@vite-pwa/nuxt',
+    '@vueuse/nuxt'
+  ],
   ssr: false,
 
   devtools: {

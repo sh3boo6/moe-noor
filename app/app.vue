@@ -17,6 +17,42 @@ const description = 'لوحة تحليل تفاعلية لقراءة ملفات 
 const isAboutOpen = ref(false)
 const toaster = { position: 'top-right' }
 
+const osName = ref('Detecting OS...')
+const isTauri = ref(false)
+
+onMounted(() => {
+  // Check if running in Tauri
+  isTauri.value = typeof window !== 'undefined' && '__TAURI__' in window
+  // Safe from SSR because onMounted only fires in the browser
+  const ua = navigator.userAgent
+
+  if (ua.indexOf('Win') !== -1) osName.value = 'Windows'
+  else if (ua.indexOf('Mac') !== -1) osName.value = 'macOS'
+  else if (ua.indexOf('Linux') !== -1) osName.value = 'Linux'
+  else if (ua.indexOf('Android') !== -1) osName.value = 'Android'
+  else if (ua.indexOf('like Mac OS X') !== -1) osName.value = 'iOS'
+  else osName.value = 'Unknown OS'
+})
+
+const osIcon = computed(() => {
+  const icons = {
+    Windows: 'i-simple-icons-windows',
+    macOS: 'i-simple-icons-apple',
+    Linux: 'i-simple-icons-linux',
+    Android: 'i-simple-icons-android',
+    iOS: 'i-simple-icons-ios'
+  }
+  return icons[osName.value] || 'i-lucide-monitor'
+})
+
+const downloadLinks = computed(() => ({
+  Windows: 'https://github.com/sh3boo6/moenoor-data/releases/latest/download/MoeNoorData_windows_x64.msi',
+  macOS: 'https://github.com/sh3boo6/moenoor-data/releases/latest/download/MoeNoorData_macos_aarch64.dmg',
+  Linux: 'https://github.com/sh3boo6/moenoor-data/releases/latest/download/MoeNoorData_linux_x64.AppImage'
+}))
+
+const detectedOsDownloadLink = computed(() => downloadLinks.value[osName.value])
+
 const social = ref([
   { name: 'i-simple-icons-whatsapp', href: 'https://wa.me/966507770383' },
   { name: 'i-simple-icons-x', href: 'https://twitter.com/sh3boo6' },
@@ -56,6 +92,19 @@ useSeoMeta({
       </template>
 
       <template #right>
+        <ClientOnly>
+          <UButton
+            v-if="!isTauri"
+            :label="`تحميل لـ ${osName}`"
+            :href="detectedOsDownloadLink"
+            variant="ghost"
+            :tooltip="osName"
+            color="neutral"
+            class="hidden xl:inline-flex cursor-pointer"
+            :trailing-icon="osIcon"
+            size="sm"
+          />
+        </ClientOnly>
         <UButton
           label="حول التطبيق"
           variant="ghost"
@@ -149,6 +198,42 @@ useSeoMeta({
         <p class="text-sm text-muted">
           برمجة وتصميم: محمد عبدالرحمن - فكرة: هاشم العمري
         </p>
+      </template>
+      <template #right>
+        <ClientOnly>
+          <div
+            v-if="!isTauri"
+            class="hidden lg:flex items-center gap-2"
+          >
+            <UButton
+              :href="downloadLinks.Windows"
+              variant="outline"
+              color="neutral"
+              size="sm"
+              icon="i-simple-icons-windows"
+            >
+              Windows
+            </UButton>
+            <UButton
+              :href="downloadLinks.macOS"
+              variant="outline"
+              color="neutral"
+              size="sm"
+              icon="i-simple-icons-apple"
+            >
+              macOS
+            </UButton>
+            <UButton
+              :href="downloadLinks.Linux"
+              variant="outline"
+              color="neutral"
+              size="sm"
+              icon="i-simple-icons-linux"
+            >
+              Linux
+            </UButton>
+          </div>
+        </ClientOnly>
       </template>
     </UFooter>
   </UApp>
