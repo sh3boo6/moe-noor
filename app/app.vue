@@ -46,7 +46,7 @@ const osIcon = computed(() => {
 })
 
 const downloadLinks = computed(() => ({
-  Windows: 'https://github.com/sh3boo6/moe-noor/releases/tag/0.1.1/Moe%20.Noor%20.Data%20.0.1.0.exe',
+  Windows: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.1/Moe.Noor.Data.0.1.0.exe',
   macOS: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_aarch64.dmg',
   Linux: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_x64.AppImage'
 }))
