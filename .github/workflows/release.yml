@@ -1,0 +1,150 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-nuxt:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Nuxt app
+        run: pnpm build
+        env:
+          TAURI_APP: true
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    needs: build-nuxt
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          target: x86_64-unknown-linux-gnu
+          components: rust-src
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Tauri Linux
+        run: pnpm tauri build
+        env:
+          TAURI_APP: true
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-linux
+          path: src-tauri/target/release/bundle/**
+
+  build-windows:
+    runs-on: windows-latest
+    needs: build-nuxt
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Tauri Windows
+        run: pnpm tauri build
+        env:
+          TAURI_APP: true
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-windows
+          path: src-tauri/target/release/bundle/**
+
+  build-macos:
+    runs-on: macos-14
+    needs: build-nuxt
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Rust targets
+        run: rustup target add x86_64-apple-darwin aarch64-apple-darwin
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Tauri macOS
+        run: pnpm tauri build
+        env:
+          TAURI_APP: true
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-macos
+          path: src-tauri/target/release/bundle/**
+
+  release:
+    runs-on: ubuntu-22.04
+    needs: [build-linux, build-windows, build-macos]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**
+          draft: false
+          prerelease: false
+          fail-on-unmatched: false
