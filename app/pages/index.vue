@@ -318,6 +318,10 @@ function resetFilters() {
         </div>
 
         <div class="mt-6">
+          <MinistryDensityTable :schools="filteredSchools" />
+        </div>
+
+        <div class="mt-6">
           <MinistryCharts :schools="filteredSchools" />
         </div>
       </template>
