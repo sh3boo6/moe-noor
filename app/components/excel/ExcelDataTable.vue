@@ -160,7 +160,7 @@ function formatNumber(value: number): string {
     </div>
 
     <div class="mt-5 overflow-x-auto rounded-2xl border border-border/50">
-      <table class="w-full min-w-[900px] border-collapse text-right text-sm">
+      <table class="w-full min-w-225 border-collapse text-right text-sm">
         <thead class="bg-muted text-xs uppercase text-muted-foreground">
           <tr>
             <th class="px-4 py-3 font-semibold">
@@ -211,7 +211,7 @@ function formatNumber(value: number): string {
             <td class="whitespace-nowrap px-4 py-3 font-medium text-foreground">
               {{ school.id || 'غير محدد' }}
             </td>
-            <td class="max-w-[240px] px-4 py-3 font-medium text-foreground">
+            <td class="max-w-60 px-4 py-3 font-medium text-foreground">
               {{ school.schoolName || 'غير محدد' }}
             </td>
             <td class="px-4 py-3 text-muted-foreground">
