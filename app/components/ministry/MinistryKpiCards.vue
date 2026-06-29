@@ -46,7 +46,7 @@ const governmentManagerRatio = computed(() => uniqueManagers.value.size ? Math.r
 const mismatchedSchools = computed(() => (props.schools || []).filter(school => (school.students?.gradeTotalMismatch || 0) > 0).length)
 
 const totalClasses = computed(() => (props.schools || []).reduce((sum, school) => sum + (school.students?.classes || 0), 0))
-const classDensityPerStage = computed(() => totalStages.value ? (totalClasses.value / totalStages.value).toFixed(1) : '0')
+const classDensityPerStage = computed(() => totalClasses.value ? (totalStudents.value / totalClasses.value).toFixed(1) : '0')
 const studentTeacherRatio = computed(() => totalTeachers.value ? (totalStudents.value / totalTeachers.value).toFixed(1) : '0')
 
 const avgStudentsPerSchool = computed(() => totalSchools.value ? (totalStudents.value / totalSchools.value).toFixed(0) : '0')
@@ -104,9 +104,9 @@ const cards = computed(() => [
     icon: 'i-lucide-user-check'
   },
   {
-    title: 'كثافة الفصول لكل مرحلة',
+    title: 'معدل كثافة الفصول',
     value: classDensityPerStage.value,
-    description: `${formatNumber(totalClasses.value)} فصل من أصل ${formatNumber(totalStages.value)} مرحلة`,
+    description: `${formatNumber(totalStudents.value)} طالب / ${formatNumber(totalClasses.value)} فصل`,
     icon: 'i-lucide-layers'
   },
   {
