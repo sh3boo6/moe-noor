@@ -81,7 +81,7 @@ function clearFilter(key: keyof MinistryFilters) {
           <UButton
             v-if="filterModels[filter.key]?.length > 0"
             variant="link"
-            color="red"
+            color="error"
             trailing-icon="i-lucide-funnel-x"
             size="xs"
             class="p-0 underline cursor-pointer decoration-dotted hover:text-red-600"

@@ -257,7 +257,7 @@ function formatValue(value: unknown): string {
       aria-modal="true"
     >
       <!-- Header -->
-      <header class="flex items-start justify-between gap-4 border-b border-accented/50 dark:border-zinc-800 bg-gradient-to-l from-primary/5 dark:from-primary/10 to-transparent px-6 py-4">
+      <header class="flex items-start justify-between gap-4 border-b border-accented/50 dark:border-zinc-800 bg-linear-to-l from-primary/5 dark:from-primary/10 to-transparent px-6 py-4">
         <div>
           <p class="text-xs font-medium tracking-wide text-primary/80 dark:text-primary-400">
             عرض التفاصيل
@@ -341,7 +341,10 @@ function formatValue(value: unknown): string {
                 rel="noopener noreferrer"
                 class="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
-                <UIcon name="i-lucide-map-pin size-5" />
+                <UIcon
+                  name="i-lucide-map"
+                  class="size-5"
+                />
                 <span class="ms-1 hidden lg:inline-block">فتح في Google Maps</span>
               </a>
             </div>
@@ -350,7 +353,7 @@ function formatValue(value: unknown): string {
             <div class="overflow-hidden rounded-2xl border border-accented/50 dark:border-zinc-800 shadow-sm">
               <iframe
                 :src="googleMapsEmbedUrl"
-                class="h-[400px] w-full invert-[0.05] hue-rotate-180 dark:invert dark:hue-rotate-180"
+                class="h-100 w-full invert-[0.05] hue-rotate-180 dark:invert dark:hue-rotate-180"
                 frameborder="0"
                 scrolling="no"
                 marginheight="0"
@@ -394,7 +397,7 @@ function formatValue(value: unknown): string {
                 {{ label }}
               </p>
 
-              <p class="mt-2 break-words text-sm font-semibold text-foreground dark:text-zinc-200">
+              <p class="mt-2 wrap-break-word text-sm font-semibold text-foreground dark:text-zinc-200">
                 {{ formatValue(value) }}
               </p>
             </div>

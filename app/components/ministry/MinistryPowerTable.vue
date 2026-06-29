@@ -82,8 +82,8 @@ watch(totalPages, (value) => {
 // دالة تحويل الأرقام الشرقية (٠-٩) إلى غربية (0-9)
 function convertArabicNumbers(str: string): string {
   const arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g]
-  for (let i = 0; i < 10; i++) {
-    str = str.replace(arabicNumbers[i], String(i))
+  for (const [i, regex] of arabicNumbers.entries()) {
+    str = str.replace(regex, String(i))
   }
   return str
 }
