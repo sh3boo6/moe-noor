@@ -92,7 +92,7 @@ jobs:
         run: corepack enable && corepack prepare pnpm@11.5.2 --activate
 
       - name: Install NSIS and WiX
-        run: choco install nsis wix
+        run: choco install nsis wixtoolset
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
