@@ -271,7 +271,7 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
   { key: 'classification.earlyChildhood', label: 'هل المدرسة طفولة مبكرة', aliases: ['هل المدرسة طفولة مبكرة', 'طفولة مبكرة', 'مرحلة الطفولة المبكرة', 'روضة'] },
   { key: 'classification.pathways', label: 'هل المدرسة مسارات', aliases: ['هل المدرسة مسارات', 'مسارات', 'مدارس المسارات', 'نظام المسارات'] },
 
-  column('students.schoolCount', 'عدد المدارس'),
+  column('additional.schoolCount', 'عدد المدارس'),
   column('additional.createdAt', 'تاريخ الانشاء في النظام', ['تاريخ الإنشاء في النظام', 'تاريخ الانشاء']),
   column('identity.schoolType', 'نوع المدرسة', ['نوع المؤسسة', 'نوع المدرسة']),
   column('additional.educationOffice', 'مكتب التعليم', ['مكتب التعليم', 'مكتب الإشراف', 'مكتب التربية']),

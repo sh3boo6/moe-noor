@@ -1,52 +1,23 @@
 <script setup lang="ts">
 import type { MinistryFilters } from '~/types/ministrySchool'
-
-interface FilterOption {
-  key: keyof MinistryFilters
-  label: string
-  placeholder: string
-  options: string[]
-}
+import type { FilterOptionDef } from '~/composables/useSchoolFilters'
 
 const props = defineProps<{
   filters: MinistryFilters
-  options: FilterOption[]
+  options: FilterOptionDef[]
 }>()
 
 const emit = defineEmits<{
   change: [key: keyof MinistryFilters, value: string[]]
+  clear: [key: keyof MinistryFilters]
 }>()
 
-const filterModels = ref<Record<keyof MinistryFilters, string[]>>({
-  educationDepartment: [],
-  administrativeRegion: [],
-  stage: [],
-  gender: [],
-  authority: [],
-  buildingOwnership: [],
-  studyTime: [],
-  educationType: [],
-  governorate: [],
-  schoolName: []
-})
-
-watch(
-  () => props.filters,
-  (newFilters) => {
-    filterModels.value = { ...newFilters }
-  },
-  { immediate: true, deep: true }
-)
-
-function updateFilter(key: keyof MinistryFilters, value: string[]) {
-  filterModels.value[key] = value
+function handleUpdate(key: keyof MinistryFilters, value: string[]) {
   emit('change', key, value)
 }
 
-// دالة لمسح قيم فلتر معين وإرسال التحديث للمكون الأب
 function clearFilter(key: keyof MinistryFilters) {
-  filterModels.value[key] = []
-  emit('change', key, [])
+  emit('clear', key)
 }
 </script>
 
@@ -80,7 +51,7 @@ function clearFilter(key: keyof MinistryFilters) {
           <span>{{ filter.label }}</span>
 
           <UButton
-            v-if="filterModels[filter.key]?.length > 0"
+            v-if="props.filters[filter.key]?.length > 0"
             variant="link"
             color="error"
             trailing-icon="i-lucide-funnel-x"
@@ -93,13 +64,14 @@ function clearFilter(key: keyof MinistryFilters) {
         </div>
 
         <USelectMenu
-          v-model="filterModels[filter.key]"
-          size="xl"
+          :key="filter.key"
+          :model-value="props.filters[filter.key]"
           :items="filter.options"
-          :placeholder="`الكل`"
+          :placeholder="filter.placeholder"
           multiple
+          size="xl"
           class="w-full"
-          @update:model-value="updateFilter(filter.key, $event)"
+          @update:model-value="handleUpdate(filter.key, $event)"
         />
       </div>
     </div>

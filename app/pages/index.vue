@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { MinistryFilters, MinistrySchoolRecord } from '~/types/ministrySchool'
-import { normalizeGender } from '~/utils/normalize'
+import type { MinistrySchoolRecord } from '~/types/ministrySchool'
 
 const toast = useToast()
 
+// ─── استيراد البيانات من الـ Excel Worker ──────────────────────────────────
 const {
   schools,
   headers,
@@ -15,21 +15,21 @@ const {
   clearSchools
 } = useMinistryExcel()
 
-const filters = reactive<MinistryFilters>({
-  educationDepartment: [],
-  administrativeRegion: [],
-  stage: [],
-  gender: [],
-  authority: [],
-  buildingOwnership: [],
-  studyTime: [],
-  educationType: [],
-  governorate: [],
-  schoolName: []
-})
+// ─── نظام الفلاتر المترابطة (Cross-Filter / Excel Slicers) ────────────────
+const {
+  filters,
+  hasActiveFilters,
+  filteredSchools,
+  filterOptionDefs,
+  updateFilter,
+  resetFilters: resetFilterState,
+  clearFilter
+} = useSchoolFilters(schools)
 
+// ─── حالة الصفحة ──────────────────────────────────────────────────────────
 const selectedSchool = ref<MinistrySchoolRecord | null>(null)
 const uploadDate = ref<string>('')
+const showConfirmClear = ref(false)
 
 useHead({
   title: 'لوحة الصيغة الوزارية الشاملة',
@@ -38,56 +38,7 @@ useHead({
   ]
 })
 
-// تستخرج القيم الفريدة من عمود محدد لاستخدامها في قوائم الفلاتر.
-function uniqueIdentityValues(field: keyof Pick<MinistrySchoolRecord['identity'], 'educationDepartment' | 'administrativeRegion' | 'stage' | 'gender' | 'authority' | 'studyTime' | 'educationType'>): string[] {
-  return Array.from(new Set(schools.value.map(school => school.identity[field]).filter(Boolean)))
-    .sort((a, b) => a.localeCompare(b, 'ar'))
-}
-
-const uniqueBuildingOwnership = computed(() => Array.from(new Set(schools.value.map(school => school.building.ownership).filter(Boolean)))
-  .sort((a, b) => a.localeCompare(b, 'ar')))
-
-const uniqueGovernorate = computed(() => Array.from(new Set(schools.value.map(school => school.additional.governorate).filter(Boolean)))
-  .sort((a, b) => a.localeCompare(b, 'ar')))
-
-const uniqueGenderOptions = computed(() => Array.from(new Set(schools.value.map(school => normalizeGender(school.identity.gender || '')).filter(Boolean)))
-  .sort((a, b) => a.localeCompare(b, 'ar')))
-
-const uniqueSchoolName = computed(() => Array.from(new Set(schools.value
-  .filter(school => school.identity.id && school.identity.schoolName)
-  .map(school => `${school.identity.id} - ${school.identity.schoolName}`)))
-  .sort((a, b) => a.localeCompare(b, 'ar')))
-
-const filterOptions = computed(() => [
-  { key: 'educationDepartment' as const, label: 'إدارة التعليم', placeholder: 'كل إدارات التعليم', options: uniqueIdentityValues('educationDepartment') },
-  { key: 'administrativeRegion' as const, label: 'المنطقة الإدارية', placeholder: 'كل المناطق', options: uniqueIdentityValues('administrativeRegion') },
-  { key: 'stage' as const, label: 'المرحلة', placeholder: 'كل المراحل', options: uniqueIdentityValues('stage') },
-  { key: 'gender' as const, label: 'الجنس', placeholder: 'كل الأجناس', options: uniqueGenderOptions.value },
-  { key: 'authority' as const, label: 'السلطة', placeholder: 'كل السلطات', options: uniqueIdentityValues('authority') },
-  { key: 'buildingOwnership' as const, label: 'نوع المبنى', placeholder: 'كل أنواع المباني', options: uniqueBuildingOwnership.value },
-  { key: 'studyTime' as const, label: 'وقت الدراسة', placeholder: 'كل الأوقات', options: uniqueIdentityValues('studyTime') },
-  { key: 'educationType' as const, label: 'نوع التعليم', placeholder: 'كل أنواع التعليم', options: uniqueIdentityValues('educationType') },
-  { key: 'governorate' as const, label: 'المحافظة', placeholder: 'كل المحافظات', options: uniqueGovernorate.value },
-  { key: 'schoolName' as const, label: 'اسم المدرسة', placeholder: 'كل المدارس', options: uniqueSchoolName.value }
-])
-
-const hasActiveFilters = computed(() => Object.values(filters).some(arr => arr.length > 0))
-
-// تطبق الفلاتر المتقدمة قبل تمرير البيانات إلى الرسوم والجداول.
-const filteredSchools = computed(() => schools.value.filter((school) => {
-  const identity = school.identity
-
-  return (!filters.educationDepartment.length || filters.educationDepartment.includes(identity.educationDepartment))
-    && (!filters.administrativeRegion.length || filters.administrativeRegion.includes(identity.administrativeRegion))
-    && (!filters.stage.length || filters.stage.includes(identity.stage))
-    && (!filters.gender.length || filters.gender.includes(normalizeGender(identity.gender || '')))
-    && (!filters.authority.length || filters.authority.includes(identity.authority))
-    && (!filters.buildingOwnership.length || filters.buildingOwnership.includes(school.building.ownership))
-    && (!filters.studyTime.length || filters.studyTime.includes(identity.studyTime))
-    && (!filters.educationType.length || filters.educationType.includes(identity.educationType))
-    && (!filters.governorate.length || filters.governorate.includes(school.additional.governorate))
-    && (!filters.schoolName.length || filters.schoolName.includes(`${school.identity.id} - ${school.identity.schoolName}`))
-  }))
+// ─── معالجة الأحداث ────────────────────────────────────────────────────────
 
 function updateUploadDate(data: { uploadedAt: string }) {
   uploadDate.value = new Date(data.uploadedAt).toLocaleString('ar-SA', {
@@ -103,43 +54,20 @@ async function handleFile(file: File) {
   await parseFile(file)
 }
 
-const showConfirmClear = ref(false)
-
 function confirmClearAll() {
-  clearAll()
+  clearSchools()
+  uploadDate.value = ''
+  resetFilterState()
   showConfirmClear.value = false
 }
 
-function clearAll() {
-  clearSchools()
-  uploadDate.value = ''
-  resetFilters()
-}
-
-function successAction(title: string) {
+function resetFilters() {
+  resetFilterState()
   toast.add({
-    title: title,
+    title: 'تمت إعادة الفلاتر بنجاح',
     icon: 'i-lucide-check-circle',
     duration: 1250
   })
-}
-
-function updateFilter(key: keyof MinistryFilters, value: string | string[]) {
-  filters[key] = value as string[]
-}
-
-function resetFilters() {
-  filters.educationDepartment = []
-  filters.administrativeRegion = []
-  filters.stage = []
-  filters.gender = []
-  filters.authority = []
-  filters.buildingOwnership = []
-  filters.studyTime = []
-  filters.educationType = []
-  filters.governorate = []
-  filters.schoolName = []
-  successAction('تمت العملية بنجاح')
 }
 </script>
 
@@ -308,8 +236,9 @@ function resetFilters() {
         <div class="mt-5">
           <MinistryFilters
             :filters="filters"
-            :options="filterOptions"
+            :options="filterOptionDefs"
             @change="updateFilter"
+            @clear="clearFilter"
           />
         </div>
 
