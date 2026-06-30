@@ -30,6 +30,13 @@ jobs:
         env:
           TAURI_APP: true
 
+      # التعديل 1: رفع ملفات Nuxt الناتجة (تأكد من مسار مخرجات توري المعتمد لديك، سواء dist أو .output)
+      - name: Upload Nuxt Build Assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuxt-dist
+          path: dist # أو .output/public حسب إعدادات tauri.conf.json -> frontendDist
+
   build-linux:
     runs-on: ubuntu-latest
     needs: build-nuxt
@@ -43,6 +50,13 @@ jobs:
 
       - name: Setup pnpm
         run: corepack enable && corepack prepare pnpm@11.5.2 --activate
+
+      # التعديل 2: تحميل ملفات الـ فرونت إند الجاهزة قبل بناء توري
+      - name: Download Nuxt Build Assets
+        uses: actions/download-artifact@v4
+        with:
+          name: nuxt-dist
+          path: dist
 
       - name: Install system dependencies
         run: |
@@ -91,6 +105,13 @@ jobs:
       - name: Setup pnpm
         run: corepack enable && corepack prepare pnpm@11.5.2 --activate
 
+      # التعديل 3: تحميل ملفات الـ فرونت إند لويندوز
+      - name: Download Nuxt Build Assets
+        uses: actions/download-artifact@v4
+        with:
+          name: nuxt-dist
+          path: dist
+
       - name: Install NSIS and WiX
         run: choco install nsis wixtoolset
 
@@ -124,6 +145,13 @@ jobs:
 
       - name: Setup pnpm
         run: corepack enable && corepack prepare pnpm@11.5.2 --activate
+
+      # التعديل 4: تحميل ملفات الـ فرونت إند للماك
+      - name: Download Nuxt Build Assets
+        uses: actions/download-artifact@v4
+        with:
+          name: nuxt-dist
+          path: dist
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
