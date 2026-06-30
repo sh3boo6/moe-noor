@@ -48,10 +48,12 @@ onMounted(async () => {
       const update = await check()
       if (update) {
         updateInfo.value = update
-        isUpdateOpen.value = true
+        // تنفيذ التحديث وتثبيته مباشرة وتلقائياً فور توفره
+        await update.downloadAndInstall()
+        await relaunch()
       }
     } catch (e) {
-      console.error('Failed to check for updates:', e)
+      console.error('Failed to check or perform direct update:', e)
     } finally {
       updateLoading.value = false
     }
@@ -96,24 +98,22 @@ const downloads: DownloadOs[] = [
     os: 'Windows',
     icon: 'i-simple-icons-windows',
     links: [
-      { label: 'تثبيت EXE', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_x64-setup.exe' },
-      { label: 'تثبيت MSI', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_x64_en-US.msi' }
+      { label: 'تثبيت EXE', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.5/Moe.Noor.Data_1.0.5_x64-setup.exe' },
+      { label: 'تثبيت MSI', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.5/Moe.Noor.Data_1.0.5_x64_en-US.msi' }
     ]
   },
   {
     os: 'macOS',
     icon: 'i-simple-icons-apple',
     links: [
-      { label: 'تحميل DMG', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_aarch64.dmg' }
+      { label: 'تحميل DMG', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.5/Moe.Noor.Data_1.0.5_aarch64.dmg' }
     ]
   },
   {
     os: 'Linux',
     icon: 'i-simple-icons-linux',
     links: [
-      { label: 'AppImage', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_amd64.AppImage' },
-      { label: 'DEB', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_amd64.deb' },
-      { label: 'RPM', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_1.x86_64.rpm' }
+      { label: 'AppImage', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.5/Moe.Noor.Data_1.0.5_amd64.AppImage' }
     ]
   }
 ]
