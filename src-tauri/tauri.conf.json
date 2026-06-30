@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Moe Noor Data",
-  "version": "0.2.0",
+  "version": "1.0.3",
   "identifier": "com.moenoordata.desktop",
   "mainBinaryName": "moe-noor-data",
   "build": {
