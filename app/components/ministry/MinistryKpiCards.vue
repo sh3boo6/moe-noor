@@ -4,6 +4,7 @@ import type { MinistrySchoolRecord } from '~/types/ministrySchool'
 const props = defineProps<{
   schools: MinistrySchoolRecord[]
   warningCount: number
+  hasActiveFilters: boolean
 }>()
 
 const totalStages = computed(() => props.schools?.length || 0)
@@ -12,6 +13,16 @@ const totalSchools = computed(() => {
     .map(school => String(school.staff?.managerName || '').trim())
     .filter(name => Boolean(name))
   return new Set(managers).size
+})
+
+const schoolIds = computed(() => props.schools.map(s => String(s.identity.id || '')).filter(Boolean))
+const displayedSchoolIds = computed(() => {
+  if (!props.hasActiveFilters || schoolIds.value.length === 0) return ''
+  const max = 6
+  if (schoolIds.value.length <= max) {
+    return schoolIds.value.join('، ')
+  }
+  return schoolIds.value.slice(0, max).join('، ') + '، ...'
 })
 const uniqueManagers = computed(() => {
   const ids = (props.schools || [])
@@ -62,9 +73,9 @@ function formatNumber(value: number): string {
 
 const cards = computed(() => [
   {
-    title: 'إجمالي المدارس',
+    title: props.hasActiveFilters ? 'المدارس حسب التصفية' : 'إجمالي المدارس',
     value: formatNumber(totalSchools.value),
-    description: `حسب عدد المباني المدرسية الفعلية ${totalSchools.value !== totalStages.value ? `، إجمالي المراحل ${formatNumber(totalStages.value)}` : ''}`,
+    description: props.hasActiveFilters ? displayedSchoolIds.value : `حسب عدد المباني المدرسية الفعلية ${totalSchools.value !== totalStages.value ? `، إجمالي المراحل ${formatNumber(totalStages.value)}` : ''}`,
     icon: 'i-lucide-building-2'
   },
   {

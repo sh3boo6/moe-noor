@@ -24,7 +24,8 @@ const filters = reactive<MinistryFilters>({
   buildingOwnership: [],
   studyTime: [],
   educationType: [],
-  governorate: []
+  governorate: [],
+  schoolName: []
 })
 
 const selectedSchool = ref<MinistrySchoolRecord | null>(null)
@@ -52,6 +53,11 @@ const uniqueGovernorate = computed(() => Array.from(new Set(schools.value.map(sc
 const uniqueGenderOptions = computed(() => Array.from(new Set(schools.value.map(school => normalizeGender(school.identity.gender || '')).filter(Boolean)))
   .sort((a, b) => a.localeCompare(b, 'ar')))
 
+const uniqueSchoolName = computed(() => Array.from(new Set(schools.value
+  .filter(school => school.identity.id && school.identity.schoolName)
+  .map(school => `${school.identity.id} - ${school.identity.schoolName}`)))
+  .sort((a, b) => a.localeCompare(b, 'ar')))
+
 const filterOptions = computed(() => [
   { key: 'educationDepartment' as const, label: 'إدارة التعليم', placeholder: 'كل إدارات التعليم', options: uniqueIdentityValues('educationDepartment') },
   { key: 'administrativeRegion' as const, label: 'المنطقة الإدارية', placeholder: 'كل المناطق', options: uniqueIdentityValues('administrativeRegion') },
@@ -61,8 +67,11 @@ const filterOptions = computed(() => [
   { key: 'buildingOwnership' as const, label: 'نوع المبنى', placeholder: 'كل أنواع المباني', options: uniqueBuildingOwnership.value },
   { key: 'studyTime' as const, label: 'وقت الدراسة', placeholder: 'كل الأوقات', options: uniqueIdentityValues('studyTime') },
   { key: 'educationType' as const, label: 'نوع التعليم', placeholder: 'كل أنواع التعليم', options: uniqueIdentityValues('educationType') },
-  { key: 'governorate' as const, label: 'المحافظة', placeholder: 'كل المحافظات', options: uniqueGovernorate.value }
+  { key: 'governorate' as const, label: 'المحافظة', placeholder: 'كل المحافظات', options: uniqueGovernorate.value },
+  { key: 'schoolName' as const, label: 'اسم المدرسة', placeholder: 'كل المدارس', options: uniqueSchoolName.value }
 ])
+
+const hasActiveFilters = computed(() => Object.values(filters).some(arr => arr.length > 0))
 
 // تطبق الفلاتر المتقدمة قبل تمرير البيانات إلى الرسوم والجداول.
 const filteredSchools = computed(() => schools.value.filter((school) => {
@@ -77,7 +86,8 @@ const filteredSchools = computed(() => schools.value.filter((school) => {
     && (!filters.studyTime.length || filters.studyTime.includes(identity.studyTime))
     && (!filters.educationType.length || filters.educationType.includes(identity.educationType))
     && (!filters.governorate.length || filters.governorate.includes(school.additional.governorate))
-}))
+    && (!filters.schoolName.length || filters.schoolName.includes(`${school.identity.id} - ${school.identity.schoolName}`))
+  }))
 
 function updateUploadDate(data: { uploadedAt: string }) {
   uploadDate.value = new Date(data.uploadedAt).toLocaleString('ar-SA', {
@@ -128,6 +138,7 @@ function resetFilters() {
   filters.studyTime = []
   filters.educationType = []
   filters.governorate = []
+  filters.schoolName = []
   successAction('تمت العملية بنجاح')
 }
 </script>
@@ -306,6 +317,7 @@ function resetFilters() {
           <MinistryKpiCards
             :schools="filteredSchools"
             :warning-count="warningCount"
+            :has-active-filters="hasActiveFilters"
           />
         </div>
 

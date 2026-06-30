@@ -26,7 +26,8 @@ const filterModels = ref<Record<keyof MinistryFilters, string[]>>({
   buildingOwnership: [],
   studyTime: [],
   educationType: [],
-  governorate: []
+  governorate: [],
+  schoolName: []
 })
 
 watch(
@@ -58,7 +59,7 @@ function clearFilter(key: keyof MinistryFilters) {
             الفلترة المتقدمة
           </h2>
           <p class="mt-1 text-sm text-muted-foreground">
-            صفّ البيانات حسب إدارة التعليم، المنطقة، المرحلة، الجنس، السلطة، نوع المبنى، وقت الدراسة، نوع التعليم والمحافظة.
+            صفّ البيانات حسب إدارة التعليم، المنطقة، المرحلة، الجنس، السلطة، نوع المبنى، وقت الدراسة، نوع التعليم والمحاسبة واسم المدرسة.
           </p>
         </div>
 
@@ -69,7 +70,7 @@ function clearFilter(key: keyof MinistryFilters) {
       </div>
     </template>
 
-    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4 xl:[&>*:last-child]:col-span-full">
+    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4 xl:[&>*:last-child]:col-span-3">
       <div
         v-for="filter in props.options"
         :key="filter.key"

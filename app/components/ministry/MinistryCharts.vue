@@ -745,12 +745,20 @@ const facilityRegionData = computed(() => {
     const chem = school.facilities.chemistryLabs || 0
 
     if (gender === 'بنين') {
-      current.compBoys += comp; current.physBoys += phys; current.chemBoys += chem
+      current.compBoys += comp
+      current.physBoys += phys
+      current.chemBoys += chem
     } else if (gender === 'بنات') {
-      current.compGirls += comp; current.physGirls += phys; current.chemGirls += chem
+      current.compGirls += comp
+      current.physGirls += phys
+      current.chemGirls += chem
     } else {
-      current.compBoys += comp / 2; current.physBoys += phys / 2; current.chemBoys += chem / 2
-      current.compGirls += comp / 2; current.physGirls += phys / 2; current.chemGirls += chem / 2
+      current.compBoys += comp / 2
+      current.physBoys += phys / 2
+      current.chemBoys += chem / 2
+      current.compGirls += comp / 2
+      current.physGirls += phys / 2
+      current.chemGirls += chem / 2
     }
     current.total += comp + phys + chem
     grouped.set(region, current)
@@ -786,12 +794,20 @@ const facilityGovernorateData = computed(() => {
     const chem = school.facilities.chemistryLabs || 0
 
     if (gender === 'بنين') {
-      current.compBoys += comp; current.physBoys += phys; current.chemBoys += chem
+      current.compBoys += comp
+      current.physBoys += phys
+      current.chemBoys += chem
     } else if (gender === 'بنات') {
-      current.compGirls += comp; current.physGirls += phys; current.chemGirls += chem
+      current.compGirls += comp
+      current.physGirls += phys
+      current.chemGirls += chem
     } else {
-      current.compBoys += comp / 2; current.physBoys += phys / 2; current.chemBoys += chem / 2
-      current.compGirls += comp / 2; current.physGirls += phys / 2; current.chemGirls += chem / 2
+      current.compBoys += comp / 2
+      current.physBoys += phys / 2
+      current.chemBoys += chem / 2
+      current.compGirls += comp / 2
+      current.physGirls += phys / 2
+      current.chemGirls += chem / 2
     }
     current.total += comp + phys + chem
     grouped.set(gov, current)

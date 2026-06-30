@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
@@ -12,18 +12,26 @@ useHead({
   }
 })
 
+import { check } from '@tauri-apps/plugin-updater'
+import { relaunch } from '@tauri-apps/plugin-process'
+import { getVersion } from '@tauri-apps/api/app'
+
+const isDesktop = ref(false)
 const title = 'لوحة تحليل ملفات Excel'
 const description = 'لوحة تحليل تفاعلية لقراءة ملفات Excel وعرض إحصائيات المدارس باستخدام Nuxt و Tauri.'
 const isAboutOpen = ref(false)
-const toaster = { position: 'top-right' }
+const toaster = { position: 'top-right' } as const
+const isUpdateOpen = ref(false)
+const updateInfo = ref<any>(null)
+const currentVersion = ref('')
+const updateLoading = ref(false)
 
 const osName = ref('Detecting OS...')
-const isTauri = ref(false)
 
-onMounted(() => {
-  // Check if running in Tauri
-  isTauri.value = typeof window !== 'undefined' && '__TAURI__' in window
-  // Safe from SSR because onMounted only fires in the browser
+onMounted(async () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  isDesktop.value = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
+
   const ua = navigator.userAgent
 
   if (ua.indexOf('Win') !== -1) osName.value = 'Windows'
@@ -32,10 +40,26 @@ onMounted(() => {
   else if (ua.indexOf('Android') !== -1) osName.value = 'Android'
   else if (ua.indexOf('like Mac OS X') !== -1) osName.value = 'iOS'
   else osName.value = 'Unknown OS'
+
+  if (isDesktop.value) {
+    try {
+      currentVersion.value = await getVersion()
+      updateLoading.value = true
+      const update = await check()
+      if (update) {
+        updateInfo.value = update
+        isUpdateOpen.value = true
+      }
+    } catch (e) {
+      console.error('Failed to check for updates:', e)
+    } finally {
+      updateLoading.value = false
+    }
+  }
 })
 
 const osIcon = computed(() => {
-  const icons = {
+  const icons: Record<string, string> = {
     Windows: 'i-simple-icons-windows',
     macOS: 'i-simple-icons-apple',
     Linux: 'i-simple-icons-linux',
@@ -45,7 +69,29 @@ const osIcon = computed(() => {
   return icons[osName.value] || 'i-lucide-monitor'
 })
 
-const downloads = [
+const installAndUpdate = async () => {
+  if (!updateInfo.value) return
+  try {
+    updateLoading.value = true
+    await updateInfo.value.downloadAndInstall()
+    await relaunch()
+  } catch (e) {
+    console.error('Failed to install update:', e)
+  }
+}
+
+interface DownloadLink {
+  label: string
+  href: string
+}
+
+interface DownloadOs {
+  os: string
+  icon: string
+  links: DownloadLink[]
+}
+
+const downloads: DownloadOs[] = [
   {
     os: 'Windows',
     icon: 'i-simple-icons-windows',
@@ -74,7 +120,7 @@ const downloads = [
 
 const detectedOsDownloadLink = computed(() => {
   const os = downloads.find(d => d.os === osName.value)
-  return os ? os.links[0].href : downloads[0].links[0].href
+  return os?.links[0]?.href ?? (downloads[0] as DownloadOs).links[0]!.href
 })
 
 const social = ref([
@@ -118,7 +164,7 @@ useSeoMeta({
       <template #right>
         <ClientOnly>
           <UDropdownMenu
-            v-if="!isTauri"
+            v-if="!isDesktop"
             :items="downloads.map(os => ({
               label: os.os,
               icon: os.icon,
@@ -215,6 +261,63 @@ useSeoMeta({
       </template>
     </UModal>
 
+    <UModal
+      v-model:open="isUpdateOpen"
+      title="تحديث متاح"
+      icon="i-lucide-download"
+      description="يوجد إصدار جديد من التطبيق"
+      class="max-w-md"
+    >
+      <template #header>
+        <div class="flex justify-between items-center gap-2 w-full">
+          <div class="flex items-center gap-3">
+            <UIcon
+              name="i-lucide-download"
+              class="size-10 text-primary"
+            />
+            <div>
+              <h3 class="text-lg font-semibold">
+                تحديث متاح
+              </h3>
+              <p class="text-sm text-muted">
+                الإصدار الحالي: {{ currentVersion }}
+              </p>
+            </div>
+          </div>
+          <UButton
+            icon="i-lucide-x"
+            color="neutral"
+            variant="ghost"
+            @click="isUpdateOpen = false"
+          />
+        </div>
+      </template>
+      <template #body>
+        <div class="space-y-4 text-right leading-7">
+          <p v-if="updateInfo">
+            <span class="font-semibold">الإصدار الجديد:</span> {{ updateInfo.version }}
+          </p>
+          <p class="text-sm text-muted">
+            {{ updateInfo?.date ? new Date(updateInfo.date).toLocaleDateString('ar-SA') : '' }}
+          </p>
+          <div class="flex justify-end gap-2">
+            <UButton
+              label="تحديث لاحقاً"
+              color="neutral"
+              variant="ghost"
+              @click="isUpdateOpen = false"
+            />
+            <UButton
+              label="بدء التحديث الآن"
+              :loading="updateLoading"
+              icon="i-lucide-download"
+              @click="installAndUpdate"
+            />
+          </div>
+        </div>
+      </template>
+    </UModal>
+
     <UMain>
       <NuxtPage />
     </UMain>
@@ -239,13 +342,13 @@ useSeoMeta({
       <template #right>
         <ClientOnly>
           <div
-            v-if="!isTauri"
+            v-if="!isDesktop"
             class="hidden lg:flex items-center gap-2"
           >
             <UButton
               v-for="os in downloads"
               :key="os.os"
-              :href="os.links[0].href"
+              :href="(os.links[0] as DownloadLink).href"
               variant="outline"
               color="neutral"
               size="sm"

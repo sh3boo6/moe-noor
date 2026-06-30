@@ -20,6 +20,14 @@ function uniqueValues(field: keyof Pick<SchoolRecord, 'governorate' | 'stage' | 
     .sort((a, b) => a.localeCompare(b, 'ar'))
 }
 
+function convertArabicNumbers(str: string): string {
+  const arabicDigits: Record<string, string> = {
+    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+    '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+  }
+  return str.replace(/[٠-٩]/g, match => arabicDigits[match] || match)
+}
+
 const governorateOptions = computed(() => uniqueValues('governorate'))
 const stageOptions = computed(() => uniqueValues('stage'))
 const genderOptions = computed(() => uniqueValues('gender'))
@@ -41,8 +49,16 @@ const filteredRows = computed(() => {
   })
 })
 
-// يعيد ترتيب الصفحة إلى الأولى عند تغيير أي فلتر أو نص بحث.
-watch([search, governorate, stage, gender, studyTime], () => {
+// يعيد ترتيب الصفحة إلى الأولى عند تغيير أي فلتر.
+watch([governorate, stage, gender, studyTime], () => {
+  page.value = 1
+})
+
+watch(search, (newValue) => {
+  const normalized = convertArabicNumbers(newValue)
+  if (newValue !== normalized) {
+    search.value = normalized
+  }
   page.value = 1
 })
 

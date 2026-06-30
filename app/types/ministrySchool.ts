@@ -215,4 +215,5 @@ export interface MinistryFilters {
   studyTime: string[]
   educationType: string[]
   governorate: string[]
+  schoolName: string[]
 }
