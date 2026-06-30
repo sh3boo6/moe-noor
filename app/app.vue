@@ -45,13 +45,37 @@ const osIcon = computed(() => {
   return icons[osName.value] || 'i-lucide-monitor'
 })
 
-const downloadLinks = computed(() => ({
-  Windows: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.1/Moe.Noor.Data%20.0.1.0.exe',
-  macOS: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_aarch64.dmg',
-  Linux: 'https://github.com/sh3boo6/moe-noor/releases/download/0.1.0/Moe.Noor.Data_0.1.0_x64.AppImage'
-}))
+const downloads = [
+  {
+    os: 'Windows',
+    icon: 'i-simple-icons-windows',
+    links: [
+      { label: 'تثبيت EXE', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_x64-setup.exe' },
+      { label: 'تثبيت MSI', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_x64_en-US.msi' }
+    ]
+  },
+  {
+    os: 'macOS',
+    icon: 'i-simple-icons-apple',
+    links: [
+      { label: 'تحميل DMG', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_aarch64.dmg' }
+    ]
+  },
+  {
+    os: 'Linux',
+    icon: 'i-simple-icons-linux',
+    links: [
+      { label: 'AppImage', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_amd64.AppImage' },
+      { label: 'DEB', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_amd64.deb' },
+      { label: 'RPM', href: 'https://github.com/sh3boo6/moe-noor/releases/download/v1.0.2/Moe.Noor.Data_0.2.0_1.x86_64.rpm' }
+    ]
+  }
+]
 
-const detectedOsDownloadLink = computed(() => downloadLinks.value[osName.value])
+const detectedOsDownloadLink = computed(() => {
+  const os = downloads.find(d => d.os === osName.value)
+  return os ? os.links[0].href : downloads[0].links[0].href
+})
 
 const social = ref([
   { name: 'i-simple-icons-whatsapp', href: 'https://wa.me/966507770383' },
@@ -93,17 +117,30 @@ useSeoMeta({
 
       <template #right>
         <ClientOnly>
-          <UButton
+          <UDropdownMenu
             v-if="!isTauri"
-            :label="`تحميل لـ ${osName}`"
-            :href="detectedOsDownloadLink"
-            variant="ghost"
-            :tooltip="osName"
-            color="neutral"
-            class="hidden xl:inline-flex cursor-pointer"
-            :trailing-icon="osIcon"
+            :items="downloads.map(os => ({
+              label: os.os,
+              icon: os.icon,
+              children: os.links.map(link => ({
+                label: link.label,
+                href: link.href,
+                target: '_blank'
+              }))
+            }))"
+            :content="{ align: 'start' }"
+            :ui="{ content: 'min-w-48' }"
             size="sm"
-          />
+          >
+            <UButton
+              label="تحميل البرنامج"
+              variant="ghost"
+              color="neutral"
+              size="sm"
+              trailing-icon="i-lucide-download"
+              class="hidden xl:inline-flex"
+            />
+          </UDropdownMenu>
         </ClientOnly>
         <UButton
           label="حول التطبيق"
@@ -206,22 +243,15 @@ useSeoMeta({
             class="hidden lg:flex items-center gap-2"
           >
             <UButton
-              :href="downloadLinks.Windows"
+              v-for="os in downloads"
+              :key="os.os"
+              :href="os.links[0].href"
               variant="outline"
               color="neutral"
               size="sm"
-              icon="i-simple-icons-windows"
+              :icon="os.icon"
             >
-              Windows
-            </UButton>
-            <UButton
-              :href="downloadLinks.macOS"
-              variant="outline"
-              color="neutral"
-              size="sm"
-              icon="i-simple-icons-apple"
-            >
-              macOS
+              {{ os.os }}
             </UButton>
           </div>
         </ClientOnly>
