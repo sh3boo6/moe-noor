@@ -196,9 +196,13 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
           files: |
-            artifacts/**/*.{AppImage,dmg,exe,msi,deb,rpm,tar.gz,zip}
+            artifacts/**/*.dmg
+            artifacts/**/*.msi
+            artifacts/**/*.exe
+            artifacts/**/*.AppImage
           draft: false
           prerelease: false
-          fail_on_unmatched_files: false
+          fail_on_unmatched_files: true
           token: ${{ secrets.GITHUB_TOKEN }}
