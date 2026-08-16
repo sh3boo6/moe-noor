@@ -248,7 +248,7 @@ function exportToXLSX() {
             :color="excludeZeroDensity ? 'primary' : 'neutral'"
             variant="ghost"
             :label="excludeZeroDensity ? 'إظهار الكثافة الصفرية' : 'استبعاد الكثافة الصفرية'"
-            @click="excludeZeroDensity = !excludeZeroDensity"
+            @click="excludeZeroDensity = !excludeZeroDensity;"
           />
         </div>
       </div>
@@ -258,22 +258,22 @@ function exportToXLSX() {
       <table class="w-full min-w-max border-collapse text-right text-sm">
         <thead class="bg-muted text-xs uppercase text-muted-foreground">
           <tr>
-            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-[150px]">
+            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-37.5">
               الرقم الوزاري
             </th>
-            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-[250px]">
+            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-62.5">
               اسم المدرسة
             </th>
-            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-[150px]">
+            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-37.5">
               المرحلة الدراسية
             </th>
-            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-[120px]">
+            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-30">
               عدد الطلاب
             </th>
-            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-[120px]">
+            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-30">
               عدد الفصول
             </th>
-            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-[100px]">
+            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-25">
               <button
                 type="button"
                 class="flex items-center gap-1 hover:text-primary transition-colors"
@@ -292,7 +292,7 @@ function exportToXLSX() {
                 />
               </button>
             </th>
-            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-[100px]">
+            <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold min-w-25">
               التصنيف
             </th>
           </tr>

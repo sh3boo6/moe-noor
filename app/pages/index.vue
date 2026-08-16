@@ -201,7 +201,7 @@ function resetFilters() {
               variant="ghost"
               label="مسح البيانات"
               icon="i-lucide-trash-2"
-              @click="showConfirmClear = true"
+              @click="showConfirmClear = true;"
             />
           </div>
         </div>
@@ -221,7 +221,7 @@ function resetFilters() {
                   color="neutral"
                   variant="soft"
                   label="إلغاء"
-                  @click="showConfirmClear = false"
+                  @click="showConfirmClear = false;"
                 />
                 <UButton
                   color="error"

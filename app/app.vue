@@ -22,7 +22,7 @@ const description = 'لوحة تحليل تفاعلية لقراءة ملفات 
 const isAboutOpen = ref(false)
 const toaster = { position: 'top-right' } as const
 const isUpdateOpen = ref(false)
-const updateInfo = ref<unknown>(null)
+const updateInfo = ref<{ version: string, date?: string, downloadAndInstall: () => Promise<void> } | null>(null)
 const currentVersion = ref('')
 const updateLoading = ref(false)
 
