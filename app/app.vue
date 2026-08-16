@@ -191,7 +191,7 @@ useSeoMeta({
           label="حول التطبيق"
           variant="ghost"
           icon="i-lucide-info"
-          @click="isAboutOpen = true"
+          @click="isAboutOpen = true;"
         />
         <UColorModeButton />
       </template>
@@ -224,7 +224,7 @@ useSeoMeta({
             icon="i-lucide-x"
             color="neutral"
             variant="ghost"
-            @click="isAboutOpen = false"
+            @click="isAboutOpen = false;"
           />
         </div>
       </template>
@@ -289,7 +289,7 @@ useSeoMeta({
             icon="i-lucide-x"
             color="neutral"
             variant="ghost"
-            @click="isUpdateOpen = false"
+            @click="isUpdateOpen = false;"
           />
         </div>
       </template>
@@ -306,7 +306,7 @@ useSeoMeta({
               label="تحديث لاحقاً"
               color="neutral"
               variant="ghost"
-              @click="isUpdateOpen = false"
+              @click="isUpdateOpen = false;"
             />
             <UButton
               label="بدء التحديث الآن"
