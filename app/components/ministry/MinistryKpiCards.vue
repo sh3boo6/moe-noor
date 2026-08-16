@@ -11,7 +11,7 @@ const totalStages = computed(() => props.schools?.length || 0)
 const totalSchools = computed(() => {
   const uniqueManagers = new Set(
     (props.schools || [])
-      .filter(school => {
+      .filter((school) => {
         const status = String(school.building?.independenceStatus || '').trim()
         return status === 'مستقل' || status === 'مشترك أساسي'
       })
@@ -21,15 +21,6 @@ const totalSchools = computed(() => {
   return uniqueManagers.size
 })
 
-const schoolIds = computed(() => props.schools.map(s => String(s.identity.id || '')).filter(Boolean))
-const displayedSchoolIds = computed(() => {
-  if (!props.hasActiveFilters || schoolIds.value.length === 0) return ''
-  const max = 6
-  if (schoolIds.value.length <= max) {
-    return schoolIds.value.join('، ')
-  }
-  return schoolIds.value.slice(0, max).join('، ') + '، ...'
-})
 const uniqueManagers = computed(() => {
   const ids = (props.schools || [])
     .map(school => String(school.staff?.managerId || '').trim())
