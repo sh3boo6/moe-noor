@@ -9,10 +9,16 @@ const props = defineProps<{
 
 const totalStages = computed(() => props.schools?.length || 0)
 const totalSchools = computed(() => {
-  const managers = (props.schools || [])
-    .map(school => String(school.staff?.managerName || '').trim())
-    .filter(name => Boolean(name))
-  return new Set(managers).size
+  const uniqueManagers = new Set(
+    (props.schools || [])
+      .filter(school => {
+        const status = String(school.building?.independenceStatus || '').trim()
+        return status === 'مستقل' || status === 'مشترك أساسي'
+      })
+      .map(school => String(school.staff?.managerId || '').trim())
+      .filter(id => Boolean(id))
+  )
+  return uniqueManagers.size
 })
 
 const schoolIds = computed(() => props.schools.map(s => String(s.identity.id || '')).filter(Boolean))
@@ -63,7 +69,7 @@ const studentTeacherRatio = computed(() => totalTeachers.value ? (totalStudents.
 const avgStudentsPerSchool = computed(() => totalSchools.value ? (totalStudents.value / totalSchools.value).toFixed(0) : '0')
 const avgTeachersPerSchool = computed(() => totalSchools.value ? (totalTeachers.value / totalSchools.value).toFixed(0) : '0')
 const avgAdminsPerSchool = computed(() => totalSchools.value ? (totalAdmins.value / totalSchools.value).toFixed(1) : '0')
-const adminTeacherRatio = computed(() => totalTeachers.value ? ((totalAdmins.value / totalTeachers.value) * 100).toFixed(1) : '0')
+const adminTeacherRatio = computed(() => totalTeachers.value ? (totalAdmins.value / totalTeachers.value).toFixed(2) : '0.00')
 const teachersStaffRatio = computed(() => totalStaff.value ? ((totalTeachers.value / totalStaff.value) * 100).toFixed(1) : '0')
 const avgStagesPerSchool = computed(() => totalSchools.value ? (totalStages.value / totalSchools.value).toFixed(1) : '0')
 
@@ -75,7 +81,7 @@ const cards = computed(() => [
   {
     title: props.hasActiveFilters ? 'المدارس حسب التصفية' : 'إجمالي المدارس',
     value: formatNumber(totalSchools.value),
-    description: props.hasActiveFilters ? displayedSchoolIds.value : `حسب عدد المباني المدرسية الفعلية ${totalSchools.value !== totalStages.value ? `، إجمالي المراحل ${formatNumber(totalStages.value)}` : ''}`,
+    description: props.hasActiveFilters ? `حسب التصفية عدد المباني المدرسية الفعلية، إجمالي المراحل ${formatNumber(totalStages.value)}` : `حسب عدد المباني المدرسية الفعلية ${totalSchools.value !== totalStages.value ? `، إجمالي المراحل ${formatNumber(totalStages.value)}` : ''}`,
     icon: 'i-lucide-building-2'
   },
   {
@@ -145,9 +151,9 @@ const cards = computed(() => [
     icon: 'i-lucide-briefcase'
   },
   {
-    title: 'نسبة الإداريين إلى المعلمين',
-    value: `${adminTeacherRatio.value}%`,
-    description: 'التوازن بين الكادر التعليمي والإداري',
+    title: 'معدل اداري لكل معلم',
+    value: adminTeacherRatio.value,
+    description: 'عدد الإداريين لكل معلم',
     icon: 'i-lucide-scale'
   },
   {
