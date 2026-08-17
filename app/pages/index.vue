@@ -247,6 +247,7 @@ function resetFilters() {
             :schools="filteredSchools"
             :warning-count="warningCount"
             :has-active-filters="hasActiveFilters"
+            :all-schools="schools"
           />
         </div>
 
