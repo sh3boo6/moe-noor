@@ -76,7 +76,9 @@ watch(hasActiveFilters, (val) => {
 })
 
 onMounted(() => {
-  setFilterHeaderActions(resetFilters, () => { showConfirmClear.value = true })
+  setFilterHeaderActions(resetFilters, () => {
+    showConfirmClear.value = true
+  })
 })
 </script>
 

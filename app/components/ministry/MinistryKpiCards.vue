@@ -9,6 +9,8 @@ const props = defineProps<{
   allSchools?: MinistrySchoolRecord[]
 }>()
 
+const toast = useToast()
+
 const totalStages = computed(() => props.schools?.length || 0)
 const totalSchools = computed(() => {
   return (props.schools || []).filter((school) => {
@@ -216,6 +218,11 @@ function getManagerStageCount(school: MinistrySchoolRecord): number {
 
 function formatNumber(value: number): string {
   return value.toLocaleString('en-US')
+}
+
+function copySchoolId(id: string) {
+  navigator.clipboard.writeText(id)
+  toast.add({ title: 'تم نسخ الرقم الوزاري', description: id })
 }
 
 function exportToExcel() {
@@ -618,6 +625,7 @@ const cards = computed(() => [
             color="primary"
             variant="solid"
             size="sm"
+            class="me-auto"
             @click="exportToExcel"
           />
 
@@ -689,6 +697,7 @@ const cards = computed(() => [
               v-for="school in (props.allSchools || props.schools || []).filter(s => String(s.staff?.managerId || '').trim() === drawerManagerId)"
               :key="school.identity.id"
               class="cursor-pointer px-4 py-3 text-sm text-foreground hover:bg-muted/40 border-b border-accented/50 last:border-b-0"
+              @click="copySchoolId(school.identity.id)"
             >
               {{ school.identity.schoolName }} - {{ school.identity.id }}
             </li>
