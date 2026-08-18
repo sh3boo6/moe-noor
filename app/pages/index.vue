@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+import { filterHeaderHasActiveFilters } from '~/composables/useFilterHeaderState'
 
 const toast = useToast()
 
@@ -69,6 +70,14 @@ function resetFilters() {
     duration: 1250
   })
 }
+
+watch(hasActiveFilters, (val) => {
+  filterHeaderHasActiveFilters.value = val
+})
+
+onMounted(() => {
+  setFilterHeaderActions(resetFilters, () => { showConfirmClear.value = true })
+})
 </script>
 
 <template>
@@ -173,7 +182,7 @@ function resetFilters() {
       />
 
       <template v-if="schools.length">
-        <div class="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div class="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:sticky lg:top-0 lg:z-30 lg:bg-background lg:pb-4">
           <div>
             <h2 class="text-xl font-semibold text-foreground">
               لوحة التحليل
@@ -183,7 +192,10 @@ function resetFilters() {
             </p>
           </div>
 
-          <div class="flex flex-wrap gap-2">
+          <div
+            v-if="hasActiveFilters"
+            class="flex flex-wrap gap-2"
+          >
             <!-- <MinistryPdfExport :schools="filteredSchools" /> -->
 
             <UButton

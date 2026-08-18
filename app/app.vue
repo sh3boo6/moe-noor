@@ -2,6 +2,7 @@
 import { check } from '@tauri-apps/plugin-updater'
 import { relaunch } from '@tauri-apps/plugin-process'
 import { getVersion } from '@tauri-apps/api/app'
+import { filterHeaderHasActiveFilters, getFilterHeaderActions } from './composables/useFilterHeaderState'
 
 useHead({
   meta: [
@@ -27,6 +28,7 @@ const currentVersion = ref('')
 const updateLoading = ref(false)
 
 const osName = ref('Detecting OS...')
+const headerActions = getFilterHeaderActions()
 
 onMounted(async () => {
   isDesktop.value = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
@@ -159,6 +161,28 @@ useSeoMeta({
           وزارة التعليم
         </NuxtLink>
       </template>
+
+      <div
+        v-if="filterHeaderHasActiveFilters"
+        class="flex flex-wrap gap-2"
+      >
+        <UButton
+          size="sm"
+          color="neutral"
+          variant="ghost"
+          label="إعادة الفلاتر"
+          icon="i-lucide-rotate-ccw"
+          @click="headerActions.resetFilters()"
+        />
+        <UButton
+          size="sm"
+          color="neutral"
+          variant="ghost"
+          label="مسح البيانات"
+          icon="i-lucide-trash-2"
+          @click="headerActions.openConfirmClear()"
+        />
+      </div>
 
       <template #right>
         <!-- <ClientOnly>
