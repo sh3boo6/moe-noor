@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+import * as XLSX from 'xlsx'
 
 const props = defineProps<{
   schools: MinistrySchoolRecord[]
@@ -215,6 +216,35 @@ function getManagerStageCount(school: MinistrySchoolRecord): number {
 
 function formatNumber(value: number): string {
   return value.toLocaleString('en-US')
+}
+
+function exportToExcel() {
+  const headers = [
+    'الرقم الوزاري',
+    'اسم المدرسة',
+    'المدير',
+    'رقم الهوية',
+    'جنس المدرسة',
+    'عدد المراحل',
+    'حالة الاستقلال',
+    'نوع المبنى'
+  ]
+
+  const rows = filteredSchoolsForModal.value.map(school => [
+    formatValue(school.identity.id),
+    formatValue(school.identity.schoolName),
+    formatValue(school.staff.managerName),
+    formatValue(school.staff.managerId),
+    formatValue(school.identity.gender),
+    getManagerStageCount(school),
+    formatValue(school.building.independenceStatus),
+    formatValue(school.building.ownership)
+  ])
+
+  const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows])
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'المدارس')
+  XLSX.writeFile(workbook, 'schools_export.xlsx')
 }
 
 const firstCardTitle = computed(() => cards.value[0]?.title ?? '')
@@ -582,6 +612,15 @@ const cards = computed(() => [
 
       <template #footer>
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between justify-end">
+          <UButton
+            icon="i-lucide-file-spreadsheet"
+            label="تصدير Excel"
+            color="primary"
+            variant="solid"
+            size="sm"
+            @click="exportToExcel"
+          />
+
           <div class="text-sm text-muted-foreground">
             عرض {{ schoolPageStart }} - {{ schoolPageEnd }} من {{ filteredSchoolsForModal.length }} سجل
           </div>

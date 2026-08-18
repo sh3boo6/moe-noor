@@ -174,14 +174,14 @@ useSeoMeta({
           icon="i-lucide-rotate-ccw"
           @click="headerActions.resetFilters()"
         />
-        <UButton
+        <!-- <UButton
           size="sm"
           color="neutral"
           variant="ghost"
           label="مسح البيانات"
           icon="i-lucide-trash-2"
           @click="headerActions.openConfirmClear()"
-        />
+        /> -->
       </div>
 
       <template #right>
