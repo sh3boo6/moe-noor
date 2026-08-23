@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MinistrySchoolRecord } from '~/types/ministrySchool'
+import { useExcelExport } from '~/composables/useExcelExport'
 
 interface TableColumn {
   key: string
@@ -20,6 +21,12 @@ const numberFormatter = new Intl.NumberFormat('ar')
 const search = ref('')
 const page = ref(1)
 const pageSize = ref(5)
+
+const { exportToExcel } = useExcelExport()
+
+function handleExportExcel() {
+  exportToExcel(filteredRows.value, visibleColumns.value)
+}
 
 const defaultColumns: TableColumn[] = [
   { key: 'identity.id', label: 'الرقم الوزاري', width: 'min-w-[130px]', getValue: s => s.identity.id },
@@ -238,6 +245,17 @@ function openDetails(school: MinistrySchoolRecord) {
       <p class="mt-1 text-sm text-muted-foreground">
         جرّب تغيير البحث أو الفلاتر.
       </p>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+      <UButton
+        size="sm"
+        variant="outline"
+        icon="i-lucide-file-spreadsheet"
+        label="تصدير Excel"
+        color="primary"
+        @click="handleExportExcel"
+      />
     </div>
 
     <template #footer>
