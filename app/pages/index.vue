@@ -195,12 +195,12 @@ onMounted(() => {
           </div>
 
           <div
-            v-if="hasActiveFilters"
             class="flex flex-wrap gap-2"
           >
             <!-- <MinistryPdfExport :schools="filteredSchools" /> -->
 
             <UButton
+              v-if="hasActiveFilters"
               size="sm"
               color="neutral"
               variant="ghost"
