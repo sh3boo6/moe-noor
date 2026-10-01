@@ -43,6 +43,7 @@ const defaultColumns: TableColumn[] = [
   { key: 'staff.teachers', label: 'المعلمين', width: 'min-w-[100px]', getValue: s => s.staff.teachers },
   { key: 'staff.managerName', label: 'المدير', width: 'min-w-[160px]', getValue: s => s.staff.managerName },
   { key: 'staff.managerId', label: 'هوية المدير', width: 'min-w-[140px]', getValue: s => s.staff.managerId }, // العمود الجديد
+  { key: 'staff.managerPhone', label: 'جوال المدير', width: 'min-w-[140px]', getValue: s => s.staff.managerPhone },
   { key: 'building.ownership', label: 'ملكية المبنى', width: 'min-w-[120px]', getValue: s => s.building.ownership }
 ]
 
@@ -63,7 +64,8 @@ const filteredRows = computed(() => {
       school.identity.educationDepartment,
       school.identity.mailAddress,
       school.staff.managerName,
-      school.staff.managerId
+      school.staff.managerId,
+      school.staff.managerPhone
     ].join(' ').toLocaleLowerCase('ar')
 
     return searchableText.includes(keyword)
