@@ -16,7 +16,25 @@ export default defineNuxtConfig({
     buildAssetsDir: '/_nuxt/',
     head: {
       link: [
-        { rel: 'manifest', href: '/manifest.webmanifest' }
+        { rel: 'manifest', href: '/manifest.webmanifest' },
+        { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+        { rel: 'apple-touch-icon', href: '/img/logo.png' }
+      ],
+      meta: [
+        { name: 'description', content: 'لوحة تحليل تفاعلية لقراءة ملفات Excel وزارية وعرض إحصائيات المدارس باستخدام Nuxt و Tauri.' },
+        { name: 'format-detection', content: 'telephone=no, email=no, address=no' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'لوحة تحليل البيانات الوزارية' },
+        { name: 'twitter:description', content: 'قراءة ملفات Excel وزارية وتحليل بيانات المدارس بسرعة.' },
+        { name: 'twitter:image', content: '/og-image.png' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: 'لوحة تحليل البيانات الوزارية' },
+        { property: 'og:description', content: 'لوحة تحليل تفاعلية لقراءة ملفات Excel وزارية وعرض إحصائيات المدارس باستخدام Nuxt و Tauri.' },
+        { property: 'og:image', content: '/og-image.png' },
+        { property: 'og:image:alt', content: 'لوحة تحليل البيانات الوزارية' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { property: 'og:locale', content: 'ar_SA' }
       ]
     }
   },
