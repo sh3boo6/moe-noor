@@ -231,6 +231,7 @@ function exportToExcel() {
     'اسم المدرسة',
     'المدير',
     'رقم الهوية',
+    'جوال المدير',
     'جنس المدرسة',
     'عدد المراحل',
     'حالة الاستقلال',
@@ -242,6 +243,7 @@ function exportToExcel() {
     formatValue(school.identity.schoolName),
     formatValue(school.staff.managerName),
     formatValue(school.staff.managerId),
+    formatValue(school.staff.managerPhone),
     formatValue(school.identity.gender),
     getManagerStageCount(school),
     formatValue(school.building.independenceStatus),
@@ -474,6 +476,9 @@ const cards = computed(() => [
                   رقم الهوية
                 </th>
                 <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold">
+                  جوال المدير
+                </th>
+                <th class="whitespace-nowrap border-b border-accented/50 bg-card px-4 py-3 font-semibold">
                   جنس المدرسة
                 </th>
                 <th
@@ -537,6 +542,9 @@ const cards = computed(() => [
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 text-foreground">
                   {{ formatValue(school.staff.managerId) }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-foreground">
+                  {{ formatValue(school.staff.managerPhone) }}
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 text-foreground">
                   {{ formatValue(school.identity.gender) }}
