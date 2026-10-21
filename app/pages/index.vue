@@ -266,6 +266,10 @@ onMounted(() => {
         </div>
 
         <div class="mt-6">
+          <MinistrySpecialEducation :schools="filteredSchools" />
+        </div>
+
+        <div class="mt-6">
           <MinistryPowerTable
             :schools="filteredSchools"
             :headers="headers"
