@@ -86,6 +86,11 @@ async function parseSpecialEducationFile(file: File): Promise<SpecialEducationRe
   return Array.from(records.values())
 }
 
+export interface SpecialEducationRow {
+  school: MinistrySchoolRecord
+  record: SpecialEducationRecord
+}
+
 export function useSpecialEducation(schools: Readonly<Ref<MinistrySchoolRecord[]>>) {
   const records = ref<SpecialEducationRecord[]>([])
   const fileName = ref('')
@@ -95,9 +100,9 @@ export function useSpecialEducation(schools: Readonly<Ref<MinistrySchoolRecord[]
   const recordsById = computed(() => new Map(records.value.map(record => [record.id, record])))
 
   /** سجلات التربية الخاصة المطابقة (بالرقم الوزاري) للمدارس المفلترة، دون تكرار */
-  const matched = computed(() => {
+  const matchedRows = computed(() => {
     const seen = new Set<string>()
-    const result: SpecialEducationRecord[] = []
+    const result: SpecialEducationRow[] = []
 
     for (const school of schools.value) {
       const id = toEnglishDigits(cleanText(school.identity.id))
@@ -105,12 +110,14 @@ export function useSpecialEducation(schools: Readonly<Ref<MinistrySchoolRecord[]
 
       if (record && !seen.has(id)) {
         seen.add(id)
-        result.push(record)
+        result.push({ school, record })
       }
     }
 
     return result
   })
+
+  const matched = computed(() => matchedRows.value.map(row => row.record))
 
   const totals = computed(() => {
     const sums: Record<string, number> = {}
@@ -152,6 +159,7 @@ export function useSpecialEducation(schools: Readonly<Ref<MinistrySchoolRecord[]
     loading,
     error,
     matched,
+    matchedRows,
     totals,
     schoolsWithStudents,
     parseFile,
