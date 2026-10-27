@@ -316,37 +316,37 @@ const cards = computed(() => [
   {
     title: 'متوسط الطلاب لكل مدرسة',
     value: avgStudentsPerSchool.value,
-    description: 'حجم المدارس بشكل عام',
+    description: `${formatNumber(totalStudents.value)} طالب / ${formatNumber(totalSchools.value)} مبنى`,
     icon: 'i-lucide-users'
   },
   {
     title: 'متوسط المعلمين لكل مدرسة',
     value: avgTeachersPerSchool.value,
-    description: 'مؤشر توزيع الكادر',
+    description: `${formatNumber(totalTeachers.value)} معلم / ${formatNumber(totalSchools.value)} مبنى`,
     icon: 'i-lucide-user-check'
   },
   {
     title: 'متوسط الإداريين لكل مدرسة',
     value: avgAdminsPerSchool.value,
-    description: 'تقييم الكادر الإداري',
+    description: `${formatNumber(totalAdmins.value)} إداري / ${formatNumber(totalSchools.value)} مبنى`,
     icon: 'i-lucide-briefcase'
   },
   {
     title: 'معدل اداري لكل معلم',
     value: adminTeacherRatio.value,
-    description: 'عدد الإداريين لكل معلم',
+    description: `${formatNumber(totalAdmins.value)} إداري / ${formatNumber(totalTeachers.value)} معلم`,
     icon: 'i-lucide-scale'
   },
   {
     title: 'نسبة المعلمين من إجمالي الكادر',
     value: `${teachersStaffRatio.value}%`,
-    description: 'قياس كفاءة التوزيع الوظيفي',
+    description: `${formatNumber(totalTeachers.value)} معلم / ${formatNumber(totalStaff.value)} موظف`,
     icon: 'i-lucide-percent'
   },
   {
     title: 'متوسط المراحل لكل مدرسة',
     value: avgStagesPerSchool.value,
-    description: 'مدى انتشار المدارس المشتركة',
+    description: `${formatNumber(totalStages.value)} مرحلة / ${formatNumber(totalSchools.value)} مبنى`,
     icon: 'i-lucide-layers'
   }
 ])
